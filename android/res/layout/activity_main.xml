@@ -1,0 +1,99 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="foo.fruitfox.evend.MainActivity" >
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:src="@android:drawable/ic_lock_lock" />
+
+    <ImageButton
+        android:id="@+id/imageButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="86dp"
+        android:layout_marginRight="36dp"
+        android:layout_toLeftOf="@+id/imageView1"
+        android:src="@android:drawable/ic_media_rew" />
+
+    <ImageButton
+        android:id="@+id/imageButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageButton1"
+        android:layout_marginLeft="32dp"
+        android:layout_toRightOf="@+id/imageView1"
+        android:src="@android:drawable/ic_media_ff" 
+        android:onClick="buttonNext" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:onClick="showLoginActivity"
+        android:text="Login Activity" />
+
+    <Button
+        android:id="@+id/checkNetwork"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/getNumber"
+        android:layout_below="@+id/getNumber"
+        android:layout_toLeftOf="@+id/imageView1"
+        android:text="Check Network" 
+        android:onClick="checkNetwork" />
+
+    <Button
+        android:id="@+id/getNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button1"
+        android:layout_alignRight="@+id/button1"
+        android:layout_below="@+id/button1"
+        android:onClick="getNumber"
+        android:text="Get Number" />
+
+    <Button
+        android:id="@+id/putUserData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/checkNetwork"
+        android:layout_alignRight="@+id/checkNetwork"
+        android:layout_below="@+id/checkNetwork"
+        android:text="Save User Data"
+        android:onClick="putUserData" />
+
+    <Button
+        android:id="@+id/getUserData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/putUserData"
+        android:layout_alignRight="@+id/imageButton2"
+        android:layout_toRightOf="@+id/getNumber"
+        android:text="Get User Data" 
+        android:onClick="getUserData" />
+
+    <Button
+        android:id="@+id/httpPost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/checkNetwork"
+        android:layout_alignLeft="@+id/getUserData"
+        android:layout_alignRight="@+id/getUserData"
+        android:layout_alignTop="@+id/checkNetwork"
+        android:text="HTTP POST"
+        android:onClick="httpPost" />
+
+</RelativeLayout>

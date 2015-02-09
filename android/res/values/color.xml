@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="BLACK">#000000</color>
+    <color name="WHITE">#FFFFFF</color>
+    <color name="light_grey">#a5acb0</color>
+    <color name="brown">#525964</color>
+    <color name="dark_grey">#212121</color>
+    <color name="aqua">#a6b1ba</color>
+    <color name="red_cherry">#C9282D</color>
+    <color name="silver">#A9A9A9</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="blue">#00aceb</color>
+    <color name="spiritclips_bck">#8AB8E0</color>
+    <color name="translucent_black">#55000000</color>
+    <color name="grid_bck">#627583</color>
+    <color name="grey">#393430</color>
+    <color name="dark_grey_bg">#1f1c17</color>
+    <color name="login_font_color_1">#546778</color>
+    <color name="login_font_color_2">#8E8E8E</color>
+    <color name="blue_txt">#0f5690</color>
+
+</resources>
