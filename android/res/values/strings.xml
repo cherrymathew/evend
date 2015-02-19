@@ -218,5 +218,6 @@
     </string-array>
 
     <string name="title_activity_welcome">WelcomeActivity</string>
+    <string name="title_activity_sessions">SessionsActivity</string>
 
 </resources>

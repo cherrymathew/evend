@@ -20,6 +20,10 @@ public class EventCalendarAdapter extends BaseAdapter {
 	private DateTime startDate;
 	private DateTime endDate;
 
+	static class ViewHolder {
+		public TextView dayText;
+	}
+
 	public EventCalendarAdapter(Context context, String startDate,
 			String endDate) {
 		super();
@@ -52,7 +56,6 @@ public class EventCalendarAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View dayView = convertView;
-		TextView dayText;
 
 		if (dayView == null) {
 			LayoutInflater inflater = (LayoutInflater) context
@@ -60,11 +63,15 @@ public class EventCalendarAdapter extends BaseAdapter {
 			dayView = inflater.inflate(R.layout.calendar_single_day, parent,
 					false);
 
-			dayText = (TextView) dayView.findViewById(R.id.dayText);
-			dayText.setText(Integer.toString(startDate.plusDays(position)
-					.getDayOfMonth()));
+			ViewHolder viewHolder = new ViewHolder();
+			viewHolder.dayText = (TextView) dayView.findViewById(R.id.dayText);
+			viewHolder.dayText.setText(Integer.toString(startDate.plusDays(
+					position).getDayOfMonth()));
+			dayView.setTag(viewHolder);
 		} else {
-			dayText = (TextView) dayView.findViewById(R.id.dayText);
+			ViewHolder viewHolder = (ViewHolder) dayView.getTag();
+			viewHolder.dayText.setText(Integer.toString(startDate.plusDays(
+					position).getDayOfMonth()));
 		}
 
 		return dayView;

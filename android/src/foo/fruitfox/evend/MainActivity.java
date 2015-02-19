@@ -103,9 +103,9 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void putUserData(View view) {
-		UserData ud = new UserData("abc@def.com", "9876543210", "ABC123",
-				"df6c2711-2ac1-4251-aa9f-9c7f797e4c8b");
-		StorageHelper.PreferencesHelper.setUserData(this, ud.getGUID(), ud);
+		// UserData ud = new UserData("abc@def.com", "9876543210", "ABC123",
+		// "df6c2711-2ac1-4251-aa9f-9c7f797e4c8b");
+		// StorageHelper.PreferencesHelper.setUserData(this, ud.getGUID(), ud);
 		DebugHelper.ShowMessage.t(this, "Set the User Data");
 	}
 
@@ -118,8 +118,7 @@ public class MainActivity extends ActionBarActivity {
 			DebugHelper.ShowMessage.t(this, "No Data Present");
 		} else {
 			DebugHelper.ShowMessage.t(this, "Data Present");
-			DebugHelper.ShowMessage.d(ud.getEmail() + "\n" + ud.getGUID()
-					+ "\n" + ud.getPhone() + "\n" + ud.getVerificationCode());
+			DebugHelper.ShowMessage.d(ud.getEmail() + "\n" + ud.getPhone());
 		}
 	}
 

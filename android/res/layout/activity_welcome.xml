@@ -18,34 +18,66 @@
         android:textAlignment="center"
         android:textSize="15sp" />
 
-    <GridView
-        android:id="@+id/eventCalendarGrid"
+    <RelativeLayout
+        android:id="@+id/calenderHolder"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="35dp"
-        android:columnWidth="60dp"
-        android:horizontalSpacing="10dp"
-        android:numColumns="7"
-        android:stretchMode="spacingWidth"
-        android:verticalSpacing="10dp" >
-    </GridView>
+        android:layout_height="wrap_content" >
 
-    <CheckBox
-        android:id="@+id/accomodationCheck"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        <GridView
+            android:id="@+id/eventCalendarGrid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="35dp"
+            android:columnWidth="60dp"
+            android:horizontalSpacing="10dp"
+            android:numColumns="7"
+            android:stretchMode="spacingWidth"
+            android:verticalSpacing="10dp" >
+        </GridView>
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/ScrollView01"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:layout_alignLeft="@+id/textView1"
-        android:layout_centerVertical="true"
-        android:text="Would you like Accomodation and Food?" />
+        android:layout_below="@+id/calenderHolder" >
 
-    <CheckBox
-        android:id="@+id/pickupCheck"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/accomodationCheck"
-        android:layout_below="@+id/accomodationCheck"
-        android:layout_marginTop="20dp"
-        android:text="Would you like a Pick up?" />
+        <RelativeLayout
+            android:id="@+id/widgetHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <CheckBox
+                android:id="@+id/accomodationCheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="Would you like Accomodation and Food?" />
+
+            <CheckBox
+                android:id="@+id/pickupCheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/accomodationCheck"
+                android:layout_below="@+id/accomodationCheck"
+                android:layout_marginTop="20dp"
+                android:text="Would you like a Pick up?" />
+
+            <Button
+                android:id="@+id/next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/pickupCheck"
+                android:onClick="next"
+                android:layout_marginTop="10dp"
+                android:text="Next" />
+
+        </RelativeLayout>
+    </ScrollView>
 
 </RelativeLayout>

@@ -3,6 +3,7 @@ package foo.fruitfox.evend;
 import java.util.Arrays;
 import java.util.TimeZone;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -134,4 +135,8 @@ public class WelcomeActivity extends ActionBarActivity implements
 		DebugHelper.ShowMessage.d(Arrays.toString(stayAndPickup));
 	}
 
+	public void next(View view) {
+		Intent intent = new Intent(this, SessionsActivity.class);
+		startActivity(intent);
+	}
 }

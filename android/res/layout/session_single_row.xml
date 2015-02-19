@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/sessionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editSession"
+        android:layout_alignBottom="@+id/editSession"
+        android:layout_alignParentLeft="true"
+        android:text="Session Name"
+        android:textSize="15sp" />
+
+    <Button
+        android:id="@+id/editSession"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/viewSession"
+        android:minHeight="28dp"
+        android:minWidth="48dp"
+        android:text="Edit"
+        android:textSize="12sp" 
+        android:onClick="sessionEdit" />
+
+    <Button
+        android:id="@+id/viewSession"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:minHeight="28dp"
+        android:minWidth="48dp"
+        android:text="View"
+        android:textSize="12sp"
+        android:onClick="sessionView" />
+
+</RelativeLayout>

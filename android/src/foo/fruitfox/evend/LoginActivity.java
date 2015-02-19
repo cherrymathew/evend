@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import foo.fruitfox.evend.R;
 import foo.fruitfox.helpers.DebugHelper;
 
 public class LoginActivity extends ActionBarActivity {
@@ -115,19 +114,26 @@ public class LoginActivity extends ActionBarActivity {
 		String countryCode = "";
 		TelephonyManager tMgr = (TelephonyManager) this
 				.getSystemService(Context.TELEPHONY_SERVICE);
-		String mPhoneNumber = tMgr.getLine1Number();
+		String mRawPhoneNumber = tMgr.getLine1Number();
 		String countryISO = tMgr.getSimCountryIso().toUpperCase(Locale.ENGLISH);
 		String[] countryCodeList = this.getResources().getStringArray(
 				R.array.CountryCodes);
+		String mPhoneNumber;
 
-		for (int i = 0; i < countryCodeList.length; i++) {
-			String[] countryCodePair = countryCodeList[i].split(",");
-			if (countryCodePair[1].trim().equals(countryISO.trim())) {
-				countryCode = countryCodePair[0];
-				break;
+		if (mRawPhoneNumber.startsWith("+") == false) {
+			for (int i = 0; i < countryCodeList.length; i++) {
+				String[] countryCodePair = countryCodeList[i].split(",");
+				if (countryCodePair[1].trim().equals(countryISO.trim())) {
+					countryCode = countryCodePair[0];
+					break;
+				}
 			}
+
+			mPhoneNumber = "+" + countryCode + mRawPhoneNumber;
+		} else {
+			mPhoneNumber = mRawPhoneNumber;
 		}
 
-		return "+" + countryCode + mPhoneNumber;
+		return mPhoneNumber;
 	}
 };
