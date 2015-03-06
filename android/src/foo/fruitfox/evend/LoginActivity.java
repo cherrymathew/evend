@@ -6,6 +6,9 @@ package foo.fruitfox.evend;
 
 import java.util.Locale;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,11 +22,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import foo.fruitfox.data.UserData;
 import foo.fruitfox.helpers.DebugHelper;
+import foo.fruitfox.helpers.NetworkHelper;
+import foo.fruitfox.helpers.StorageHelper;
+import foo.fruitfox.tasks.UserDataWebAPITask;
 
-public class LoginActivity extends ActionBarActivity {
+public class LoginActivity extends ActionBarActivity implements
+		UserDataWebAPITask.AsyncResponse {
 
-	String registrationType;
+	private String registrationType;
+	private Button login;
+	private Button register;
+	private EditText username;
+	private TextView usernameLabel;
+	private LinearLayout verificationLayout;
+	private EditText verificationCode;
+	private UserData userData;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +48,13 @@ public class LoginActivity extends ActionBarActivity {
 
 		Intent intent = getIntent();
 		registrationType = intent.getStringExtra("type");
-		DebugHelper.ShowMessage.t(this, "Verified by " + registrationType);
 
 		LinearLayout activityLogin = (LinearLayout) findViewById(R.id.activity_login);
 		setLayout(registrationType, activityLogin);
 
-		LinearLayout verificationLayout = (LinearLayout) findViewById(R.id.verificationLayout);
+		verificationLayout = (LinearLayout) findViewById(R.id.verificationLayout);
 		verificationLayout.setVisibility(View.GONE);
+
 	}
 
 	@Override
@@ -62,10 +77,10 @@ public class LoginActivity extends ActionBarActivity {
 	}
 
 	private void setLayout(String type, LinearLayout activityLayout) {
-		Button login = (Button) findViewById(R.id.login);
-		Button register = (Button) findViewById(R.id.register);
-		EditText username = (EditText) findViewById(R.id.username);
-		TextView usernameLabel = (TextView) findViewById(R.id.usernameLabel);
+		login = (Button) findViewById(R.id.login);
+		register = (Button) findViewById(R.id.register);
+		username = (EditText) findViewById(R.id.username);
+		usernameLabel = (TextView) findViewById(R.id.usernameLabel);
 
 		switch (type) {
 		case "phone":
@@ -78,6 +93,7 @@ public class LoginActivity extends ActionBarActivity {
 
 		case "email":
 			username.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+			username.setText("john@example.com");
 			usernameLabel.setText("E-Mail");
 			login.setVisibility(View.GONE);
 			register.setVisibility(View.VISIBLE);
@@ -88,26 +104,93 @@ public class LoginActivity extends ActionBarActivity {
 	}
 
 	public void register(View view) {
-		LinearLayout verificationLayout = (LinearLayout) findViewById(R.id.verificationLayout);
+		verificationLayout = (LinearLayout) findViewById(R.id.verificationLayout);
 		verificationLayout.setVisibility(View.VISIBLE);
+		username = (EditText) findViewById(R.id.username);
+		String identifier = "";
+
+		JSONObject requestJSON = new JSONObject();
+
+		try {
+			switch (registrationType) {
+			case "email":
+				String email = username.getText().toString();
+				if (userData == null) {
+					userData = new UserData(registrationType, email);
+				} else {
+					userData.setEmail(email);
+				}
+				identifier = email;
+				requestJSON.put("email", email);
+				break;
+
+			case "phone":
+				String phone = username.getText().toString();
+				if (userData == null) {
+					userData = new UserData(registrationType, phone);
+				} else {
+					userData.setPhone(phone);
+				}
+				identifier = phone;
+				requestJSON.put("phone", phone);
+				break;
+			}
+
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+
+		StorageHelper.PreferencesHelper.setIdentifier(this, identifier);
+		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
+
+		if (NetworkHelper.Utilities.isConnected(this)) {
+			UserDataWebAPITask udwTask = new UserDataWebAPITask(
+					LoginActivity.this);
+			try {
+				udwTask.execute("POST",
+						getResources().getString(R.string.server_url)
+								+ "/authenticate", requestJSON.toString());
+
+			} catch (Exception e) {
+				udwTask.cancel(true);
+			}
+		} else {
+			DebugHelper.ShowMessage.t(this, "Connection error");
+		}
 	}
 
 	public void verify(View view) {
-		Button login = (Button) findViewById(R.id.login);
-		Button register = (Button) findViewById(R.id.register);
-		EditText verificationCode = (EditText) findViewById(R.id.verificationCodeText);
+		String identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
+		verificationCode = (EditText) findViewById(R.id.verificationCodeText);
+		userData = StorageHelper.PreferencesHelper
+				.getUserData(this, identifier);
 
-		DebugHelper.ShowMessage.t(this, "Verification code entered was "
-				+ verificationCode.getText().toString());
+		if (verificationCode.getText().toString()
+				.equals(userData.getVerificationCode())) {
+			UserDataWebAPITask udwTask = new UserDataWebAPITask(
+					LoginActivity.this);
+			try {
+				udwTask.execute("GET",
+						getResources().getString(R.string.server_url)
+								+ "/verify" + "?identifier=" + identifier
+								+ "&code=" + userData.getVerificationCode());
 
-		login.setVisibility(View.VISIBLE);
-		register.setVisibility(View.GONE);
+			} catch (Exception e) {
+				udwTask.cancel(true);
+			}
+
+		} else {
+			DebugHelper.ShowMessage.t(this, "Verification Code did not match");
+		}
 	}
 
 	public void login(View view) {
-		DebugHelper.ShowMessage.t(this, "clicked login");
 		Intent intent = new Intent(this, WelcomeActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
+				| Intent.FLAG_ACTIVITY_NEW_TASK);
+
 		startActivity(intent);
+		finish();
 	}
 
 	private String getPhoneNumber() {
@@ -135,5 +218,50 @@ public class LoginActivity extends ActionBarActivity {
 		}
 
 		return mPhoneNumber;
+	}
+
+	@Override
+	public void postAsyncTaskCallback(String result) {
+		String identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
+		DebugHelper.ShowMessage.d(result);
+		JSONObject responseJSON;
+
+		try {
+			responseJSON = new JSONObject(result);
+
+			if (responseJSON.has("needverfication") == true) {
+				Boolean needVerificationStatus = responseJSON
+						.getBoolean("needverfication");
+				String verifier = "";
+				if (needVerificationStatus == true) {
+					verifier = responseJSON.getJSONObject("user").getString(
+							"verifier");
+					userData.setVerificationCode(verifier);
+				}
+			} else if (responseJSON.has("isVerified") == true) {
+				DebugHelper.ShowMessage.d("verified");
+
+				login = (Button) findViewById(R.id.login);
+				register = (Button) findViewById(R.id.register);
+				verificationLayout = (LinearLayout) findViewById(R.id.verificationLayout);
+				username = (EditText) findViewById(R.id.username);
+
+				username.setEnabled(false);
+				login.setVisibility(View.VISIBLE);
+				register.setVisibility(View.GONE);
+				verificationLayout.setVisibility(View.GONE);
+
+				userData.setIsVerified(true);
+
+			} else if (responseJSON.has("error") == true) {
+				DebugHelper.ShowMessage.t(this,
+						"An error occured processing your request");
+			}
+		} catch (JSONException e) {
+			DebugHelper.ShowMessage.t(this,
+					"An error occured processing the response");
+		}
+
+		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
 	}
 };
