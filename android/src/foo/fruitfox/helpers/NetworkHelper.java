@@ -56,6 +56,7 @@ public final class NetworkHelper {
 			InputStream inputStream = null;
 			String result = "";
 
+			DebugHelper.ShowMessage.d(url);
 			try {
 				// create HttpClient
 				HttpClient httpclient = new DefaultHttpClient();
@@ -63,6 +64,11 @@ public final class NetworkHelper {
 				// make GET request to the given URL
 				HttpResponse httpResponse = httpclient
 						.execute(new HttpGet(url));
+
+				int httpReponseCode = httpResponse.getStatusLine()
+						.getStatusCode();
+
+				DebugHelper.ShowMessage.d(String.valueOf(httpReponseCode));
 
 				// receive response as inputStream
 				inputStream = httpResponse.getEntity().getContent();
@@ -99,6 +105,11 @@ public final class NetworkHelper {
 
 				// make POST request to the given URL
 				HttpResponse httpResponse = httpclient.execute(httpPostRequest);
+
+				int httpReponseCode = httpResponse.getStatusLine()
+						.getStatusCode();
+
+				DebugHelper.ShowMessage.d(String.valueOf(httpReponseCode));
 
 				// receive response as inputStream
 				inputStream = httpResponse.getEntity().getContent();
