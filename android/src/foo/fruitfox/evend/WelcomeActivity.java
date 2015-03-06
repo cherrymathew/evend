@@ -136,7 +136,7 @@ public class WelcomeActivity extends ActionBarActivity implements
 	}
 
 	public void next(View view) {
-		Intent intent = new Intent(this, SessionsActivity.class);
+		Intent intent = new Intent(this, TalksActivity.class);
 		startActivity(intent);
 	}
 }
