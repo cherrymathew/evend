@@ -96,4 +96,15 @@
         android:text="HTTP POST"
         android:onClick="httpPost" />
 
+    <Button
+        android:id="@+id/getEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/httpPost"
+        android:layout_alignLeft="@+id/httpPost"
+        android:layout_alignRight="@+id/httpPost"
+        android:layout_alignTop="@+id/getNumber"
+        android:text="Get Email" 
+        android:onClick="getEmail" />
+
 </RelativeLayout>

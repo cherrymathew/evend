@@ -1,9 +1,10 @@
 package foo.fruitfox.helpers;
 
-import com.google.gson.Gson;
-
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.google.gson.Gson;
+
 import foo.fruitfox.data.UserData;
 
 public final class StorageHelper {
@@ -23,13 +24,20 @@ public final class StorageHelper {
 			SharedPreferences sp = c.getSharedPreferences("UserData",
 					Context.MODE_PRIVATE);
 			String value = sp.getString(GUID, null);
-			DebugHelper.ShowMessage.d("StorageHelper", value);
-			
+
 			if (value != null) {
 				ud = gson.fromJson(value.toString(), UserData.class);
 			}
 
 			return ud;
+		}
+
+		public static String getIdentifier(Context c) {
+			SharedPreferences sp = c.getSharedPreferences("UserData",
+					Context.MODE_PRIVATE);
+			String value = sp.getString("identifier", null);
+
+			return value;
 		}
 
 		/**
@@ -45,6 +53,24 @@ public final class StorageHelper {
 			String value = gson.toJson(ud);
 
 			editor.putString(GUID, value);
+			editor.commit();
+		}
+
+		public static void setIdentifier(Context c, String identifier) {
+			SharedPreferences sp = c.getSharedPreferences("UserData",
+					Context.MODE_PRIVATE);
+			SharedPreferences.Editor editor = sp.edit();
+
+			editor.putString("identifier", identifier);
+			editor.commit();
+		}
+
+		public static void clearAllData(Context c) {
+			SharedPreferences sp = c.getSharedPreferences("UserData",
+					Context.MODE_PRIVATE);
+			SharedPreferences.Editor editor = sp.edit();
+
+			editor.clear();
 			editor.commit();
 		}
 	}

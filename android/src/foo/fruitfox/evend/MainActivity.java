@@ -1,16 +1,20 @@
 package foo.fruitfox.evend;
 
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -106,7 +110,8 @@ public class MainActivity extends ActionBarActivity {
 		// UserData ud = new UserData("abc@def.com", "9876543210", "ABC123",
 		// "df6c2711-2ac1-4251-aa9f-9c7f797e4c8b");
 		// StorageHelper.PreferencesHelper.setUserData(this, ud.getGUID(), ud);
-		DebugHelper.ShowMessage.t(this, "Set the User Data");
+		StorageHelper.PreferencesHelper.clearAllData(this);
+		DebugHelper.ShowMessage.t(this, "Cleared the User Data");
 	}
 
 	public void getUserData(View view) {
@@ -155,6 +160,18 @@ public class MainActivity extends ActionBarActivity {
 
 		} catch (Exception e) {
 			udwTask.cancel(true);
+		}
+	}
+
+	public void getEmail(View view) {
+		DebugHelper.ShowMessage.t(this, "In email");
+		Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
+		Account[] accounts = AccountManager.get(this).getAccounts();
+		for (Account account : accounts) {
+			if (emailPattern.matcher(account.name).matches()) {
+				String possibleEmail = account.name;
+				DebugHelper.ShowMessage.t(this, possibleEmail);
+			}
 		}
 	}
 }
