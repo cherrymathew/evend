@@ -5,29 +5,29 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/sessionText"
+        android:id="@+id/talkText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/editSession"
-        android:layout_alignBottom="@+id/editSession"
+        android:layout_alignBaseline="@+id/editTalk"
+        android:layout_alignBottom="@+id/editTalk"
         android:layout_alignParentLeft="true"
-        android:text="Session Name"
+        android:text="Talk Name"
         android:textSize="15sp" />
 
     <Button
-        android:id="@+id/editSession"
+        android:id="@+id/editTalk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/viewSession"
+        android:layout_toLeftOf="@+id/viewTalk"
         android:minHeight="28dp"
         android:minWidth="48dp"
         android:text="Edit"
         android:textSize="12sp" 
-        android:onClick="sessionEdit" />
+        android:onClick="talkEdit" />
 
     <Button
-        android:id="@+id/viewSession"
+        android:id="@+id/viewTalk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -36,6 +36,6 @@
         android:minWidth="48dp"
         android:text="View"
         android:textSize="12sp"
-        android:onClick="sessionView" />
+        android:onClick="talkView" />
 
 </RelativeLayout>

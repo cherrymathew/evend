@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="foo.fruitfox.evend.SessionsActivity" >
+    tools:context="foo.fruitfox.evend.TalksActivity" >
 
     <TextView
         android:id="@+id/participateHeader"
@@ -18,21 +18,21 @@
         android:textSize="20dp" />
 
     <ListView
-        android:id="@+id/sessionsList"
+        android:id="@+id/talksList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_above="@+id/addSession"
+        android:layout_above="@+id/addTalk"
         android:layout_below="@+id/participateHeader"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="29dp" >
     </ListView>
 
     <Button
-        android:id="@+id/addSession"
+        android:id="@+id/addTalk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/sessionsList"
-        android:text="Add Session" />
+        android:layout_alignRight="@+id/talksList"
+        android:text="Add Talk" />
 
 </RelativeLayout>

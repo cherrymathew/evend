@@ -8,13 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import foo.fruitfox.data.SessionData;
+import foo.fruitfox.data.TalkData;
 import foo.fruitfox.evend.R;
 
-public class SessionsAdapter extends BaseAdapter {
+public class TalksAdapter extends BaseAdapter {
 
 	private Context context;
-	private ArrayList<SessionData> sessions;
+	private ArrayList<TalkData> talks;
 
 	public static class ViewHolder {
 		public TextView sessionName;
@@ -22,20 +22,20 @@ public class SessionsAdapter extends BaseAdapter {
 		public String viewLink;
 	}
 
-	public SessionsAdapter(Context context, ArrayList<SessionData> sessions) {
+	public TalksAdapter(Context context, ArrayList<TalkData> talks) {
 		super();
 		this.context = context;
-		this.sessions = sessions;
+		this.talks = talks;
 	}
 
 	@Override
 	public int getCount() {
-		return sessions.size();
+		return talks.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return sessions.get(position);
+		return talks.get(position);
 	}
 
 	@Override
@@ -50,23 +50,21 @@ public class SessionsAdapter extends BaseAdapter {
 		if (sessionView == null) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			sessionView = inflater.inflate(R.layout.session_single_row, parent,
+			sessionView = inflater.inflate(R.layout.talk_single_row, parent,
 					false);
 
 			ViewHolder viewHolder = new ViewHolder();
 			viewHolder.sessionName = (TextView) sessionView
-					.findViewById(R.id.sessionText);
-			viewHolder.sessionName.setText(sessions.get(position)
-					.getSessionName());
-			viewHolder.editLink = sessions.get(position).getEditLink();
-			viewHolder.viewLink = sessions.get(position).getViewLink();
+					.findViewById(R.id.talkText);
+			viewHolder.sessionName.setText(talks.get(position).getTitle());
+			viewHolder.editLink = talks.get(position).getEditLink();
+			viewHolder.viewLink = talks.get(position).getViewLink();
 			sessionView.setTag(viewHolder);
 		} else {
 			ViewHolder viewHolder = (ViewHolder) sessionView.getTag();
-			viewHolder.sessionName.setText(sessions.get(position)
-					.getSessionName());
-			viewHolder.editLink = sessions.get(position).getEditLink();
-			viewHolder.viewLink = sessions.get(position).getViewLink();
+			viewHolder.sessionName.setText(talks.get(position).getTitle());
+			viewHolder.editLink = talks.get(position).getEditLink();
+			viewHolder.viewLink = talks.get(position).getViewLink();
 		}
 
 		return sessionView;
