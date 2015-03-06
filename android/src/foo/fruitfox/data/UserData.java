@@ -1,25 +1,54 @@
 package foo.fruitfox.data;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class UserData {
 	private String email;
 	private String phone;
-	private Boolean[] eventDays;
-	private Boolean pickUp;
-	private Boolean accomodation;
-	private ArrayList<SessionData> sessionDataList;
+	private String registrationIdType;
+	private String firstName;
+	private String lastName;
+	private String verificationCode;
+	private Boolean[] eventDaysAttending;
+	private Boolean needsPickUp;
+	private Boolean needsAccomodation;
+	private Boolean hasTalk;
+	private Boolean hasOauth;
+	private Boolean isVerified;
+	private UserOauthData oauthData;
+	private List<TalkData> talkDataList;
 
-	public UserData(String email, String phone, Boolean[] eventDays,
-			Boolean pickUp, Boolean accomodation,
-			ArrayList<SessionData> sessionDataList) {
+	public UserData(String registrationIdType, String data) {
 		super();
-		this.email = email;
-		this.phone = phone;
-		this.eventDays = eventDays;
-		this.pickUp = pickUp;
-		this.accomodation = accomodation;
-		this.sessionDataList = sessionDataList;
+
+		this.registrationIdType = registrationIdType;
+
+		if (registrationIdType == "email") {
+			this.email = data;
+		} else if (registrationIdType == "phone") {
+			this.phone = data;
+		}
+
+		this.needsPickUp = false;
+		this.needsAccomodation = false;
+		this.hasTalk = false;
+		this.hasOauth = false;
+		this.isVerified = false;
+	}
+
+	public UserData(String oauthProvider, String oauthAccessToken,
+			String oauthUserId) {
+		super();
+
+		this.registrationIdType = "oauth";
+		this.oauthData = new UserOauthData(oauthProvider, oauthAccessToken,
+				oauthUserId);
+
+		this.needsPickUp = false;
+		this.needsAccomodation = false;
+		this.hasTalk = false;
+		this.hasOauth = true;
+		this.isVerified = false;
 	}
 
 	public String getEmail() {
@@ -38,36 +67,103 @@ public class UserData {
 		this.phone = phone;
 	}
 
-	public Boolean[] getEventDays() {
-		return eventDays;
+	public String getRegistrationIdType() {
+		return registrationIdType;
 	}
 
-	public void setEventDays(Boolean[] eventDays) {
-		this.eventDays = eventDays;
+	public void setRegistrationIdType(String registrationIdType) {
+		this.registrationIdType = registrationIdType;
 	}
 
-	public Boolean getPickUp() {
-		return pickUp;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setPickUp(Boolean pickUp) {
-		this.pickUp = pickUp;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public Boolean getAccomodation() {
-		return accomodation;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setAccomodation(Boolean accomodation) {
-		this.accomodation = accomodation;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
-	public ArrayList<SessionData> getSessionDataList() {
-		return sessionDataList;
+	public String getFullName() {
+		return this.firstName + " " + this.lastName;
 	}
 
-	public void setSessionDataList(ArrayList<SessionData> sessionDataList) {
-		this.sessionDataList = sessionDataList;
+	public String getVerificationCode() {
+		return this.verificationCode;
 	}
 
+	public void setVerificationCode(String verificationCode) {
+		this.verificationCode = verificationCode;
+	}
+
+	public Boolean[] getEventDaysAttending() {
+		return eventDaysAttending;
+	}
+
+	public void setEventDaysAttending(Boolean[] eventDaysAttending) {
+		this.eventDaysAttending = eventDaysAttending;
+	}
+
+	public Boolean getNeedsPickUp() {
+		return needsPickUp;
+	}
+
+	public void setNeedsPickUp(Boolean needsPickUp) {
+		this.needsPickUp = needsPickUp;
+	}
+
+	public Boolean getNeedsAccomodation() {
+		return needsAccomodation;
+	}
+
+	public void setNeedsAccomodation(Boolean needsAccomodation) {
+		this.needsAccomodation = needsAccomodation;
+	}
+
+	public Boolean getHasTalk() {
+		return hasTalk;
+	}
+
+	public void setHasTalk(Boolean hasTalk) {
+		this.hasTalk = hasTalk;
+	}
+
+	public Boolean getHasOauth() {
+		return hasOauth;
+	}
+
+	public void setHasOauth(Boolean hasOauth) {
+		this.hasOauth = hasOauth;
+	}
+
+	public Boolean getIsVerified() {
+		return this.isVerified;
+	}
+
+	public void setIsVerified(Boolean isVerified) {
+		this.isVerified = isVerified;
+	}
+
+	public UserOauthData getOauthData() {
+		return oauthData;
+	}
+
+	public void setOauthData(UserOauthData oauthData) {
+		this.oauthData = oauthData;
+	}
+
+	public List<TalkData> getTalkDataList() {
+		return talkDataList;
+	}
+
+	public void setTalkDataList(List<TalkData> talkDataList) {
+		this.talkDataList = talkDataList;
+	}
 }
