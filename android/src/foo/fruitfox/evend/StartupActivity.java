@@ -1,12 +1,13 @@
 package foo.fruitfox.evend;
 
-import foo.fruitfox.evend.R;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import foo.fruitfox.data.UserData;
+import foo.fruitfox.helpers.StorageHelper;
 
 public class StartupActivity extends ActionBarActivity {
 
@@ -14,6 +15,21 @@ public class StartupActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_startup);
+
+		String identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
+
+		if (identifier != null) {
+			UserData userData = StorageHelper.PreferencesHelper.getUserData(
+					this, identifier);
+			if (userData.getIsVerified() == true) {
+				Intent intent = new Intent(this, WelcomeActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
+						| Intent.FLAG_ACTIVITY_NEW_TASK);
+
+				startActivity(intent);
+				finish();
+			}
+		}
 	}
 
 	@Override
