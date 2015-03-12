@@ -168,6 +168,7 @@ public class MainActivity extends ActionBarActivity {
 		Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
 		Account[] accounts = AccountManager.get(this).getAccounts();
 		for (Account account : accounts) {
+			DebugHelper.ShowMessage.t(this, account.name);
 			if (emailPattern.matcher(account.name).matches()) {
 				String possibleEmail = account.name;
 				DebugHelper.ShowMessage.t(this, possibleEmail);
