@@ -93,6 +93,7 @@ public class LoginActivity extends ActionBarActivity implements
 
 		case "email":
 			username.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+			// TODO: Remove this Hardcoding
 			username.setText("john@example.com");
 			usernameLabel.setText("E-Mail");
 			login.setVisibility(View.GONE);
@@ -149,7 +150,7 @@ public class LoginActivity extends ActionBarActivity implements
 			try {
 				udwTask.execute("POST",
 						getResources().getString(R.string.server_url)
-								+ "/authenticate", requestJSON.toString());
+								+ "authenticate", requestJSON.toString());
 
 			} catch (Exception e) {
 				udwTask.cancel(true);
@@ -172,7 +173,7 @@ public class LoginActivity extends ActionBarActivity implements
 			try {
 				udwTask.execute("GET",
 						getResources().getString(R.string.server_url)
-								+ "/verify" + "?identifier=" + identifier
+								+ "verify" + "?identifier=" + identifier
 								+ "&code=" + userData.getVerificationCode());
 
 			} catch (Exception e) {
@@ -223,7 +224,6 @@ public class LoginActivity extends ActionBarActivity implements
 	@Override
 	public void postAsyncTaskCallback(String result) {
 		String identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
-		DebugHelper.ShowMessage.d(result);
 		JSONObject responseJSON;
 
 		try {
@@ -238,7 +238,7 @@ public class LoginActivity extends ActionBarActivity implements
 							"verifier");
 					userData.setVerificationCode(verifier);
 				}
-			} else if (responseJSON.has("isVerified") == true) {
+			} else if (responseJSON.has("hhtoken") == true) {
 				DebugHelper.ShowMessage.d("verified");
 
 				login = (Button) findViewById(R.id.login);
@@ -252,6 +252,7 @@ public class LoginActivity extends ActionBarActivity implements
 				verificationLayout.setVisibility(View.GONE);
 
 				userData.setIsVerified(true);
+				userData.setAuthToken(responseJSON.getString("hhtoken"));
 
 			} else if (responseJSON.has("error") == true) {
 				DebugHelper.ShowMessage.t(this,
