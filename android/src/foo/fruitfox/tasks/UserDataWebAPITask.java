@@ -32,7 +32,7 @@ public class UserDataWebAPITask extends AsyncTask<String, Integer, String> {
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-		progDialog = ProgressDialog.show(this.activity, "Search",
+		progDialog = ProgressDialog.show(this.activity, "Processing...",
 				"Fetching data", true, false);
 	}
 
@@ -53,8 +53,9 @@ public class UserDataWebAPITask extends AsyncTask<String, Integer, String> {
 	protected void onPostExecute(String result) {
 		progDialog.dismiss();
 		if (result.length() == 0) {
-			DebugHelper.ShowMessage.t(context,
-					"Unable to find track data. Try again later.");
+			DebugHelper.ShowMessage
+					.t(context,
+							"There was an error processing your request. Please try again later.");
 			return;
 		} else {
 			ar.postAsyncTaskCallback(result);
