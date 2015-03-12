@@ -7,12 +7,15 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.Days;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import foo.fruitfox.data.UserData;
 import foo.fruitfox.evend.R;
+import foo.fruitfox.helpers.StorageHelper;
 
 public class EventCalendarAdapter extends BaseAdapter {
 
@@ -56,6 +59,11 @@ public class EventCalendarAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View dayView = convertView;
+		String identifier = StorageHelper.PreferencesHelper
+				.getIdentifier(this.context);
+		UserData userData = StorageHelper.PreferencesHelper.getUserData(
+				this.context, identifier);
+		Boolean[] eventDays = userData.getEventDaysAttending();
 
 		if (dayView == null) {
 			LayoutInflater inflater = (LayoutInflater) context
@@ -67,11 +75,25 @@ public class EventCalendarAdapter extends BaseAdapter {
 			viewHolder.dayText = (TextView) dayView.findViewById(R.id.dayText);
 			viewHolder.dayText.setText(Integer.toString(startDate.plusDays(
 					position).getDayOfMonth()));
+
+			if (eventDays[position] == true) {
+				viewHolder.dayText.setBackgroundColor(Color.GREEN);
+			} else {
+				viewHolder.dayText.setBackgroundColor(Color.TRANSPARENT);
+			}
+
 			dayView.setTag(viewHolder);
+
 		} else {
 			ViewHolder viewHolder = (ViewHolder) dayView.getTag();
 			viewHolder.dayText.setText(Integer.toString(startDate.plusDays(
 					position).getDayOfMonth()));
+
+			if (eventDays[position] == true) {
+				viewHolder.dayText.setBackgroundColor(Color.GREEN);
+			} else {
+				viewHolder.dayText.setBackgroundColor(Color.TRANSPARENT);
+			}
 		}
 
 		return dayView;

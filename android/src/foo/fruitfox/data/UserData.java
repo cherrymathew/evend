@@ -9,9 +9,10 @@ public class UserData {
 	private String firstName;
 	private String lastName;
 	private String verificationCode;
+	private String authToken;
 	private Boolean[] eventDaysAttending;
 	private Boolean needsPickUp;
-	private Boolean needsAccomodation;
+	private Boolean needsAccommodation;
 	private Boolean hasTalk;
 	private Boolean hasOauth;
 	private Boolean isVerified;
@@ -30,7 +31,7 @@ public class UserData {
 		}
 
 		this.needsPickUp = false;
-		this.needsAccomodation = false;
+		this.needsAccommodation = false;
 		this.hasTalk = false;
 		this.hasOauth = false;
 		this.isVerified = false;
@@ -45,7 +46,7 @@ public class UserData {
 				oauthUserId);
 
 		this.needsPickUp = false;
-		this.needsAccomodation = false;
+		this.needsAccommodation = false;
 		this.hasTalk = false;
 		this.hasOauth = true;
 		this.isVerified = false;
@@ -119,12 +120,12 @@ public class UserData {
 		this.needsPickUp = needsPickUp;
 	}
 
-	public Boolean getNeedsAccomodation() {
-		return needsAccomodation;
+	public Boolean getNeedsAccommodation() {
+		return needsAccommodation;
 	}
 
-	public void setNeedsAccomodation(Boolean needsAccomodation) {
-		this.needsAccomodation = needsAccomodation;
+	public void setNeedsAccommodation(Boolean needsAccommodation) {
+		this.needsAccommodation = needsAccommodation;
 	}
 
 	public Boolean getHasTalk() {
@@ -166,4 +167,13 @@ public class UserData {
 	public void setTalkDataList(List<TalkData> talkDataList) {
 		this.talkDataList = talkDataList;
 	}
+
+	public String getAuthToken() {
+		return authToken;
+	}
+
+	public void setAuthToken(String authToken) {
+		this.authToken = authToken;
+	}
+
 }

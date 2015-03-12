@@ -50,19 +50,19 @@
             android:layout_height="wrap_content" >
 
             <CheckBox
-                android:id="@+id/accomodationCheck"
+                android:id="@+id/accommodationCheck"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:text="Would you like Accomodation and Food?" />
+                android:text="Would you like Accommodation and Food?" />
 
             <CheckBox
                 android:id="@+id/pickupCheck"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/accomodationCheck"
-                android:layout_below="@+id/accomodationCheck"
+                android:layout_alignLeft="@+id/accommodationCheck"
+                android:layout_below="@+id/accommodationCheck"
                 android:layout_marginTop="20dp"
                 android:text="Would you like a Pick up?" />
 

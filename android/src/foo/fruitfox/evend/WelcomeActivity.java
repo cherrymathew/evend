@@ -1,7 +1,13 @@
 package foo.fruitfox.evend;
 
-import java.util.Arrays;
 import java.util.TimeZone;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Days;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -19,40 +25,63 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.GridView;
 import android.widget.TextView;
 import foo.fruitfox.adapters.EventCalendarAdapter;
+import foo.fruitfox.data.UserData;
 import foo.fruitfox.helpers.DebugHelper;
+import foo.fruitfox.helpers.NetworkHelper;
+import foo.fruitfox.helpers.StorageHelper;
+import foo.fruitfox.tasks.UserDataWebAPITask;
+import foo.fruitfox.tasks.UserDataWebAPITask.AsyncResponse;
 
 public class WelcomeActivity extends ActionBarActivity implements
-		OnItemClickListener, OnCheckedChangeListener {
+		OnItemClickListener, OnCheckedChangeListener, AsyncResponse {
 
 	GridView eventCalendarGrid;
-	CheckBox accomodationCheck;
+	CheckBox accommodationCheck;
 	CheckBox pickupCheck;
 
 	Boolean[] eventDays = null;
-	Boolean[] stayAndPickup = new Boolean[2];
+	Boolean needsAccommodation = false;
+	Boolean needsPickup = false;
+
+	String identifier;
+	UserData userData;
+
+	String startDate = "2015-05-23";
+	String endDate = "2015-06-07";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_welcome);
 
-		accomodationCheck = (CheckBox) findViewById(R.id.accomodationCheck);
+		accommodationCheck = (CheckBox) findViewById(R.id.accommodationCheck);
 		pickupCheck = (CheckBox) findViewById(R.id.pickupCheck);
 		eventCalendarGrid = (GridView) findViewById(R.id.eventCalendarGrid);
 
-		EventCalendarAdapter eca = new EventCalendarAdapter(this, "2015-05-23",
-				"2015-06-07");
-		eventDays = new Boolean[eca.getCount()];
+		accommodationCheck.setOnCheckedChangeListener(this);
+		pickupCheck.setOnCheckedChangeListener(this);
+		EventCalendarAdapter eca = new EventCalendarAdapter(this, startDate,
+				endDate);
+
+		identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
+		userData = StorageHelper.PreferencesHelper
+				.getUserData(this, identifier);
+
+		if (userData.getEventDaysAttending() != null) {
+			this.eventDays = userData.getEventDaysAttending();
+		} else {
+			eventDays = new Boolean[eca.getCount()];
+			java.util.Arrays.fill(eventDays, false);
+			userData.setEventDaysAttending(eventDays);
+			StorageHelper.PreferencesHelper.setUserData(this, identifier,
+					userData);
+		}
 
 		eventCalendarGrid.setAdapter(eca);
 		eventCalendarGrid.setOnItemClickListener(this);
 
-		accomodationCheck.setOnCheckedChangeListener(this);
-		pickupCheck.setOnCheckedChangeListener(this);
-
-		DebugHelper.ShowMessage.d(" ECA Adapter",
-				Integer.toString(eca.getCount()));
-		DebugHelper.ShowMessage.t(this, TimeZone.getDefault().getID());
+		getEventDaysUpdate(userData);
+		setLayout(userData);
 	}
 
 	@Override
@@ -77,8 +106,6 @@ public class WelcomeActivity extends ActionBarActivity implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		// TODO Auto-generated method stub
-		DebugHelper.ShowMessage.t(this, "Clicked " + position);
 		TextView dateText = (TextView) view.findViewById(R.id.dayText);
 		ColorDrawable backgroundColor = (ColorDrawable) dateText
 				.getBackground();
@@ -111,32 +138,176 @@ public class WelcomeActivity extends ActionBarActivity implements
 			dateText.setBackgroundColor(Color.GREEN);
 			eventDays[position] = true;
 		}
-		DebugHelper.ShowMessage.d(Arrays.toString(eventDays));
 	}
 
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		// TODO Auto-generated method stub
-
 		switch (buttonView.getId()) {
-		case R.id.accomodationCheck:
-			stayAndPickup[0] = isChecked;
+		case R.id.accommodationCheck:
+			needsAccommodation = isChecked;
 			break;
 
 		case R.id.pickupCheck:
-			stayAndPickup[1] = isChecked;
+			needsPickup = isChecked;
 			break;
 
 		default:
 			break;
 
 		}
-
-		DebugHelper.ShowMessage.d(Arrays.toString(stayAndPickup));
 	}
 
 	public void next(View view) {
+		String currentTimeZone = TimeZone.getDefault().getID();
+		DateTime startDate = new DateTime(this.startDate,
+				DateTimeZone.forID(currentTimeZone));
+		DateTime endDate = new DateTime(this.endDate,
+				DateTimeZone.forID(currentTimeZone));
+		String identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
+
+		String dates = "";
+
+		JSONObject requestJSON = new JSONObject();
+
+		if (needsAccommodation == true) {
+			userData.setNeedsAccommodation(true);
+		} else {
+			userData.setNeedsAccommodation(false);
+		}
+
+		if (needsPickup == true) {
+			userData.setNeedsPickUp(true);
+		} else {
+			userData.setNeedsPickUp(false);
+		}
+
+		userData.setEventDaysAttending(eventDays);
+
+		for (int i = 0; i < eventDays.length; i++) {
+			if (eventDays[i] == true) {
+				dates += Integer
+						.toString(startDate.plusDays(i).getDayOfMonth())
+						+ "-"
+						+ Integer.toString(startDate.plusDays(i)
+								.getMonthOfYear() - 1)
+						+ "-"
+						+ Integer.toString(startDate.plusDays(i).getYear())
+						+ ",";
+			}
+		}
+
+		if (dates.length() > 0) {
+			dates = dates.substring(0, dates.length() - 1);
+		}
+
+		try {
+			requestJSON.put("hhtoken", userData.getAuthToken());
+			requestJSON.put("dates", dates);
+			requestJSON.put("accommodation",
+					userData.getNeedsAccommodation() ? "1" : "0");
+			requestJSON.put("pickup", userData.getNeedsPickUp() ? "1" : "0");
+			requestJSON.put("seats", "0");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// Gson userDataGson = new GsonBuilder().setPrettyPrinting().create();
+		// String userDataString = userDataGson.toJson(userData);
+
+		DebugHelper.ShowMessage.d(requestJSON.toString());
+
+		if (NetworkHelper.Utilities.isConnected(this)) {
+			UserDataWebAPITask udwTask = new UserDataWebAPITask(
+					WelcomeActivity.this);
+			try {
+				udwTask.execute("POST",
+						getResources().getString(R.string.server_url)
+								+ "users/reservedates", requestJSON.toString());
+
+			} catch (Exception e) {
+				udwTask.cancel(true);
+			}
+		} else {
+			DebugHelper.ShowMessage.t(this, "Connection error");
+		}
+
+		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
+
 		Intent intent = new Intent(this, TalksActivity.class);
 		startActivity(intent);
+	}
+
+	private void setLayout(UserData userData) {
+		this.needsAccommodation = userData.getNeedsAccommodation();
+		this.needsPickup = userData.getNeedsPickUp();
+
+		// TextView dateText = (TextView) this.findViewById(R.id.dayText);
+		CheckBox accommodationCheck = (CheckBox) this
+				.findViewById(R.id.accommodationCheck);
+		CheckBox pickupCheck = (CheckBox) this.findViewById(R.id.pickupCheck);
+
+		if (this.needsAccommodation == true) {
+			accommodationCheck.setChecked(true);
+		}
+
+		if (this.needsPickup == true) {
+			pickupCheck.setChecked(true);
+		}
+	}
+
+	@Override
+	public void postAsyncTaskCallback(String result) {
+		String identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
+		DateTime startDate = new DateTime(this.startDate);
+		int currentDay = 0;
+
+		JSONObject responseJSON;
+
+		try {
+			responseJSON = new JSONObject(result);
+
+			if (responseJSON.has("user") == true) {
+				DebugHelper.ShowMessage.d(responseJSON.getString("dates")
+						.toString());
+				JSONArray dates = new JSONArray(responseJSON.getString("dates"));
+				for (int i = 0; i < dates.length(); i++) {
+					DateTime date = new DateTime(dates.get(i));
+					currentDay = Days.daysBetween(startDate.toLocalDate(),
+							date.toLocalDate()).getDays();
+					this.eventDays[currentDay] = true;
+				}
+
+				this.needsAccommodation = responseJSON
+						.getBoolean("accommodation");
+				this.needsPickup = responseJSON.getBoolean("pickup");
+				DebugHelper.ShowMessage.d(responseJSON.getString("dates")
+						.toString());
+			}
+		} catch (JSONException e) {
+			DebugHelper.ShowMessage.t(this,
+					"An error occured processing the response");
+		}
+	}
+
+	private void getEventDaysUpdate(UserData userData) {
+		String token = userData.getAuthToken();
+		String identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
+
+		if (NetworkHelper.Utilities.isConnected(this)) {
+			UserDataWebAPITask udwTask = new UserDataWebAPITask(
+					WelcomeActivity.this);
+			try {
+				udwTask.execute("GET",
+						getResources().getString(R.string.server_url)
+								+ "users/reservedates?user=" + identifier
+								+ "&hhtoken=" + token);
+
+			} catch (Exception e) {
+				udwTask.cancel(true);
+			}
+		} else {
+			DebugHelper.ShowMessage.t(this, "Connection error");
+		}
 	}
 }
