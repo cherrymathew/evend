@@ -6,14 +6,14 @@ import android.widget.Button;
 import foo.fruitfox.evend.R;
 import foo.fruitfox.evend.StartupActivity;
 
-public class StartupActivityTest extends
+public class StartupActivityUnitTest extends
 		android.test.ActivityUnitTestCase<StartupActivity> {
 
 	private StartupActivity startupActivity;
 	private Button phoneVerification;
 	private Button emailVerification;
 
-	public StartupActivityTest() {
+	public StartupActivityUnitTest() {
 		super(StartupActivity.class);
 	}
 
