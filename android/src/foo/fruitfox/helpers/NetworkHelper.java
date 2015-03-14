@@ -15,6 +15,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 
 import android.app.Activity;
@@ -58,8 +61,11 @@ public final class NetworkHelper {
 
 			DebugHelper.ShowMessage.d(url);
 			try {
+				HttpParams httpParams = new BasicHttpParams();
+				HttpConnectionParams.setConnectionTimeout(httpParams, 15000);
+
 				// create HttpClient
-				HttpClient httpclient = new DefaultHttpClient();
+				HttpClient httpclient = new DefaultHttpClient(httpParams);
 
 				// make GET request to the given URL
 				HttpResponse httpResponse = httpclient
@@ -91,8 +97,11 @@ public final class NetworkHelper {
 			String result = "";
 
 			try {
+				HttpParams httpParams = new BasicHttpParams();
+				HttpConnectionParams.setConnectionTimeout(httpParams, 15000);
+
 				// create HttpClient
-				HttpClient httpclient = new DefaultHttpClient();
+				HttpClient httpclient = new DefaultHttpClient(httpParams);
 
 				HttpPost httpPostRequest = new HttpPost(url);
 
