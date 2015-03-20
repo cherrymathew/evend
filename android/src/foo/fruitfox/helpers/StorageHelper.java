@@ -3,7 +3,9 @@ package foo.fruitfox.helpers;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.fatboyindustrial.gsonjodatime.Converters;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import foo.fruitfox.data.UserData;
 
@@ -19,7 +21,8 @@ public final class StorageHelper {
 		 * @return
 		 */
 		public static UserData getUserData(Context c, String GUID) {
-			Gson gson = new Gson();
+			Gson gson = Converters.registerDateTime(new GsonBuilder()).create();
+
 			UserData ud = null;
 			SharedPreferences sp = c.getSharedPreferences("UserData",
 					Context.MODE_PRIVATE);
@@ -46,7 +49,7 @@ public final class StorageHelper {
 		 * @param ud
 		 */
 		public static void setUserData(Context c, String GUID, UserData ud) {
-			Gson gson = new Gson();
+			Gson gson = Converters.registerDateTime(new GsonBuilder()).create();
 			SharedPreferences sp = c.getSharedPreferences("UserData",
 					Context.MODE_PRIVATE);
 			SharedPreferences.Editor editor = sp.edit();
