@@ -103,6 +103,12 @@ public class WelcomeActivity extends ActionBarActivity implements
 		return super.onOptionsItemSelected(item);
 	}
 
+	public void onResume() {
+		super.onResume();
+		userData = StorageHelper.PreferencesHelper
+				.getUserData(this, identifier);
+	}
+
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
@@ -161,8 +167,7 @@ public class WelcomeActivity extends ActionBarActivity implements
 		String currentTimeZone = TimeZone.getDefault().getID();
 		DateTime startDate = new DateTime(this.startDate,
 				DateTimeZone.forID(currentTimeZone));
-		DateTime endDate = new DateTime(this.endDate,
-				DateTimeZone.forID(currentTimeZone));
+
 		String identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
 
 		String dates = "";
@@ -215,8 +220,6 @@ public class WelcomeActivity extends ActionBarActivity implements
 		// Gson userDataGson = new GsonBuilder().setPrettyPrinting().create();
 		// String userDataString = userDataGson.toJson(userData);
 
-		DebugHelper.ShowMessage.d(requestJSON.toString());
-
 		if (NetworkHelper.Utilities.isConnected(this)) {
 			UserDataWebAPITask udwTask = new UserDataWebAPITask(
 					WelcomeActivity.this);
@@ -258,7 +261,8 @@ public class WelcomeActivity extends ActionBarActivity implements
 
 	@Override
 	public void postAsyncTaskCallback(String result) {
-		String identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
+		// String identifier =
+		// StorageHelper.PreferencesHelper.getIdentifier(this);
 		DateTime startDate = new DateTime(this.startDate);
 		int currentDay = 0;
 
@@ -268,8 +272,8 @@ public class WelcomeActivity extends ActionBarActivity implements
 			responseJSON = new JSONObject(result);
 
 			if (responseJSON.has("user") == true) {
-				DebugHelper.ShowMessage.d(responseJSON.getString("dates")
-						.toString());
+				// DebugHelper.ShowMessage.d(responseJSON.getString("dates")
+				// .toString());
 				JSONArray dates = new JSONArray(responseJSON.getString("dates"));
 				for (int i = 0; i < dates.length(); i++) {
 					DateTime date = new DateTime(dates.get(i));
@@ -281,8 +285,8 @@ public class WelcomeActivity extends ActionBarActivity implements
 				this.needsAccommodation = responseJSON
 						.getBoolean("accommodation");
 				this.needsPickup = responseJSON.getBoolean("pickup");
-				DebugHelper.ShowMessage.d(responseJSON.getString("dates")
-						.toString());
+				// DebugHelper.ShowMessage.d(responseJSON.getString("dates")
+				// .toString());
 			}
 		} catch (JSONException e) {
 			DebugHelper.ShowMessage.t(this,
