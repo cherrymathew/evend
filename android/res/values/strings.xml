@@ -9,7 +9,7 @@
     <string name="title_activity_startup">Startup</string>
     <string name="title_activity_welcome">WelcomeActivity</string>
     <string name="title_activity_talks">TalksActivity</string>
-    <string name="server_url">http://192.168.1.103:3000/</string>
+    <string name="server_url">http://192.168.1.107:3000/</string>
     
     <string-array name="CountryCodes">
         <item>93,AF</item>
