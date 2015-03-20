@@ -1,5 +1,7 @@
 package foo.fruitfox.evend;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -18,7 +20,14 @@ import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.fatboyindustrial.gsonjodatime.Converters;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import foo.fruitfox.data.TalkData;
 import foo.fruitfox.data.UserData;
+import foo.fruitfox.data.UserOauthData;
 import foo.fruitfox.helpers.DebugHelper;
 import foo.fruitfox.helpers.NetworkHelper;
 import foo.fruitfox.helpers.StorageHelper;
@@ -115,16 +124,31 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void getUserData(View view) {
-		UserData ud = null;
-		ud = StorageHelper.PreferencesHelper.getUserData(this,
-				"df6c2711-2ac1-4251-aa9f-9c7f797e4c8b");
+		UserData userData = new UserData("email", "a@b.com");
+		UserOauthData userOauthData = new UserOauthData("Provider",
+				"AccessToken", "a@b.com");
+		List<TalkData> talksList = new ArrayList<TalkData>();
 
-		if (ud == null) {
-			DebugHelper.ShowMessage.t(this, "No Data Present");
-		} else {
-			DebugHelper.ShowMessage.t(this, "Data Present");
-			DebugHelper.ShowMessage.d(ud.getEmail() + "\n" + ud.getPhone());
+		for (int i = 0; i < 1; i++) {
+			TalkData talkData = new TalkData("Tile " + i, "2015-09-" + (i + 1));
+			talksList.add(talkData);
 		}
+
+		userData.setAuthToken("diIfbxEhdgOxL1OkG1GhWzjNnuKVrUyxF20EfVYqxbOQZfUd5uqM8pWreQOpto");
+		userData.setOauthData(userOauthData);
+		userData.setTalkDataList(talksList);
+
+		// Gson gson = new Gson();
+		Gson gson = Converters.registerDateTime(new GsonBuilder()).create();
+		String data = gson.toJson(userData);
+
+		DebugHelper.ShowMessage.d(data);
+
+		UserData restoredData;
+
+		restoredData = gson.fromJson(data.toString(), UserData.class);
+
+		DebugHelper.ShowMessage.d(restoredData.getAuthToken());
 	}
 
 	public void httpPost(View view) {
