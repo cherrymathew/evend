@@ -95,6 +95,10 @@ public class UserData {
 		this.lastName = lastName;
 	}
 
+	/**
+	 * 
+	 * @return Always returns FirstName + " " + LastName
+	 */
 	public String getFullName() {
 		return this.firstName + " " + this.lastName;
 	}
