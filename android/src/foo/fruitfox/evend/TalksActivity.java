@@ -131,12 +131,8 @@ public class TalksActivity extends ActionBarActivity implements
 			talkTitle.setTag(null);
 
 			if (talkTitleText.length() > 0 && talkDateText.length() > 0) {
-				String date = talkDateText.split("-")[2] + "-"
-						+ talkDateText.split("-")[1] + "-"
-						+ talkDateText.split("-")[0];
-
 				talksList.get(position).setTitle(talkTitleText);
-				talksList.get(position).setDate(date);
+				talksList.get(position).setDate("dd-MM-yyyy", talkDateText);
 
 				ta.notifyDataSetChanged();
 
