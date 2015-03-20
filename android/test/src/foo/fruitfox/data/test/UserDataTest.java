@@ -32,6 +32,7 @@ public class UserDataTest extends TestCase {
 		assertFalse(testUserData.getHasTalk());
 		assertFalse(testUserData.getHasOauth());
 		assertFalse(testUserData.getIsVerified());
+		assertEquals(testUserData.getTalkDataList().size(), 0);
 	}
 
 	public void testUserDataConstrutor2() {
@@ -45,6 +46,7 @@ public class UserDataTest extends TestCase {
 		assertFalse(testUserData.getHasTalk());
 		assertFalse(testUserData.getHasOauth());
 		assertFalse(testUserData.getIsVerified());
+		assertEquals(testUserData.getTalkDataList().size(), 0);
 	}
 
 	public void testUserDataConstructor3() {
@@ -197,7 +199,7 @@ public class UserDataTest extends TestCase {
 	}
 
 	public void testUserDataMemberTalkData() {
-		TalkData talkData = new TalkData("Talk Title", "Edit Link", "View Link");
+		TalkData talkData = new TalkData("Talk Title");
 		List<TalkData> talkDataList = new ArrayList<TalkData>();
 		TalkData userTalkData = null;
 		List<TalkData> userTalkDataList = null;
@@ -212,9 +214,5 @@ public class UserDataTest extends TestCase {
 				userTalkDataList.size());
 		assertEquals("title values did not match", talkData.getTitle(),
 				userTalkData.getTitle());
-		assertEquals("Edit link values did not match", talkData.getEditLink(),
-				userTalkData.getEditLink());
-		assertEquals("View link values did not match", talkData.getViewLink(),
-				userTalkData.getViewLink());
 	}
 }
