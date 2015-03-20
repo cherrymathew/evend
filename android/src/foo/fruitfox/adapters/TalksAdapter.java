@@ -1,12 +1,13 @@
 package foo.fruitfox.adapters;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 import foo.fruitfox.data.TalkData;
 import foo.fruitfox.evend.R;
@@ -14,28 +15,28 @@ import foo.fruitfox.evend.R;
 public class TalksAdapter extends BaseAdapter {
 
 	private Context context;
-	private ArrayList<TalkData> talks;
+	private List<TalkData> talkList;
 
 	public static class ViewHolder {
-		public TextView sessionName;
-		public String editLink;
-		public String viewLink;
+		public TextView talkTitle;
+		public TextView talkDate;
+		public Button removeTalk;
 	}
 
-	public TalksAdapter(Context context, ArrayList<TalkData> talks) {
+	public TalksAdapter(Context context, List<TalkData> talkList) {
 		super();
 		this.context = context;
-		this.talks = talks;
+		this.talkList = talkList;
 	}
 
 	@Override
 	public int getCount() {
-		return talks.size();
+		return talkList.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return talks.get(position);
+		return talkList.get(position);
 	}
 
 	@Override
@@ -45,29 +46,50 @@ public class TalksAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View sessionView = convertView;
+		View talkDataRow = convertView;
 
-		if (sessionView == null) {
+		if (talkDataRow == null) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			sessionView = inflater.inflate(R.layout.talk_single_row, parent,
+			talkDataRow = inflater.inflate(R.layout.talk_single_row, parent,
 					false);
 
 			ViewHolder viewHolder = new ViewHolder();
-			viewHolder.sessionName = (TextView) sessionView
-					.findViewById(R.id.talkText);
-			viewHolder.sessionName.setText(talks.get(position).getTitle());
-			viewHolder.editLink = talks.get(position).getEditLink();
-			viewHolder.viewLink = talks.get(position).getViewLink();
-			sessionView.setTag(viewHolder);
+
+			viewHolder.talkTitle = (TextView) talkDataRow
+					.findViewById(R.id.talkTitle);
+			viewHolder.talkDate = (TextView) talkDataRow
+					.findViewById(R.id.talkDate);
+			viewHolder.removeTalk = (Button) talkDataRow
+					.findViewById(R.id.removetTalk);
+
+			viewHolder.talkTitle.setText(talkList.get(position).getTitle());
+
+			viewHolder.talkDate.setText(talkList.get(position).getDate(
+					"dd-MM-yyyy"));
+			// viewHolder.talkDate
+			// .setOnFocusChangeListener((OnFocusChangeListener) context);
+			// viewHolder.talkDate.setOnClickListener((OnClickListener)
+			// context);
+
+			talkDataRow.setTag(viewHolder);
 		} else {
-			ViewHolder viewHolder = (ViewHolder) sessionView.getTag();
-			viewHolder.sessionName.setText(talks.get(position).getTitle());
-			viewHolder.editLink = talks.get(position).getEditLink();
-			viewHolder.viewLink = talks.get(position).getViewLink();
+			ViewHolder viewHolder = (ViewHolder) talkDataRow.getTag();
+
+			viewHolder.talkTitle.setText(talkList.get(position).getTitle());
+			// viewHolder.talkTitle
+			// .setOnFocusChangeListener((OnFocusChangeListener) context);
+			// viewHolder.talkTitle.setOnClickListener((OnClickListener)
+			// context);
+
+			viewHolder.talkDate.setText(talkList.get(position).getDate(
+					"dd-MM-yyyy"));
+			// viewHolder.talkDate
+			// .setOnFocusChangeListener((OnFocusChangeListener) context);
+			// viewHolder.talkDate.setOnClickListener((OnClickListener)
+			// context);
 		}
 
-		return sessionView;
+		return talkDataRow;
 	}
-
 }
