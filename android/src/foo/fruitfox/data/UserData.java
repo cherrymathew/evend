@@ -1,5 +1,6 @@
 package foo.fruitfox.data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserData {
@@ -35,6 +36,7 @@ public class UserData {
 		this.hasTalk = false;
 		this.hasOauth = false;
 		this.isVerified = false;
+		this.talkDataList = new ArrayList<TalkData>();
 	}
 
 	public UserData(String oauthProvider, String oauthAccessToken,
@@ -50,6 +52,7 @@ public class UserData {
 		this.hasTalk = false;
 		this.hasOauth = true;
 		this.isVerified = false;
+		this.talkDataList = new ArrayList<TalkData>();
 	}
 
 	public String getEmail() {
