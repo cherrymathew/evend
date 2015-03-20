@@ -14,25 +14,62 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
         android:text="Participate"
-        android:textSize="20dp" />
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:id="@+id/addTalkLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/participateHeader"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/talkTitleEdit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.6"
+            android:hint="Talk Title"
+            android:inputType="text"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/talkDateEdit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4"
+            android:ems="10"
+            android:hint="Talk Date"
+            android:inputType="date"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/addTalk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="28dp"
+            android:minWidth="48dp"
+            android:onClick="addTalk"
+            android:text="+"
+            android:textSize="12sp" />
+    </LinearLayout>
 
     <ListView
         android:id="@+id/talksList"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_above="@+id/addTalk"
-        android:layout_below="@+id/participateHeader"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="29dp" >
-    </ListView>
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/next"
+        android:layout_below="@+id/addTalkLayout"
+        android:layout_marginTop="10dp" />
 
     <Button
-        android:id="@+id/addTalk"
+        android:id="@+id/next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/talksList"
-        android:text="Add Talk" />
+        android:onClick="next"
+        android:text="Next" />
 
 </RelativeLayout>

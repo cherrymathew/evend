@@ -1,41 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="horizontal" >
 
     <TextView
-        android:id="@+id/talkText"
-        android:layout_width="wrap_content"
+        android:id="@+id/talkTitle"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/editTalk"
-        android:layout_alignBottom="@+id/editTalk"
-        android:layout_alignParentLeft="true"
+        android:layout_weight="0.6"
         android:text="Talk Name"
         android:textSize="15sp" />
 
+    <TextView
+        android:id="@+id/talkDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.4"
+        android:ems="10"
+        android:text="Talk Date"
+        android:textSize="15sp" />
+
     <Button
-        android:id="@+id/editTalk"
+        android:id="@+id/removetTalk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/viewTalk"
         android:minHeight="28dp"
         android:minWidth="48dp"
-        android:text="Edit"
+        android:onClick="talkRemove"
+        android:text="X"
         android:textSize="12sp" 
-        android:onClick="talkEdit" />
+        android:focusable="false"/>
 
-    <Button
-        android:id="@+id/viewTalk"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:minHeight="28dp"
-        android:minWidth="48dp"
-        android:text="View"
-        android:textSize="12sp"
-        android:onClick="talkView" />
-
-</RelativeLayout>
+</LinearLayout>
