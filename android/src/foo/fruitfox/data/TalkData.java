@@ -4,6 +4,8 @@ import java.util.TimeZone;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 public class TalkData {
 
@@ -16,11 +18,23 @@ public class TalkData {
 	private String editLink;
 	private String viewLink;
 
-	public TalkData(String title, String editLink, String viewLink) {
+	public TalkData(String title, String date) {
 		super();
+		String currentTimeZone = TimeZone.getDefault().getID();
+
 		this.title = title;
-		this.editLink = editLink;
-		this.viewLink = viewLink;
+		this.date = new DateTime(date, DateTimeZone.forID(currentTimeZone));
+	}
+
+	public TalkData(String title) {
+		super();
+
+		this.title = title;
+	}
+
+	public TalkData() {
+		super();
+		this.title = "";
 	}
 
 	public String getTitle() {
@@ -40,7 +54,18 @@ public class TalkData {
 	}
 
 	public DateTime getDate() {
-		return date;
+		return this.date;
+	}
+
+	public String getDate(String pattern) {
+		String dateString = "";
+
+		if (this.date != null) {
+			DateTimeFormatter dtf = DateTimeFormat.forPattern(pattern);
+			dateString = dtf.print(this.date);
+		}
+
+		return dateString;
 	}
 
 	public void setDate(DateTime date) {
