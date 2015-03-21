@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import foo.fruitfox.helpers.DebugHelper;
 import foo.fruitfox.helpers.NetworkHelper;
 
-public class UserDataWebAPITask extends AsyncTask<String, Integer, String> {
+public class UserDataWebAPITask extends AsyncTask<String, Integer, String[]> {
 	private ProgressDialog progDialog;
 	private Context context;
 	private Activity activity;
@@ -37,8 +37,8 @@ public class UserDataWebAPITask extends AsyncTask<String, Integer, String> {
 	}
 
 	@Override
-	protected String doInBackground(String... params) {
-		String result = "";
+	protected String[] doInBackground(String... params) {
+		String[] result = new String[2];
 
 		if (params[0] == "GET") {
 			result = NetworkHelper.Utilities.HTTPGet(params[1]);
@@ -50,15 +50,18 @@ public class UserDataWebAPITask extends AsyncTask<String, Integer, String> {
 	}
 
 	@Override
-	protected void onPostExecute(String result) {
+	protected void onPostExecute(String[] result) {
+		String response = result[1];
+		String responseCode = result[0];
+
 		progDialog.dismiss();
-		if (result.length() == 0) {
+		if (response.length() == 0) {
 			DebugHelper.ShowMessage
 					.t(context,
 							"There was an error processing your request. Please try again later.");
 			return;
 		} else {
-			ar.postAsyncTaskCallback(result);
+			ar.postAsyncTaskCallback(response);
 			return;
 		}
 

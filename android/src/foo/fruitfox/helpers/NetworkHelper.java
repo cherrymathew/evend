@@ -24,22 +24,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
-/**
- * @author Fox
- * 
- */
 public final class NetworkHelper {
 	public static class Utilities {
-		/**
-		 * 
-		 * @param c
-		 *            Context of the activity
-		 * @return
-		 */
-		public static boolean isConnected(Context c) {
-			ConnectivityManager connMgr = (ConnectivityManager) c
+		public static final int RESPONSE_CODE = 0;
+		public static final int RESPONSE_JSON = 1;
+
+		public static boolean isConnected(Context context) {
+			ConnectivityManager connMgr = (ConnectivityManager) context
 					.getSystemService(Activity.CONNECTIVITY_SERVICE);
 			NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 			if (networkInfo != null && networkInfo.isConnected()) {
@@ -50,57 +42,74 @@ public final class NetworkHelper {
 		}
 
 		/**
-		 * 
 		 * @param url
-		 *            A URL to get the Data from
-		 * @return
+		 *            to GET the Data from
+		 * 
+		 * @return The response HTTP Response Code and the JSON String in
+		 *         position {@link RESPONSE_CODE} and {@link RESPONSE_JSON}
+		 *         respectively of resultant String[].
 		 */
-		public static String HTTPGet(String url) {
+		public static String[] HTTPGet(String url) {
+			final int TIMEOUT = 15000;
 			InputStream inputStream = null;
-			String result = "";
+			String response = "";
+			String responseCode = "";
+			String[] result = new String[2];
 
-			DebugHelper.ShowMessage.d(url);
 			try {
 				HttpParams httpParams = new BasicHttpParams();
-				HttpConnectionParams.setConnectionTimeout(httpParams, 15000);
+				HttpConnectionParams.setConnectionTimeout(httpParams, TIMEOUT);
 
-				// create HttpClient
 				HttpClient httpclient = new DefaultHttpClient(httpParams);
 
-				// make GET request to the given URL
 				HttpResponse httpResponse = httpclient
 						.execute(new HttpGet(url));
 
-				int httpReponseCode = httpResponse.getStatusLine()
-						.getStatusCode();
+				responseCode += httpResponse.getStatusLine().getStatusCode();
 
-				DebugHelper.ShowMessage.d(String.valueOf(httpReponseCode));
-
-				// receive response as inputStream
+				// Receive response as inputStream
 				inputStream = httpResponse.getEntity().getContent();
 
-				// convert inputStream to string
-				if (inputStream != null)
-					result = convertInputStreamToString(inputStream);
-				else
-					result = "Did not work!";
+				// Convert inputStream to string
+				if (inputStream != null) {
+					response = convertInputStreamToString(inputStream);
+				} else {
+					response = "{\"error\" : \"Connection Failure\"}";
+				}
 
 			} catch (Exception e) {
-				Log.d("InputStream", e.getLocalizedMessage());
+				DebugHelper.ShowMessage.d("InputStream",
+						e.getLocalizedMessage());
 			}
+
+			result[0] = responseCode;
+			result[1] = response;
 
 			return result;
 		}
 
-		public static String HTTPPost(String url, String data) {
+		/**
+		 * 
+		 * @param url
+		 *            to POST the Data to
+		 * @param data
+		 *            contains the data to be posted in form of a String, this
+		 *            is not a generic POST we only post JSON Data.
+		 * @return The response HTTP Response Code and the JSON String in
+		 *         position {@link RESPONSE_CODE} and {@link RESPONSE_JSON}
+		 *         respectively of resultant String[].
+		 */
+		public static String[] HTTPPost(String url, String data) {
+			final int TIMEOUT = 15000;
 			InputStream inputStream = null;
-			String result = "";
+			String response = "";
+			String responseCode = "";
+			String[] result = new String[2];
 
 			try {
 				HttpParams httpParams = new BasicHttpParams();
-				HttpConnectionParams.setConnectionTimeout(httpParams, 15000);
+				HttpConnectionParams.setConnectionTimeout(httpParams, TIMEOUT);
 
-				// create HttpClient
 				HttpClient httpclient = new DefaultHttpClient(httpParams);
 
 				HttpPost httpPostRequest = new HttpPost(url);
@@ -112,35 +121,33 @@ public final class NetworkHelper {
 						"application/json;charset=UTF-8"));
 				httpPostRequest.setEntity(se);
 
-				// make POST request to the given URL
 				HttpResponse httpResponse = httpclient.execute(httpPostRequest);
 
-				int httpReponseCode = httpResponse.getStatusLine()
-						.getStatusCode();
+				responseCode += httpResponse.getStatusLine().getStatusCode();
 
-				DebugHelper.ShowMessage.d(String.valueOf(httpReponseCode));
-
-				// receive response as inputStream
+				// Receive response as inputStream
 				inputStream = httpResponse.getEntity().getContent();
 
-				// convert inputStream to string
-				if (inputStream != null)
-					result = convertInputStreamToString(inputStream);
-				else
-					result = "Did not work!";
+				// Convert inputStream to string
+				if (inputStream != null) {
+					response = convertInputStreamToString(inputStream);
+				} else {
+					response = "{\"error\" : \"Connection Failure\"}";
+				}
 
 			} catch (Exception e) {
-				Log.d("InputStream", e.getLocalizedMessage());
+				DebugHelper.ShowMessage.d("InputStream",
+						e.getLocalizedMessage());
 			}
+
+			result[0] = responseCode;
+			result[1] = response;
 
 			return result;
 		}
 
 		/**
-		 * 
-		 * @param inputStream
-		 * @return
-		 * @throws IOException
+		 * Converts the inputStream to a proper response in String format
 		 */
 		private static String convertInputStreamToString(InputStream inputStream)
 				throws IOException {
