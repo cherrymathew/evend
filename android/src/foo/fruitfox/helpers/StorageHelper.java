@@ -10,33 +10,41 @@ import com.google.gson.GsonBuilder;
 import foo.fruitfox.data.UserData;
 
 public final class StorageHelper {
-	/**
-	 * @author Fox
-	 * 
-	 */
 	public static class PreferencesHelper {
+
 		/**
-		 * @param c
-		 * @param GUID
-		 * @return
+		 * @param context
+		 *            of the running activity
+		 * @param identifier
+		 *            is the id used by the system to uniquely identify the user
+		 *            within the system
+		 * @return The UserData object is returned if found else a null is
+		 *         returned
 		 */
-		public static UserData getUserData(Context c, String GUID) {
+		public static UserData getUserData(Context context, String identifier) {
 			Gson gson = Converters.registerDateTime(new GsonBuilder()).create();
 
-			UserData ud = null;
-			SharedPreferences sp = c.getSharedPreferences("UserData",
+			UserData userData = null;
+			SharedPreferences sp = context.getSharedPreferences("UserData",
 					Context.MODE_PRIVATE);
-			String value = sp.getString(GUID, null);
+			String value = sp.getString(identifier, null);
 
 			if (value != null) {
-				ud = gson.fromJson(value.toString(), UserData.class);
+				userData = gson.fromJson(value.toString(), UserData.class);
 			}
 
-			return ud;
+			return userData;
 		}
 
-		public static String getIdentifier(Context c) {
-			SharedPreferences sp = c.getSharedPreferences("UserData",
+		/**
+		 * 
+		 * @param context
+		 *            of the running activity
+		 * @return The identifier that uniquely identifies the user within the
+		 *         system
+		 */
+		public static String getIdentifier(Context context) {
+			SharedPreferences sp = context.getSharedPreferences("UserData",
 					Context.MODE_PRIVATE);
 			String value = sp.getString("identifier", null);
 
@@ -44,23 +52,36 @@ public final class StorageHelper {
 		}
 
 		/**
-		 * @param c
-		 * @param GUID
-		 * @param ud
+		 * @param context
+		 *            of the running activity.
+		 * @param identifer
+		 *            is the id used by the system to uniquely identify the user
+		 *            within the system.
+		 * @param userData
+		 *            The UserData object that is going to be stored in the
+		 *            SharedPreferences.
 		 */
-		public static void setUserData(Context c, String GUID, UserData ud) {
+		public static void setUserData(Context context, String identifer,
+				UserData userData) {
 			Gson gson = Converters.registerDateTime(new GsonBuilder()).create();
-			SharedPreferences sp = c.getSharedPreferences("UserData",
+			SharedPreferences sp = context.getSharedPreferences("UserData",
 					Context.MODE_PRIVATE);
 			SharedPreferences.Editor editor = sp.edit();
-			String value = gson.toJson(ud);
+			String value = gson.toJson(userData);
 
-			editor.putString(GUID, value);
+			editor.putString(identifer, value);
 			editor.commit();
 		}
 
-		public static void setIdentifier(Context c, String identifier) {
-			SharedPreferences sp = c.getSharedPreferences("UserData",
+		/**
+		 * @param context
+		 *            of the running activity.
+		 * @param identifier
+		 *            is the id used by the system to uniquely identify the user
+		 *            within the system.
+		 */
+		public static void setIdentifier(Context context, String identifier) {
+			SharedPreferences sp = context.getSharedPreferences("UserData",
 					Context.MODE_PRIVATE);
 			SharedPreferences.Editor editor = sp.edit();
 
@@ -68,8 +89,12 @@ public final class StorageHelper {
 			editor.commit();
 		}
 
-		public static void clearAllData(Context c) {
-			SharedPreferences sp = c.getSharedPreferences("UserData",
+		/**
+		 * @param context
+		 *            of the running activity.
+		 */
+		public static void clearAllUserData(Context context) {
+			SharedPreferences sp = context.getSharedPreferences("UserData",
 					Context.MODE_PRIVATE);
 			SharedPreferences.Editor editor = sp.edit();
 
