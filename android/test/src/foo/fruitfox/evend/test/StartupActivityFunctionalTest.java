@@ -106,7 +106,7 @@ public class StartupActivityFunctionalTest extends
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		Context context = getInstrumentation().getTargetContext();
-		StorageHelper.PreferencesHelper.clearAllData(context);
+		StorageHelper.PreferencesHelper.clearAllUserData(context);
 
 		if (currentIdentifier != null) {
 			StorageHelper.PreferencesHelper.setIdentifier(context,

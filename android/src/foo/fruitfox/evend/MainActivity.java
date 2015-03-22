@@ -119,7 +119,7 @@ public class MainActivity extends ActionBarActivity {
 		// UserData ud = new UserData("abc@def.com", "9876543210", "ABC123",
 		// "df6c2711-2ac1-4251-aa9f-9c7f797e4c8b");
 		// StorageHelper.PreferencesHelper.setUserData(this, ud.getGUID(), ud);
-		StorageHelper.PreferencesHelper.clearAllData(this);
+		StorageHelper.PreferencesHelper.clearAllUserData(this);
 		DebugHelper.ShowMessage.t(this, "Cleared the User Data");
 	}
 
