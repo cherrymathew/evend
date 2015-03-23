@@ -35,7 +35,7 @@ public class TalksAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public Object getItem(int position) {
+	public TalkData getItem(int position) {
 		return talkList.get(position);
 	}
 
@@ -61,33 +61,19 @@ public class TalksAdapter extends BaseAdapter {
 			viewHolder.talkDate = (TextView) talkDataRow
 					.findViewById(R.id.talkDate);
 			viewHolder.removeTalk = (Button) talkDataRow
-					.findViewById(R.id.removetTalk);
+					.findViewById(R.id.removeTalk);
 
 			viewHolder.talkTitle.setText(talkList.get(position).getTitle());
-
 			viewHolder.talkDate.setText(talkList.get(position).getDate(
 					"dd-MM-yyyy"));
-			// viewHolder.talkDate
-			// .setOnFocusChangeListener((OnFocusChangeListener) context);
-			// viewHolder.talkDate.setOnClickListener((OnClickListener)
-			// context);
 
 			talkDataRow.setTag(viewHolder);
 		} else {
 			ViewHolder viewHolder = (ViewHolder) talkDataRow.getTag();
 
 			viewHolder.talkTitle.setText(talkList.get(position).getTitle());
-			// viewHolder.talkTitle
-			// .setOnFocusChangeListener((OnFocusChangeListener) context);
-			// viewHolder.talkTitle.setOnClickListener((OnClickListener)
-			// context);
-
 			viewHolder.talkDate.setText(talkList.get(position).getDate(
 					"dd-MM-yyyy"));
-			// viewHolder.talkDate
-			// .setOnFocusChangeListener((OnFocusChangeListener) context);
-			// viewHolder.talkDate.setOnClickListener((OnClickListener)
-			// context);
 		}
 
 		return talkDataRow;
