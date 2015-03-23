@@ -13,22 +13,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import foo.fruitfox.data.UserData;
 import foo.fruitfox.evend.R;
-import foo.fruitfox.helpers.StorageHelper;
 
 public class EventCalendarAdapter extends BaseAdapter {
 
 	private Context context;
 	private DateTime startDate;
 	private DateTime endDate;
+	private Boolean[] eventDays;
 
 	static class ViewHolder {
 		public TextView dayText;
 	}
 
 	public EventCalendarAdapter(Context context, String startDate,
-			String endDate) {
+			String endDate, Boolean[] eventDays) {
 		super();
 		String currentTimeZone = TimeZone.getDefault().getID();
 
@@ -37,6 +36,7 @@ public class EventCalendarAdapter extends BaseAdapter {
 				DateTimeZone.forID(currentTimeZone));
 		this.endDate = new DateTime(endDate,
 				DateTimeZone.forID(currentTimeZone));
+		this.eventDays = eventDays;
 	}
 
 	@Override
@@ -47,8 +47,8 @@ public class EventCalendarAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public Object getItem(int position) {
-		return startDate.plus(position);
+	public DateTime getItem(int position) {
+		return startDate.plusDays(position);
 	}
 
 	@Override
@@ -59,11 +59,6 @@ public class EventCalendarAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View dayView = convertView;
-		String identifier = StorageHelper.PreferencesHelper
-				.getIdentifier(this.context);
-		UserData userData = StorageHelper.PreferencesHelper.getUserData(
-				this.context, identifier);
-		Boolean[] eventDays = userData.getEventDaysAttending();
 
 		if (dayView == null) {
 			LayoutInflater inflater = (LayoutInflater) context
