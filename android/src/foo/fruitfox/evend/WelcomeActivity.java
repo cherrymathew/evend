@@ -38,6 +38,7 @@ public class WelcomeActivity extends ActionBarActivity implements
 	GridView eventCalendarGrid;
 	CheckBox accommodationCheck;
 	CheckBox pickupCheck;
+	EventCalendarAdapter eca;
 
 	Boolean[] eventDays = null;
 	Boolean needsAccommodation = false;
@@ -58,30 +59,17 @@ public class WelcomeActivity extends ActionBarActivity implements
 		pickupCheck = (CheckBox) findViewById(R.id.pickupCheck);
 		eventCalendarGrid = (GridView) findViewById(R.id.eventCalendarGrid);
 
-		accommodationCheck.setOnCheckedChangeListener(this);
-		pickupCheck.setOnCheckedChangeListener(this);
-		EventCalendarAdapter eca = new EventCalendarAdapter(this, startDate,
-				endDate);
-
 		identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
 		userData = StorageHelper.PreferencesHelper
 				.getUserData(this, identifier);
 
-		if (userData.getEventDaysAttending() != null) {
-			this.eventDays = userData.getEventDaysAttending();
-		} else {
-			eventDays = new Boolean[eca.getCount()];
-			java.util.Arrays.fill(eventDays, false);
-			userData.setEventDaysAttending(eventDays);
-			StorageHelper.PreferencesHelper.setUserData(this, identifier,
-					userData);
-		}
+		initializeLayout();
 
-		eventCalendarGrid.setAdapter(eca);
-		eventCalendarGrid.setOnItemClickListener(this);
+		initializeListeners();
 
-		getEventDaysUpdate(userData);
-		setLayout(userData);
+		initalizeAdapter();
+
+		getEventDaysUpdate();
 	}
 
 	@Override
@@ -144,6 +132,8 @@ public class WelcomeActivity extends ActionBarActivity implements
 			dateText.setBackgroundColor(Color.GREEN);
 			eventDays[position] = true;
 		}
+
+		eca.notifyDataSetChanged();
 	}
 
 	@Override
@@ -167,8 +157,6 @@ public class WelcomeActivity extends ActionBarActivity implements
 		String currentTimeZone = TimeZone.getDefault().getID();
 		DateTime startDate = new DateTime(this.startDate,
 				DateTimeZone.forID(currentTimeZone));
-
-		String identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
 
 		String dates = "";
 
@@ -217,9 +205,6 @@ public class WelcomeActivity extends ActionBarActivity implements
 			e.printStackTrace();
 		}
 
-		// Gson userDataGson = new GsonBuilder().setPrettyPrinting().create();
-		// String userDataString = userDataGson.toJson(userData);
-
 		if (NetworkHelper.Utilities.isConnected(this)) {
 			UserDataWebAPITask udwTask = new UserDataWebAPITask(
 					WelcomeActivity.this);
@@ -241,7 +226,9 @@ public class WelcomeActivity extends ActionBarActivity implements
 		startActivity(intent);
 	}
 
-	private void setLayout(UserData userData) {
+	private void initializeLayout() {
+		int daysCount = Days.daysBetween(new DateTime(startDate).toLocalDate(),
+				new DateTime(endDate).toLocalDate()).getDays() + 1;
 		this.needsAccommodation = userData.getNeedsAccommodation();
 		this.needsPickup = userData.getNeedsPickUp();
 
@@ -257,12 +244,20 @@ public class WelcomeActivity extends ActionBarActivity implements
 		if (this.needsPickup == true) {
 			pickupCheck.setChecked(true);
 		}
+
+		if (userData.getEventDaysAttending() != null) {
+			this.eventDays = userData.getEventDaysAttending();
+		} else {
+			eventDays = new Boolean[daysCount];
+			java.util.Arrays.fill(eventDays, false);
+			userData.setEventDaysAttending(eventDays);
+			StorageHelper.PreferencesHelper.setUserData(this, identifier,
+					userData);
+		}
 	}
 
 	@Override
 	public void postAsyncTaskCallback(String result) {
-		// String identifier =
-		// StorageHelper.PreferencesHelper.getIdentifier(this);
 		DateTime startDate = new DateTime(this.startDate);
 		int currentDay = 0;
 
@@ -294,9 +289,8 @@ public class WelcomeActivity extends ActionBarActivity implements
 		}
 	}
 
-	private void getEventDaysUpdate(UserData userData) {
+	private void getEventDaysUpdate() {
 		String token = userData.getAuthToken();
-		String identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
 
 		if (NetworkHelper.Utilities.isConnected(this)) {
 			UserDataWebAPITask udwTask = new UserDataWebAPITask(
@@ -313,5 +307,18 @@ public class WelcomeActivity extends ActionBarActivity implements
 		} else {
 			DebugHelper.ShowMessage.t(this, "Connection error");
 		}
+	}
+
+	private void initializeListeners() {
+		accommodationCheck.setOnCheckedChangeListener(this);
+		pickupCheck.setOnCheckedChangeListener(this);
+
+		eventCalendarGrid.setOnItemClickListener(this);
+	}
+
+	private void initalizeAdapter() {
+		eca = new EventCalendarAdapter(this, startDate, endDate, eventDays);
+
+		eventCalendarGrid.setAdapter(eca);
 	}
 }
