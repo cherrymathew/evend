@@ -1,39 +1,34 @@
 package foo.fruitfox.tasks;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
-import foo.fruitfox.helpers.DebugHelper;
 import foo.fruitfox.helpers.NetworkHelper;
 
 public class UserDataWebAPITask extends AsyncTask<String, Integer, String[]> {
-	private ProgressDialog progDialog;
-	private Context context;
-	private Activity activity;
 	private AsyncResponse ar;
 
 	public interface AsyncResponse {
-		void postAsyncTaskCallback(String result);
+		/**
+		 * 
+		 * @param responseBody
+		 *            is the JSON Response string after a HTTP callback is
+		 *            completed.
+		 * 
+		 * @param responseCode
+		 *            is the HTTP response code of the operation that was just
+		 *            performed.
+		 */
+		void postAsyncTaskCallback(String responseBody, String responseCode);
 	}
 
-	/**
-	 * Construct a task
-	 * 
-	 * @param activity
-	 */
 	public UserDataWebAPITask(Activity activity) {
 		super();
-		this.activity = activity;
-		this.context = this.activity.getApplicationContext();
 		this.ar = (AsyncResponse) activity;
 	}
 
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-		progDialog = ProgressDialog.show(this.activity, "Processing...",
-				"Fetching data", true, false);
 	}
 
 	@Override
@@ -51,19 +46,9 @@ public class UserDataWebAPITask extends AsyncTask<String, Integer, String[]> {
 
 	@Override
 	protected void onPostExecute(String[] result) {
-		String response = result[1];
+		String responseBody = result[1];
 		String responseCode = result[0];
 
-		progDialog.dismiss();
-		if (response.length() == 0) {
-			DebugHelper.ShowMessage
-					.t(context,
-							"There was an error processing your request. Please try again later.");
-			return;
-		} else {
-			ar.postAsyncTaskCallback(response);
-			return;
-		}
-
+		ar.postAsyncTaskCallback(responseBody, responseCode);
 	}
 }

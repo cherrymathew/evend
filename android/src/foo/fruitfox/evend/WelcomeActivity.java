@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -35,20 +36,23 @@ import foo.fruitfox.tasks.UserDataWebAPITask.AsyncResponse;
 public class WelcomeActivity extends ActionBarActivity implements
 		OnItemClickListener, OnCheckedChangeListener, AsyncResponse {
 
-	GridView eventCalendarGrid;
-	CheckBox accommodationCheck;
-	CheckBox pickupCheck;
-	EventCalendarAdapter eca;
+	private GridView eventCalendarGrid;
+	private CheckBox accommodationCheck;
+	private CheckBox pickupCheck;
 
-	Boolean[] eventDays = null;
-	Boolean needsAccommodation = false;
-	Boolean needsPickup = false;
+	private EventCalendarAdapter eca;
 
-	String identifier;
-	UserData userData;
+	private Boolean[] eventDays = null;
+	private Boolean needsAccommodation = false;
+	private Boolean needsPickup = false;
 
-	String startDate = "2015-05-23";
-	String endDate = "2015-06-07";
+	private String identifier;
+	private UserData userData;
+
+	private String startDate = "2015-05-23";
+	private String endDate = "2015-06-07";
+
+	private ProgressDialog progDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -209,11 +213,16 @@ public class WelcomeActivity extends ActionBarActivity implements
 			UserDataWebAPITask udwTask = new UserDataWebAPITask(
 					WelcomeActivity.this);
 			try {
+				progDialog = ProgressDialog.show(this, "Processing...",
+						"Fetching data", true, false);
 				udwTask.execute("POST",
 						getResources().getString(R.string.server_url)
 								+ "users/reservedates", requestJSON.toString());
 
 			} catch (Exception e) {
+				if (progDialog.isShowing()) {
+					progDialog.dismiss();
+				}
 				udwTask.cancel(true);
 			}
 		} else {
@@ -257,35 +266,46 @@ public class WelcomeActivity extends ActionBarActivity implements
 	}
 
 	@Override
-	public void postAsyncTaskCallback(String result) {
+	public void postAsyncTaskCallback(String responseBody, String responseCode) {
 		DateTime startDate = new DateTime(this.startDate);
 		int currentDay = 0;
 
 		JSONObject responseJSON;
 
-		try {
-			responseJSON = new JSONObject(result);
+		if (progDialog.isShowing()) {
+			progDialog.dismiss();
+		}
 
-			if (responseJSON.has("user") == true) {
-				// DebugHelper.ShowMessage.d(responseJSON.getString("dates")
-				// .toString());
-				JSONArray dates = new JSONArray(responseJSON.getString("dates"));
-				for (int i = 0; i < dates.length(); i++) {
-					DateTime date = new DateTime(dates.get(i));
-					currentDay = Days.daysBetween(startDate.toLocalDate(),
-							date.toLocalDate()).getDays();
-					this.eventDays[currentDay] = true;
+		if (responseBody.length() == 0) {
+			DebugHelper.ShowMessage
+					.t(this,
+							"There was an error processing your request. Please try again later.");
+		} else {
+			try {
+				responseJSON = new JSONObject(responseBody);
+
+				if (responseJSON.has("user") == true) {
+					// DebugHelper.ShowMessage.d(responseJSON.getString("dates")
+					// .toString());
+					JSONArray dates = new JSONArray(
+							responseJSON.getString("dates"));
+					for (int i = 0; i < dates.length(); i++) {
+						DateTime date = new DateTime(dates.get(i));
+						currentDay = Days.daysBetween(startDate.toLocalDate(),
+								date.toLocalDate()).getDays();
+						this.eventDays[currentDay] = true;
+					}
+
+					this.needsAccommodation = responseJSON
+							.getBoolean("accommodation");
+					this.needsPickup = responseJSON.getBoolean("pickup");
+					// DebugHelper.ShowMessage.d(responseJSON.getString("dates")
+					// .toString());
 				}
-
-				this.needsAccommodation = responseJSON
-						.getBoolean("accommodation");
-				this.needsPickup = responseJSON.getBoolean("pickup");
-				// DebugHelper.ShowMessage.d(responseJSON.getString("dates")
-				// .toString());
+			} catch (JSONException e) {
+				DebugHelper.ShowMessage.t(this,
+						"An error occured processing the response");
 			}
-		} catch (JSONException e) {
-			DebugHelper.ShowMessage.t(this,
-					"An error occured processing the response");
 		}
 	}
 
@@ -296,12 +316,17 @@ public class WelcomeActivity extends ActionBarActivity implements
 			UserDataWebAPITask udwTask = new UserDataWebAPITask(
 					WelcomeActivity.this);
 			try {
+				progDialog = ProgressDialog.show(this, "Processing...",
+						"Fetching data", true, false);
 				udwTask.execute("GET",
 						getResources().getString(R.string.server_url)
 								+ "users/reservedates?user=" + identifier
 								+ "&hhtoken=" + token);
 
 			} catch (Exception e) {
+				if (progDialog.isShowing()) {
+					progDialog.dismiss();
+				}
 				udwTask.cancel(true);
 			}
 		} else {

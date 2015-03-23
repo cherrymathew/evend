@@ -9,6 +9,7 @@ import java.util.Locale;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,13 +33,17 @@ public class LoginActivity extends ActionBarActivity implements
 		UserDataWebAPITask.AsyncResponse {
 
 	private String registrationType;
+
+	private UserData userData;
+
 	private Button login;
 	private Button register;
 	private EditText username;
 	private TextView usernameLabel;
 	private LinearLayout verificationLayout;
 	private EditText verificationCode;
-	private UserData userData;
+
+	private ProgressDialog progDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -148,11 +153,16 @@ public class LoginActivity extends ActionBarActivity implements
 			UserDataWebAPITask udwTask = new UserDataWebAPITask(
 					LoginActivity.this);
 			try {
+				progDialog = ProgressDialog.show(this, "Processing...",
+						"Fetching data", true, false);
 				udwTask.execute("POST",
 						getResources().getString(R.string.server_url)
 								+ "authenticate", requestJSON.toString());
 
 			} catch (Exception e) {
+				if (progDialog.isShowing()) {
+					progDialog.dismiss();
+				}
 				udwTask.cancel(true);
 			}
 		} else {
@@ -171,12 +181,17 @@ public class LoginActivity extends ActionBarActivity implements
 			UserDataWebAPITask udwTask = new UserDataWebAPITask(
 					LoginActivity.this);
 			try {
+				progDialog = ProgressDialog.show(this, "Processing...",
+						"Fetching data", true, false);
 				udwTask.execute("GET",
 						getResources().getString(R.string.server_url)
 								+ "verify" + "?identifier=" + identifier
 								+ "&code=" + userData.getVerificationCode());
 
 			} catch (Exception e) {
+				if (progDialog.isShowing()) {
+					progDialog.dismiss();
+				}
 				udwTask.cancel(true);
 			}
 
@@ -222,47 +237,56 @@ public class LoginActivity extends ActionBarActivity implements
 	}
 
 	@Override
-	public void postAsyncTaskCallback(String result) {
+	public void postAsyncTaskCallback(String responseBody, String responseCode) {
 		String identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
 		JSONObject responseJSON;
 
-		try {
-			responseJSON = new JSONObject(result);
-
-			if (responseJSON.has("needverfication") == true) {
-				Boolean needVerificationStatus = responseJSON
-						.getBoolean("needverfication");
-				String verifier = "";
-				if (needVerificationStatus == true) {
-					verifier = responseJSON.getJSONObject("user").getString(
-							"verifier");
-					userData.setVerificationCode(verifier);
-				}
-			} else if (responseJSON.has("hhtoken") == true) {
-				DebugHelper.ShowMessage.d("verified");
-
-				login = (Button) findViewById(R.id.login);
-				register = (Button) findViewById(R.id.register);
-				verificationLayout = (LinearLayout) findViewById(R.id.verificationLayout);
-				username = (EditText) findViewById(R.id.username);
-
-				username.setEnabled(false);
-				login.setVisibility(View.VISIBLE);
-				register.setVisibility(View.GONE);
-				verificationLayout.setVisibility(View.GONE);
-
-				userData.setIsVerified(true);
-				userData.setAuthToken(responseJSON.getString("hhtoken"));
-
-			} else if (responseJSON.has("error") == true) {
-				DebugHelper.ShowMessage.t(this,
-						"An error occured processing your request");
-			}
-		} catch (JSONException e) {
-			DebugHelper.ShowMessage.t(this,
-					"An error occured processing the response");
+		if (progDialog.isShowing()) {
+			progDialog.dismiss();
 		}
 
+		if (responseBody.length() == 0) {
+			DebugHelper.ShowMessage
+					.t(this,
+							"There was an error processing your request. Please try again later.");
+		} else {
+			try {
+				responseJSON = new JSONObject(responseBody);
+
+				if (responseJSON.has("needverfication") == true) {
+					Boolean needVerificationStatus = responseJSON
+							.getBoolean("needverfication");
+					String verifier = "";
+					if (needVerificationStatus == true) {
+						verifier = responseJSON.getJSONObject("user")
+								.getString("verifier");
+						userData.setVerificationCode(verifier);
+					}
+				} else if (responseJSON.has("hhtoken") == true) {
+					DebugHelper.ShowMessage.d("verified");
+
+					login = (Button) findViewById(R.id.login);
+					register = (Button) findViewById(R.id.register);
+					verificationLayout = (LinearLayout) findViewById(R.id.verificationLayout);
+					username = (EditText) findViewById(R.id.username);
+
+					username.setEnabled(false);
+					login.setVisibility(View.VISIBLE);
+					register.setVisibility(View.GONE);
+					verificationLayout.setVisibility(View.GONE);
+
+					userData.setIsVerified(true);
+					userData.setAuthToken(responseJSON.getString("hhtoken"));
+
+				} else if (responseJSON.has("error") == true) {
+					DebugHelper.ShowMessage.t(this,
+							"An error occured processing your request");
+				}
+			} catch (JSONException e) {
+				DebugHelper.ShowMessage.t(this,
+						"An error occured processing the response");
+			}
+		}
 		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
 	}
-};
+}
