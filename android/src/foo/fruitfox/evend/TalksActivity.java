@@ -4,8 +4,12 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -28,17 +32,26 @@ import foo.fruitfox.adapters.TalksAdapter;
 import foo.fruitfox.data.TalkData;
 import foo.fruitfox.data.UserData;
 import foo.fruitfox.helpers.DebugHelper;
+import foo.fruitfox.helpers.NetworkHelper;
 import foo.fruitfox.helpers.StorageHelper;
+import foo.fruitfox.tasks.UserDataWebAPITask;
+import foo.fruitfox.tasks.UserDataWebAPITask.AsyncResponseListener;
 
 public class TalksActivity extends ActionBarActivity implements
-		OnFocusChangeListener, OnClickListener, OnItemClickListener {
+		OnFocusChangeListener, OnClickListener, OnItemClickListener,
+		AsyncResponseListener {
 
-	List<TalkData> talksList;
-	ListView talksListView;
-	TalksAdapter ta;
-	Context context;
-	String identifier;
-	UserData userData;
+	private List<TalkData> talksList;
+	private ListView talksListView;
+	private TalksAdapter ta;
+
+	private Context context;
+
+	private UserData userData;
+
+	private String identifier;
+
+	private ProgressDialog progDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -231,6 +244,44 @@ public class TalksActivity extends ActionBarActivity implements
 	}
 
 	public void next(View view) {
+		JSONObject requestJSON = new JSONObject();
+		JSONArray talksJSONArray = new JSONArray();
+
+		try {
+			requestJSON.put("hhtoken", userData.getAuthToken());
+			if (talksList.size() > 0) {
+				for (TalkData talk : talksList) {
+					JSONObject talksJSON = new JSONObject();
+					talksJSON.put("title", talk.getTitle());
+					talksJSON.put("datetime", talk.getDate("yyyy-MM-dd"));
+					talksJSONArray.put(talksJSON);
+				}
+			}
+
+			requestJSON.put("talks", talksJSONArray);
+
+			if (NetworkHelper.Utilities.isConnected(this)) {
+				UserDataWebAPITask udwTask = new UserDataWebAPITask(this, this);
+				try {
+					progDialog = ProgressDialog.show(this, "Processing...",
+							"Fetching data", true, false);
+					udwTask.execute("POST",
+							getResources().getString(R.string.server_url)
+									+ "users/talk/add", requestJSON.toString());
+
+				} catch (Exception e) {
+					if (progDialog.isShowing()) {
+						progDialog.dismiss();
+					}
+					udwTask.cancel(true);
+				}
+			} else {
+				DebugHelper.ShowMessage.t(this, "Connection error");
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		DebugHelper.ShowMessage.t(this, "next");
 	}
 
@@ -270,5 +321,16 @@ public class TalksActivity extends ActionBarActivity implements
 		talkTitle.setText(talkTitleText.getText().toString());
 		talkDate.setText(talkDateText.getText().toString());
 		talkTitle.setTag(position);
+	}
+
+	@Override
+	public void postAsyncTaskCallback(String responseBody, String responseCode) {
+		if (progDialog.isShowing()) {
+			progDialog.dismiss();
+		}
+
+		DebugHelper.ShowMessage.d(responseBody);
+		DebugHelper.ShowMessage.d(responseCode);
+
 	}
 }
