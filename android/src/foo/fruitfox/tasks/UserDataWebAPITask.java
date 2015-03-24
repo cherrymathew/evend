@@ -1,13 +1,13 @@
 package foo.fruitfox.tasks;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import foo.fruitfox.helpers.NetworkHelper;
 
 public class UserDataWebAPITask extends AsyncTask<String, Integer, String[]> {
-	private AsyncResponse ar;
+	private AsyncResponseListener callback;
 
-	public interface AsyncResponse {
+	public interface AsyncResponseListener {
 		/**
 		 * 
 		 * @param responseBody
@@ -21,9 +21,9 @@ public class UserDataWebAPITask extends AsyncTask<String, Integer, String[]> {
 		void postAsyncTaskCallback(String responseBody, String responseCode);
 	}
 
-	public UserDataWebAPITask(Activity activity) {
+	public UserDataWebAPITask(Context context, AsyncResponseListener callback) {
 		super();
-		this.ar = (AsyncResponse) activity;
+		this.callback = callback;
 	}
 
 	@Override
@@ -46,9 +46,10 @@ public class UserDataWebAPITask extends AsyncTask<String, Integer, String[]> {
 
 	@Override
 	protected void onPostExecute(String[] result) {
+		super.onPostExecute(result);
 		String responseBody = result[1];
 		String responseCode = result[0];
 
-		ar.postAsyncTaskCallback(responseBody, responseCode);
+		callback.postAsyncTaskCallback(responseBody, responseCode);
 	}
 }

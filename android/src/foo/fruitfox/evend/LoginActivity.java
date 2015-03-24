@@ -30,7 +30,7 @@ import foo.fruitfox.helpers.StorageHelper;
 import foo.fruitfox.tasks.UserDataWebAPITask;
 
 public class LoginActivity extends ActionBarActivity implements
-		UserDataWebAPITask.AsyncResponse {
+		UserDataWebAPITask.AsyncResponseListener {
 
 	private String registrationType;
 
@@ -150,8 +150,7 @@ public class LoginActivity extends ActionBarActivity implements
 		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
 
 		if (NetworkHelper.Utilities.isConnected(this)) {
-			UserDataWebAPITask udwTask = new UserDataWebAPITask(
-					LoginActivity.this);
+			UserDataWebAPITask udwTask = new UserDataWebAPITask(this, this);
 			try {
 				progDialog = ProgressDialog.show(this, "Processing...",
 						"Fetching data", true, false);
@@ -178,8 +177,7 @@ public class LoginActivity extends ActionBarActivity implements
 
 		if (verificationCode.getText().toString()
 				.equals(userData.getVerificationCode())) {
-			UserDataWebAPITask udwTask = new UserDataWebAPITask(
-					LoginActivity.this);
+			UserDataWebAPITask udwTask = new UserDataWebAPITask(this, this);
 			try {
 				progDialog = ProgressDialog.show(this, "Processing...",
 						"Fetching data", true, false);

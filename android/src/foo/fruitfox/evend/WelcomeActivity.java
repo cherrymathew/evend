@@ -31,10 +31,10 @@ import foo.fruitfox.helpers.DebugHelper;
 import foo.fruitfox.helpers.NetworkHelper;
 import foo.fruitfox.helpers.StorageHelper;
 import foo.fruitfox.tasks.UserDataWebAPITask;
-import foo.fruitfox.tasks.UserDataWebAPITask.AsyncResponse;
+import foo.fruitfox.tasks.UserDataWebAPITask.AsyncResponseListener;
 
 public class WelcomeActivity extends ActionBarActivity implements
-		OnItemClickListener, OnCheckedChangeListener, AsyncResponse {
+		OnItemClickListener, OnCheckedChangeListener, AsyncResponseListener {
 
 	private GridView eventCalendarGrid;
 	private CheckBox accommodationCheck;
@@ -210,8 +210,7 @@ public class WelcomeActivity extends ActionBarActivity implements
 		}
 
 		if (NetworkHelper.Utilities.isConnected(this)) {
-			UserDataWebAPITask udwTask = new UserDataWebAPITask(
-					WelcomeActivity.this);
+			UserDataWebAPITask udwTask = new UserDataWebAPITask(this, this);
 			try {
 				progDialog = ProgressDialog.show(this, "Processing...",
 						"Fetching data", true, false);
@@ -313,8 +312,7 @@ public class WelcomeActivity extends ActionBarActivity implements
 		String token = userData.getAuthToken();
 
 		if (NetworkHelper.Utilities.isConnected(this)) {
-			UserDataWebAPITask udwTask = new UserDataWebAPITask(
-					WelcomeActivity.this);
+			UserDataWebAPITask udwTask = new UserDataWebAPITask(this, this);
 			try {
 				progDialog = ProgressDialog.show(this, "Processing...",
 						"Fetching data", true, false);

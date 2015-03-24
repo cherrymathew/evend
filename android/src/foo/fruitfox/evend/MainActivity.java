@@ -32,8 +32,10 @@ import foo.fruitfox.helpers.DebugHelper;
 import foo.fruitfox.helpers.NetworkHelper;
 import foo.fruitfox.helpers.StorageHelper;
 import foo.fruitfox.tasks.UserDataWebAPITask;
+import foo.fruitfox.tasks.UserDataWebAPITask.AsyncResponseListener;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements
+		AsyncResponseListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +104,7 @@ public class MainActivity extends ActionBarActivity {
 			DebugHelper.ShowMessage.t(this, "You are NOT conncted");
 		}
 
-		UserDataWebAPITask udwTask = new UserDataWebAPITask(MainActivity.this);
+		UserDataWebAPITask udwTask = new UserDataWebAPITask(this, this);
 		try {
 			// udwTask.execute("http://hmkcode.com/examples/index.php");
 			// udwTask.execute("http://rest-service.guides.spring.io/greeting");
@@ -173,7 +175,7 @@ public class MainActivity extends ActionBarActivity {
 			DebugHelper.ShowMessage.t(this, "You are NOT conncted");
 		}
 
-		UserDataWebAPITask udwTask = new UserDataWebAPITask(MainActivity.this);
+		UserDataWebAPITask udwTask = new UserDataWebAPITask(this, this);
 		try {
 			// udwTask.execute("http://hmkcode.com/examples/index.php");
 			// udwTask.execute("http://rest-service.guides.spring.io/greeting");
@@ -198,5 +200,11 @@ public class MainActivity extends ActionBarActivity {
 				DebugHelper.ShowMessage.t(this, possibleEmail);
 			}
 		}
+	}
+
+	@Override
+	public void postAsyncTaskCallback(String responseBody, String responseCode) {
+		// TODO Auto-generated method stub
+
 	}
 }
