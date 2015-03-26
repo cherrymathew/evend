@@ -48,8 +48,9 @@ public class TalksActivity extends ActionBarActivity implements
 	private Context context;
 
 	private UserData userData;
-
 	private String identifier;
+
+	private String serverURL;
 
 	private ProgressDialog progDialog;
 
@@ -62,6 +63,8 @@ public class TalksActivity extends ActionBarActivity implements
 		this.identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
 		this.userData = StorageHelper.PreferencesHelper.getUserData(this,
 				identifier);
+
+		serverURL = getResources().getString(R.string.server_url);
 
 		initalizeAdapter();
 		initializeListeners();
@@ -265,9 +268,8 @@ public class TalksActivity extends ActionBarActivity implements
 				try {
 					progDialog = ProgressDialog.show(this, "Processing...",
 							"Fetching data", true, false);
-					udwTask.execute("POST",
-							getResources().getString(R.string.server_url)
-									+ "users/talk/add", requestJSON.toString());
+					udwTask.execute("POST", serverURL + "users/talk/add",
+							requestJSON.toString());
 
 				} catch (Exception e) {
 					if (progDialog.isShowing()) {
@@ -279,8 +281,8 @@ public class TalksActivity extends ActionBarActivity implements
 				DebugHelper.ShowMessage.t(this, "Connection error");
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			DebugHelper.ShowMessage.t(this,
+					"An error occured processing the response");
 		}
 		DebugHelper.ShowMessage.t(this, "next");
 	}
@@ -331,6 +333,5 @@ public class TalksActivity extends ActionBarActivity implements
 
 		DebugHelper.ShowMessage.d(responseBody);
 		DebugHelper.ShowMessage.d(responseCode);
-
 	}
 }

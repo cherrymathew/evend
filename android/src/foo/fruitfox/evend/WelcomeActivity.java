@@ -52,6 +52,8 @@ public class WelcomeActivity extends ActionBarActivity implements
 	private String startDate = "2015-05-23";
 	private String endDate = "2015-06-07";
 
+	private String serverURL;
+
 	private ProgressDialog progDialog;
 
 	@Override
@@ -66,6 +68,8 @@ public class WelcomeActivity extends ActionBarActivity implements
 		identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
 		userData = StorageHelper.PreferencesHelper
 				.getUserData(this, identifier);
+
+		serverURL = getResources().getString(R.string.server_url);
 
 		initializeLayout();
 
@@ -205,8 +209,8 @@ public class WelcomeActivity extends ActionBarActivity implements
 			requestJSON.put("pickup", userData.getNeedsPickUp() ? "1" : "0");
 			requestJSON.put("seats", "0");
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			DebugHelper.ShowMessage.t(this,
+					"An error occured processing the response");
 		}
 
 		if (NetworkHelper.Utilities.isConnected(this)) {
@@ -214,9 +218,8 @@ public class WelcomeActivity extends ActionBarActivity implements
 			try {
 				progDialog = ProgressDialog.show(this, "Processing...",
 						"Fetching data", true, false);
-				udwTask.execute("POST",
-						getResources().getString(R.string.server_url)
-								+ "users/reservedates", requestJSON.toString());
+				udwTask.execute("POST", serverURL + "users/reservedates",
+						requestJSON.toString());
 
 			} catch (Exception e) {
 				if (progDialog.isShowing()) {
@@ -316,10 +319,8 @@ public class WelcomeActivity extends ActionBarActivity implements
 			try {
 				progDialog = ProgressDialog.show(this, "Processing...",
 						"Fetching data", true, false);
-				udwTask.execute("GET",
-						getResources().getString(R.string.server_url)
-								+ "users/reservedates?user=" + identifier
-								+ "&hhtoken=" + token);
+				udwTask.execute("GET", serverURL + "users/reservedates?user="
+						+ identifier + "&hhtoken=" + token);
 
 			} catch (Exception e) {
 				if (progDialog.isShowing()) {

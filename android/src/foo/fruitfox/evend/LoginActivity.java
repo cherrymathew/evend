@@ -33,14 +33,17 @@ public class LoginActivity extends ActionBarActivity implements
 		UserDataWebAPITask.AsyncResponseListener {
 
 	private String registrationType;
+	private String serverURL;
 
 	private UserData userData;
+	private String identifier;
 
 	private Button login;
 	private Button register;
 	private EditText username;
 	private TextView usernameLabel;
 	private LinearLayout verificationLayout;
+	private LinearLayout activityLayout;
 	private EditText verificationCode;
 
 	private ProgressDialog progDialog;
@@ -52,13 +55,17 @@ public class LoginActivity extends ActionBarActivity implements
 		setContentView(R.layout.activity_login);
 
 		Intent intent = getIntent();
-		registrationType = intent.getStringExtra("type");
 
-		LinearLayout activityLogin = (LinearLayout) findViewById(R.id.activity_login);
-		setLayout(registrationType, activityLogin);
+		this.registrationType = intent.getStringExtra("type");
 
-		verificationLayout = (LinearLayout) findViewById(R.id.verificationLayout);
-		verificationLayout.setVisibility(View.GONE);
+		this.serverURL = getResources().getString(R.string.server_url);
+
+		this.activityLayout = (LinearLayout) findViewById(R.id.activity_login);
+
+		this.verificationLayout = (LinearLayout) findViewById(R.id.verificationLayout);
+		this.verificationLayout.setVisibility(View.GONE);
+
+		initializeLayout();
 
 	}
 
@@ -81,13 +88,13 @@ public class LoginActivity extends ActionBarActivity implements
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void setLayout(String type, LinearLayout activityLayout) {
+	private void initializeLayout() {
 		login = (Button) findViewById(R.id.login);
 		register = (Button) findViewById(R.id.register);
 		username = (EditText) findViewById(R.id.username);
 		usernameLabel = (TextView) findViewById(R.id.usernameLabel);
 
-		switch (type) {
+		switch (registrationType) {
 		case "phone":
 			username.setInputType(InputType.TYPE_CLASS_PHONE);
 			username.setText(getPhoneNumber());
@@ -113,7 +120,7 @@ public class LoginActivity extends ActionBarActivity implements
 		verificationLayout = (LinearLayout) findViewById(R.id.verificationLayout);
 		verificationLayout.setVisibility(View.VISIBLE);
 		username = (EditText) findViewById(R.id.username);
-		String identifier = "";
+		identifier = "";
 
 		JSONObject requestJSON = new JSONObject();
 
@@ -142,8 +149,9 @@ public class LoginActivity extends ActionBarActivity implements
 				break;
 			}
 
-		} catch (JSONException e1) {
-			e1.printStackTrace();
+		} catch (JSONException e) {
+			DebugHelper.ShowMessage.t(this,
+					"An error occured processing the response");
 		}
 
 		StorageHelper.PreferencesHelper.setIdentifier(this, identifier);
@@ -154,9 +162,8 @@ public class LoginActivity extends ActionBarActivity implements
 			try {
 				progDialog = ProgressDialog.show(this, "Processing...",
 						"Fetching data", true, false);
-				udwTask.execute("POST",
-						getResources().getString(R.string.server_url)
-								+ "authenticate", requestJSON.toString());
+				udwTask.execute("POST", serverURL + "authenticate",
+						requestJSON.toString());
 
 			} catch (Exception e) {
 				if (progDialog.isShowing()) {
@@ -170,7 +177,7 @@ public class LoginActivity extends ActionBarActivity implements
 	}
 
 	public void verify(View view) {
-		String identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
+		identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
 		verificationCode = (EditText) findViewById(R.id.verificationCodeText);
 		userData = StorageHelper.PreferencesHelper
 				.getUserData(this, identifier);
@@ -182,8 +189,7 @@ public class LoginActivity extends ActionBarActivity implements
 				progDialog = ProgressDialog.show(this, "Processing...",
 						"Fetching data", true, false);
 				udwTask.execute("GET",
-						getResources().getString(R.string.server_url)
-								+ "verify" + "?identifier=" + identifier
+						serverURL + "verify" + "?identifier=" + identifier
 								+ "&code=" + userData.getVerificationCode());
 
 			} catch (Exception e) {
@@ -236,7 +242,7 @@ public class LoginActivity extends ActionBarActivity implements
 
 	@Override
 	public void postAsyncTaskCallback(String responseBody, String responseCode) {
-		String identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
+		identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
 		JSONObject responseJSON;
 
 		if (progDialog.isShowing()) {
