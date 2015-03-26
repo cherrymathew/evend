@@ -13,8 +13,6 @@ import foo.fruitfox.helpers.StorageHelper;
 public class StartupActivityFunctionalTest extends
 		ActivityInstrumentationTestCase2<StartupActivity> {
 
-	private UserData currentUserData;
-	private String currentIdentifier;
 	private UserData userData;
 	private String identifier;
 	private StartupActivity startupActivity;
