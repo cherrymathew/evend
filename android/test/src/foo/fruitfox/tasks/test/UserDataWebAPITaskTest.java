@@ -81,7 +81,6 @@ public class UserDataWebAPITaskTest extends InstrumentationTestCase implements
 		assertEquals("responseBody is not empty", "", responseBody);
 		assertEquals("responseCode is not empty", "", responseCode);
 
-		// Execute the async task on the UI thread! THIS IS KEY!
 		runTestOnUiThread(new Runnable() {
 			@Override
 			public void run() {
