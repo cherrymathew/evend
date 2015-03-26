@@ -31,19 +31,19 @@ public class StorageHelperTest extends InstrumentationTestCase {
 		Mockito.when(
 				mockContext.getSharedPreferences("UserData",
 						Context.MODE_PRIVATE)).thenReturn(
-				actualContext.getSharedPreferences("UserDataText",
+				actualContext.getSharedPreferences("UserDataTest",
 						Context.MODE_PRIVATE));
 
 	}
 
 	protected void tearDown() throws Exception {
 		SharedPreferences sp = actualContext.getSharedPreferences(
-				"UserDataText", Context.MODE_PRIVATE);
+				"UserDataTest", Context.MODE_PRIVATE);
 
 		sp.edit().clear().commit();
 
 		String filePath = actualContext.getFilesDir().getParent() + "/"
-				+ "shared_prefs/UserDataText.xml";
+				+ "shared_prefs/UserDataTest.xml";
 		File deletePrefFile = new File(filePath);
 		deletePrefFile.delete();
 	}
