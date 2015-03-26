@@ -15,7 +15,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -62,12 +61,6 @@ public class MainActivity extends ActionBarActivity implements
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void buttonNext(View view) {
-		Log.d("EVEND", "Clicked Next");
-		Intent intent = new Intent(this, SecondActivity.class);
-		startActivity(intent);
-	}
-
 	public void showLoginActivity(View view) {
 		Intent intent = new Intent(this, StartupActivity.class);
 		startActivity(intent);
@@ -107,17 +100,17 @@ public class MainActivity extends ActionBarActivity implements
 		UserDataWebAPITask udwTask = new UserDataWebAPITask(this, this);
 		try {
 			// udwTask.execute("http://hmkcode.com/examples/index.php");
-			// udwTask.execute("http://rest-service.guides.spring.io/greeting");
+			udwTask.execute("http://rest-service.guides.spring.io/greeting");
 			// udwTask.execute("http://tranquil-scrubland-2285.herokuapp.com/hellos.json");
-			udwTask.execute("GET",
-					"https://tranquil-scrubland-2285.herokuapp.com/hellos.json");
+			// udwTask.execute("GET",
+			// "https://tranquil-scrubland-2285.herokuapp.com/hellos.json");
 
 		} catch (Exception e) {
 			udwTask.cancel(true);
 		}
 	}
 
-	public void putUserData(View view) {
+	public void clearUserData(View view) {
 		// UserData ud = new UserData("abc@def.com", "9876543210", "ABC123",
 		// "df6c2711-2ac1-4251-aa9f-9c7f797e4c8b");
 		// StorageHelper.PreferencesHelper.setUserData(this, ud.getGUID(), ud);

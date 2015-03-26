@@ -8,34 +8,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="foo.fruitfox.evend.MainActivity" >
 
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:src="@android:drawable/ic_lock_lock" />
-
-    <ImageButton
-        android:id="@+id/imageButton1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="86dp"
-        android:layout_marginRight="36dp"
-        android:layout_toLeftOf="@+id/imageView1"
-        android:src="@android:drawable/ic_media_rew" />
-
-    <ImageButton
-        android:id="@+id/imageButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/imageButton1"
-        android:layout_marginLeft="32dp"
-        android:layout_toRightOf="@+id/imageView1"
-        android:src="@android:drawable/ic_media_ff" 
-        android:onClick="buttonNext" />
-
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
@@ -50,10 +22,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/getNumber"
+        android:layout_alignRight="@+id/getNumber"
         android:layout_below="@+id/getNumber"
-        android:layout_toLeftOf="@+id/imageView1"
-        android:text="Check Network" 
-        android:onClick="checkNetwork" />
+        android:onClick="checkNetwork"
+        android:text="Check Network" />
 
     <Button
         android:id="@+id/getNumber"
@@ -66,24 +38,24 @@
         android:text="Get Number" />
 
     <Button
-        android:id="@+id/putUserData"
+        android:id="@+id/clearUserData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/checkNetwork"
         android:layout_alignRight="@+id/checkNetwork"
         android:layout_below="@+id/checkNetwork"
-        android:text="Save User Data"
-        android:onClick="putUserData" />
+        android:text="Clear User Data"
+        android:onClick="clearUserData" />
 
     <Button
         android:id="@+id/getUserData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/putUserData"
-        android:layout_alignRight="@+id/imageButton2"
+        android:layout_alignBottom="@+id/clearUserData"
+        android:layout_below="@+id/httpPost"
         android:layout_toRightOf="@+id/getNumber"
-        android:text="Get User Data" 
-        android:onClick="getUserData" />
+        android:onClick="getUserData"
+        android:text="Get User Data" />
 
     <Button
         android:id="@+id/httpPost"
