@@ -1,5 +1,7 @@
 package foo.fruitfox.evend.test;
 
+import java.io.File;
+
 import android.app.Instrumentation.ActivityMonitor;
 import android.content.Context;
 import android.test.ActivityInstrumentationTestCase2;
@@ -24,19 +26,44 @@ public class StartupActivityFunctionalTest extends
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		Context context = getInstrumentation().getTargetContext();
-		currentIdentifier = StorageHelper.PreferencesHelper
-				.getIdentifier(context);
-		if (currentIdentifier != null) {
-			currentUserData = StorageHelper.PreferencesHelper.getUserData(
-					context, currentIdentifier);
+		Context context = getInstrumentation().getTargetContext()
+				.getApplicationContext();
+
+		String originalFilePath = context.getFilesDir().getParent() + "/"
+				+ "shared_prefs/UserData.xml";
+		String backupFilePath = context.getFilesDir().getParent() + "/"
+				+ "shared_prefs/UserData.xml.Backup";
+		File originalPrefFile = new File(originalFilePath);
+		File backupPrefFile = new File(backupFilePath);
+
+		if (originalPrefFile.exists()) {
+			originalPrefFile.renameTo(backupPrefFile);
 		}
-		userData = new UserData("email", "john@example.com");
+
+		userData = new UserData("email", "jane@example.com");
+	}
+
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		Context context = getInstrumentation().getTargetContext()
+				.getApplicationContext();
+
+		String originalFilePath = context.getFilesDir().getParent() + "/"
+				+ "shared_prefs/UserData.xml";
+		String backupFilePath = context.getFilesDir().getParent() + "/"
+				+ "shared_prefs/UserData.xml.Backup";
+		File originalPrefFile = new File(originalFilePath);
+		File backupPrefFile = new File(backupFilePath);
+		originalPrefFile.delete();
+
+		if (backupPrefFile.exists()) {
+			backupPrefFile.renameTo(originalPrefFile);
+		}
 	}
 
 	public void testOnCreateWithVerifiedUserData() throws Exception {
 		Context context = getInstrumentation().getTargetContext();
-		identifier = "john@example.com";
+		identifier = "jane@example.com";
 		userData.setIsVerified(true);
 
 		StorageHelper.PreferencesHelper.setIdentifier(context, identifier);
@@ -60,7 +87,7 @@ public class StartupActivityFunctionalTest extends
 
 	public void testOnCreateWithUnverifiedUserData() throws Exception {
 		Context context = getInstrumentation().getTargetContext();
-		identifier = "john@example.com";
+		identifier = "jane@example.com";
 		userData.setIsVerified(false);
 
 		StorageHelper.PreferencesHelper.setIdentifier(context, identifier);
@@ -101,18 +128,5 @@ public class StartupActivityFunctionalTest extends
 		startupActivity.finish();
 
 		assertNull(welcomeActivity);
-	}
-
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		Context context = getInstrumentation().getTargetContext();
-		StorageHelper.PreferencesHelper.clearAllUserData(context);
-
-		if (currentIdentifier != null) {
-			StorageHelper.PreferencesHelper.setIdentifier(context,
-					currentIdentifier);
-			StorageHelper.PreferencesHelper.setUserData(context,
-					currentIdentifier, currentUserData);
-		}
 	}
 }
