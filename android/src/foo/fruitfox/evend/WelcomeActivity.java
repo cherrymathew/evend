@@ -1,5 +1,6 @@
 package foo.fruitfox.evend;
 
+import java.net.URLEncoder;
 import java.util.TimeZone;
 
 import org.joda.time.DateTime;
@@ -40,7 +41,7 @@ public class WelcomeActivity extends ActionBarActivity implements
 	private CheckBox accommodationCheck;
 	private CheckBox pickupCheck;
 
-	private EventCalendarAdapter eca;
+	private EventCalendarAdapter eventCalendarAdapter;
 
 	private Boolean[] eventDays = null;
 	private Boolean needsAccommodation = false;
@@ -49,8 +50,8 @@ public class WelcomeActivity extends ActionBarActivity implements
 	private String identifier;
 	private UserData userData;
 
-	private String startDate = "2015-05-23";
-	private String endDate = "2015-06-07";
+	private String startDateString = "2015-05-23";
+	private String endDateString = "2015-06-07";
 
 	private String serverURL;
 
@@ -141,7 +142,7 @@ public class WelcomeActivity extends ActionBarActivity implements
 			eventDays[position] = true;
 		}
 
-		eca.notifyDataSetChanged();
+		eventCalendarAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -163,7 +164,7 @@ public class WelcomeActivity extends ActionBarActivity implements
 
 	public void next(View view) {
 		String currentTimeZone = TimeZone.getDefault().getID();
-		DateTime startDate = new DateTime(this.startDate,
+		DateTime startDate = new DateTime(startDateString,
 				DateTimeZone.forID(currentTimeZone));
 
 		String dates = "";
@@ -174,12 +175,14 @@ public class WelcomeActivity extends ActionBarActivity implements
 			userData.setNeedsAccommodation(true);
 		} else {
 			userData.setNeedsAccommodation(false);
+			userData.setAccommodationData(null);
 		}
 
 		if (needsPickup == true) {
 			userData.setNeedsPickUp(true);
 		} else {
 			userData.setNeedsPickUp(false);
+			userData.setPickupData(null);
 		}
 
 		userData.setEventDaysAttending(eventDays);
@@ -233,31 +236,46 @@ public class WelcomeActivity extends ActionBarActivity implements
 
 		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
 
-		Intent intent = new Intent(this, TalksActivity.class);
+		Intent intent;
+		if (userData.getNeedsAccommodation() == true
+				&& userData.getNeedsPickUp() == false) {
+			intent = new Intent(this, AccomodationActivity.class);
+			intent.putExtra("hasPickup", false);
+		} else if (userData.getNeedsAccommodation() == false
+				&& userData.getNeedsPickUp() == true) {
+			intent = new Intent(this, PickupActivity.class);
+		} else if (userData.getNeedsAccommodation() == true
+				&& userData.getNeedsPickUp() == true) {
+			intent = new Intent(this, AccomodationActivity.class);
+			intent.putExtra("hasPickup", true);
+		} else {
+			intent = new Intent(this, TalksActivity.class);
+		}
+
 		startActivity(intent);
 	}
 
 	private void initializeLayout() {
-		int daysCount = Days.daysBetween(new DateTime(startDate).toLocalDate(),
-				new DateTime(endDate).toLocalDate()).getDays() + 1;
-		this.needsAccommodation = userData.getNeedsAccommodation();
-		this.needsPickup = userData.getNeedsPickUp();
+		int daysCount = Days.daysBetween(
+				new DateTime(startDateString).toLocalDate(),
+				new DateTime(endDateString).toLocalDate()).getDays() + 1;
+		needsAccommodation = userData.getNeedsAccommodation();
+		needsPickup = userData.getNeedsPickUp();
 
-		// TextView dateText = (TextView) this.findViewById(R.id.dayText);
 		CheckBox accommodationCheck = (CheckBox) this
 				.findViewById(R.id.accommodationCheck);
-		CheckBox pickupCheck = (CheckBox) this.findViewById(R.id.pickupCheck);
+		CheckBox pickupCheck = (CheckBox) findViewById(R.id.pickupCheck);
 
-		if (this.needsAccommodation == true) {
+		if (needsAccommodation == true) {
 			accommodationCheck.setChecked(true);
 		}
 
-		if (this.needsPickup == true) {
+		if (needsPickup == true) {
 			pickupCheck.setChecked(true);
 		}
 
 		if (userData.getEventDaysAttending() != null) {
-			this.eventDays = userData.getEventDaysAttending();
+			eventDays = userData.getEventDaysAttending();
 		} else {
 			eventDays = new Boolean[daysCount];
 			java.util.Arrays.fill(eventDays, false);
@@ -269,7 +287,7 @@ public class WelcomeActivity extends ActionBarActivity implements
 
 	@Override
 	public void postAsyncTaskCallback(String responseBody, String responseCode) {
-		DateTime startDate = new DateTime(this.startDate);
+		DateTime startDate = new DateTime(startDateString);
 		int currentDay = 0;
 
 		JSONObject responseJSON;
@@ -295,12 +313,12 @@ public class WelcomeActivity extends ActionBarActivity implements
 						DateTime date = new DateTime(dates.get(i));
 						currentDay = Days.daysBetween(startDate.toLocalDate(),
 								date.toLocalDate()).getDays();
-						this.eventDays[currentDay] = true;
+						eventDays[currentDay] = true;
 					}
 
-					this.needsAccommodation = responseJSON
+					needsAccommodation = responseJSON
 							.getBoolean("accommodation");
-					this.needsPickup = responseJSON.getBoolean("pickup");
+					needsPickup = responseJSON.getBoolean("pickup");
 					// DebugHelper.ShowMessage.d(responseJSON.getString("dates")
 					// .toString());
 				}
@@ -320,7 +338,8 @@ public class WelcomeActivity extends ActionBarActivity implements
 				progDialog = ProgressDialog.show(this, "Processing...",
 						"Fetching data", true, false);
 				udwTask.execute("GET", serverURL + "users/reservedates?user="
-						+ identifier + "&hhtoken=" + token);
+						+ URLEncoder.encode(identifier, "UTF-8") + "&hhtoken="
+						+ token);
 
 			} catch (Exception e) {
 				if (progDialog.isShowing()) {
@@ -341,8 +360,9 @@ public class WelcomeActivity extends ActionBarActivity implements
 	}
 
 	private void initalizeAdapter() {
-		eca = new EventCalendarAdapter(this, startDate, endDate, eventDays);
+		eventCalendarAdapter = new EventCalendarAdapter(this, startDateString,
+				endDateString, eventDays);
 
-		eventCalendarGrid.setAdapter(eca);
+		eventCalendarGrid.setAdapter(eventCalendarAdapter);
 	}
 }

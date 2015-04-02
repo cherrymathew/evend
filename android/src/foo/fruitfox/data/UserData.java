@@ -18,6 +18,8 @@ public class UserData {
 	private Boolean hasOauth;
 	private Boolean isVerified;
 	private UserOauthData oauthData;
+	private AccommodationData accommodationData;
+	private PickupData pickupData;
 	private List<TalkData> talkDataList;
 
 	public UserData(String registrationIdType, String data) {
@@ -181,6 +183,22 @@ public class UserData {
 
 	public void setAuthToken(String authToken) {
 		this.authToken = authToken;
+	}
+
+	public AccommodationData getAccommodationData() {
+		return accommodationData;
+	}
+
+	public void setAccommodationData(AccommodationData accommodationData) {
+		this.accommodationData = accommodationData;
+	}
+
+	public PickupData getPickupData() {
+		return pickupData;
+	}
+
+	public void setPickupData(PickupData pickupData) {
+		this.pickupData = pickupData;
 	}
 
 }

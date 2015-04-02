@@ -9,7 +9,7 @@
     tools:context="foo.fruitfox.evend.WelcomeActivity" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/welcomeHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -38,10 +38,10 @@
     </RelativeLayout>
 
     <ScrollView
-        android:id="@+id/ScrollView01"
+        android:id="@+id/scrollWrapper"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_alignLeft="@+id/textView1"
+        android:layout_alignLeft="@+id/welcomeHeader"
         android:layout_below="@+id/calenderHolder" >
 
         <RelativeLayout
