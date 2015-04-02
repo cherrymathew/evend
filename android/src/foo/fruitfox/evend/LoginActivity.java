@@ -4,6 +4,7 @@
  */
 package foo.fruitfox.evend;
 
+import java.net.URLEncoder;
 import java.util.Locale;
 
 import org.json.JSONException;
@@ -56,14 +57,14 @@ public class LoginActivity extends ActionBarActivity implements
 
 		Intent intent = getIntent();
 
-		this.registrationType = intent.getStringExtra("type");
+		registrationType = intent.getStringExtra("type");
 
-		this.serverURL = getResources().getString(R.string.server_url);
+		serverURL = getResources().getString(R.string.server_url);
 
-		this.activityLayout = (LinearLayout) findViewById(R.id.activity_login);
+		activityLayout = (LinearLayout) findViewById(R.id.activity_login);
 
-		this.verificationLayout = (LinearLayout) findViewById(R.id.verificationLayout);
-		this.verificationLayout.setVisibility(View.GONE);
+		verificationLayout = (LinearLayout) findViewById(R.id.verificationLayout);
+		verificationLayout.setVisibility(View.GONE);
 
 		initializeLayout();
 
@@ -188,9 +189,9 @@ public class LoginActivity extends ActionBarActivity implements
 			try {
 				progDialog = ProgressDialog.show(this, "Processing...",
 						"Fetching data", true, false);
-				udwTask.execute("GET",
-						serverURL + "verify" + "?identifier=" + identifier
-								+ "&code=" + userData.getVerificationCode());
+				udwTask.execute("GET", serverURL + "verify" + "?identifier="
+						+ URLEncoder.encode(identifier, "UTF-8") + "&code="
+						+ userData.getVerificationCode());
 
 			} catch (Exception e) {
 				if (progDialog.isShowing()) {
@@ -219,7 +220,7 @@ public class LoginActivity extends ActionBarActivity implements
 				.getSystemService(Context.TELEPHONY_SERVICE);
 		String mRawPhoneNumber = tMgr.getLine1Number();
 		String countryISO = tMgr.getSimCountryIso().toUpperCase(Locale.ENGLISH);
-		String[] countryCodeList = this.getResources().getStringArray(
+		String[] countryCodeList = getResources().getStringArray(
 				R.array.CountryCodes);
 		String mPhoneNumber;
 
