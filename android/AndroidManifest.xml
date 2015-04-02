@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <application
         android:allowBackup="true"
@@ -18,7 +19,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="foo.fruitfox.evend.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,20 +28,34 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="foo.fruitfox.evend.SecondActivity"
+            android:name=".SecondActivity"
             android:label="@string/title_activity_second" >
         </activity>
         <activity
-            android:name="foo.fruitfox.evend.LoginActivity"
+            android:name=".LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
         <activity
-            android:name="foo.fruitfox.evend.StartupActivity"
+            android:name=".StartupActivity"
             android:label="@string/title_activity_startup" >
         </activity>
         <activity
-            android:name="foo.fruitfox.evend.WelcomeActivity"
+            android:name=".WelcomeActivity"
             android:label="@string/title_activity_welcome" >
+        </activity>
+        <activity
+            android:name=".TalksActivity"
+            android:label="@string/title_activity_talks"
+            android:windowSoftInputMode="stateHidden|adjustPan" >
+        </activity>
+        <activity
+            android:name=".AccomodationActivity"
+            android:label="@string/title_activity_accomodation" >
+        </activity>
+        <activity
+            android:name=".PickupActivity"
+            android:label="@string/title_activity_pickup"
+            android:windowSoftInputMode="stateHidden" >
         </activity>
     </application>
 
