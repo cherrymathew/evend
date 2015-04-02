@@ -4,6 +4,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,7 +45,7 @@ public class TalksActivity extends ActionBarActivity implements
 
 	private List<TalkData> talksList;
 	private ListView talksListView;
-	private TalksAdapter ta;
+	private TalksAdapter talksAdapter;
 
 	private Context context;
 
@@ -59,10 +61,10 @@ public class TalksActivity extends ActionBarActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_talks);
 
-		this.context = this;
-		this.identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
-		this.userData = StorageHelper.PreferencesHelper.getUserData(this,
-				identifier);
+		context = this;
+		identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
+		userData = StorageHelper.PreferencesHelper
+				.getUserData(this, identifier);
 
 		serverURL = getResources().getString(R.string.server_url);
 
@@ -95,14 +97,16 @@ public class TalksActivity extends ActionBarActivity implements
 
 	public void onResume() {
 		super.onResume();
-		ta.notifyDataSetChanged();
+		userData = StorageHelper.PreferencesHelper
+				.getUserData(this, identifier);
+		talksAdapter.notifyDataSetChanged();
 	}
 
 	public void talkRemove(View view) {
 		int position = talksListView
 				.getPositionForView((View) view.getParent());
 		talksList.remove(position);
-		ta.notifyDataSetChanged();
+		talksAdapter.notifyDataSetChanged();
 		userData.setTalkDataList(talksList);
 		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
 	}
@@ -129,7 +133,7 @@ public class TalksActivity extends ActionBarActivity implements
 				TalkData talk = new TalkData(talkTitleText, date);
 
 				talksList.add(talk);
-				ta.notifyDataSetChanged();
+				talksAdapter.notifyDataSetChanged();
 
 				talkTitle.setText("");
 				talkDate.setText("");
@@ -137,7 +141,7 @@ public class TalksActivity extends ActionBarActivity implements
 				TalkData talk = new TalkData(talkTitleText);
 
 				talksList.add(talk);
-				ta.notifyDataSetChanged();
+				talksAdapter.notifyDataSetChanged();
 
 				talkTitle.setText("");
 				talkDate.setText("");
@@ -150,7 +154,7 @@ public class TalksActivity extends ActionBarActivity implements
 				talksList.get(position).setTitle(talkTitleText);
 				talksList.get(position).setDate("dd-MM-yyyy", talkDateText);
 
-				ta.notifyDataSetChanged();
+				talksAdapter.notifyDataSetChanged();
 
 				talkTitle.setText("");
 				talkDate.setText("");
@@ -161,18 +165,20 @@ public class TalksActivity extends ActionBarActivity implements
 		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
 	}
 
-	public void displayCalendar() {
+	private void displayCalendar() {
 		final Dialog dialog = new Dialog(context);
 
 		DateTime startDate = new DateTime("2015-05-23");
 		DateTime endDate = new DateTime("2015-06-07");
+		EditText talkDate = (EditText) findViewById(R.id.talkDateEdit);
 
+		dialog.setTitle("Select your preferred date");
 		dialog.setContentView(R.layout.calendar_date_picker);
 
 		Button acceptDate = (Button) dialog.findViewById(R.id.acceptDate);
 
 		CalendarView calendar = (CalendarView) dialog
-				.findViewById(R.id.calendarView1);
+				.findViewById(R.id.eventCalendarView);
 
 		// sets whether to show the week number.
 		calendar.setShowWeekNumber(false);
@@ -193,6 +199,13 @@ public class TalksActivity extends ActionBarActivity implements
 		// sets the color for the vertical bar shown at the beginning and at
 		// the end of the selected date.
 		calendar.setSelectedDateVerticalBar(R.color.silver);
+
+		if (talkDate.getText().toString().length() > 0) {
+			DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
+			DateTime currentSelectedDate = dtf.parseDateTime(talkDate.getText()
+					.toString());
+			calendar.setDate(currentSelectedDate.getMillis());
+		}
 
 		// sets the listener to be notified upon selected date change.
 		calendar.setOnDateChangeListener(new OnDateChangeListener() {
@@ -295,17 +308,17 @@ public class TalksActivity extends ActionBarActivity implements
 		talkDate.setOnFocusChangeListener(this);
 		talkDate.setOnClickListener(this);
 
-		this.talksListView.setOnItemClickListener(this);
+		talksListView.setOnItemClickListener(this);
 	}
 
 	private void initalizeAdapter() {
-		this.talksListView = (ListView) findViewById(R.id.talksList);
+		talksListView = (ListView) findViewById(R.id.talksList);
 
-		this.talksList = this.userData.getTalkDataList();
+		talksList = userData.getTalkDataList();
 
-		this.ta = new TalksAdapter(this, talksList);
+		talksAdapter = new TalksAdapter(this, talksList);
 
-		this.talksListView.setAdapter(this.ta);
+		talksListView.setAdapter(talksAdapter);
 	}
 
 	@Override
