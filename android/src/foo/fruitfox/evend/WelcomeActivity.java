@@ -100,7 +100,7 @@ public class WelcomeActivity extends ActionBarActivity implements
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void onResume() {
+	protected void onResume() {
 		super.onResume();
 		userData = StorageHelper.PreferencesHelper
 				.getUserData(this, identifier);
