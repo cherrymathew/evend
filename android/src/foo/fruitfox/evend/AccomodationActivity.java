@@ -95,6 +95,14 @@ public class AccomodationActivity extends ActionBarActivity implements
 		}
 	}
 
+	protected void onPause() {
+		super.onPause();
+
+		userData.setAccommodationData(accommodationData);
+
+		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
+	}
+
 	private void initializeAdapters() {
 		accommodationTypesList = new ArrayList<String>();
 		accommodationTypesList.add("Room");
