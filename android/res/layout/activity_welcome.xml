@@ -15,7 +15,6 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:text="Welcome to Hillhacks Buddy Application"
-        android:textAlignment="center"
         android:textSize="15sp" />
 
     <RelativeLayout
@@ -42,7 +41,9 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignLeft="@+id/welcomeHeader"
-        android:layout_below="@+id/calenderHolder" >
+        android:layout_below="@+id/calenderHolder"
+        android:fadeScrollbars="false"
+        android:layout_above="@+id/next" >
 
         <RelativeLayout
             android:id="@+id/widgetHolder"
@@ -65,19 +66,17 @@
                 android:layout_below="@+id/accommodationCheck"
                 android:layout_marginTop="20dp"
                 android:text="Would you like a Pick up?" />
-
-            <Button
-                android:id="@+id/next"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/pickupCheck"
-                android:onClick="next"
-                android:layout_marginTop="10dp"
-                android:text="Next" />
-
         </RelativeLayout>
     </ScrollView>
+
+    <Button
+        android:id="@+id/next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:onClick="next"
+        android:text="Next" />
 
 </RelativeLayout>
