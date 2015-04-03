@@ -61,7 +61,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/next"
         android:layout_below="@+id/addTalkLayout"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:fadeScrollbars="false" />
 
     <Button
         android:id="@+id/next"
