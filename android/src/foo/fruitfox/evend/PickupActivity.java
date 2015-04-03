@@ -115,6 +115,20 @@ public class PickupActivity extends ActionBarActivity implements
 
 	}
 
+	protected void onPause() {
+		super.onPause();
+
+		EditText pickupDate = (EditText) findViewById(R.id.pickupDate);
+		EditText pickupTime = (EditText) findViewById(R.id.pickupTime);
+
+		pickupData.setPickupDate("dd-MM-yyyy", pickupDate.getText().toString());
+		pickupData.setPickupTime("HH:mm", pickupTime.getText().toString());
+
+		userData.setPickupData(pickupData);
+
+		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -378,7 +392,6 @@ public class PickupActivity extends ActionBarActivity implements
 			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
-			DebugHelper.ShowMessage.t(this, "timer");
 			displayTimePicker();
 		}
 
@@ -397,7 +410,6 @@ public class PickupActivity extends ActionBarActivity implements
 			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
-			DebugHelper.ShowMessage.t(this, "timer");
 			displayTimePicker();
 		}
 
