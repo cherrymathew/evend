@@ -91,15 +91,17 @@ public class TalksActivity extends ActionBarActivity implements
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void onPause() {
-		super.onPause();
-	}
-
-	public void onResume() {
+	protected void onResume() {
 		super.onResume();
 		userData = StorageHelper.PreferencesHelper
 				.getUserData(this, identifier);
 		talksAdapter.notifyDataSetChanged();
+	}
+
+	protected void onPause() {
+		super.onPause();
+
+		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
 	}
 
 	public void talkRemove(View view) {
@@ -297,7 +299,6 @@ public class TalksActivity extends ActionBarActivity implements
 			DebugHelper.ShowMessage.t(this,
 					"An error occured processing the response");
 		}
-		DebugHelper.ShowMessage.t(this, "next");
 	}
 
 	private void initializeListeners() {
