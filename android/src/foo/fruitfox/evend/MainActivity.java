@@ -40,6 +40,9 @@ public class MainActivity extends ActionBarActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		Intent intent = new Intent(this, StartupActivity.class);
+		startActivity(intent);
 	}
 
 	@Override
