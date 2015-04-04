@@ -17,52 +17,109 @@
         android:text="Accommodation Details"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <LinearLayout
-        android:id="@+id/accommodationTypeContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/next"
+    <ScrollView
+        android:id="@+id/scrollWrapper"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/next"
         android:layout_below="@+id/accommodationHeader"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical" >
+        android:fadeScrollbars="false" >
 
-        <TextView
-            android:id="@+id/accommodationTypeLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Accommodation Type"
-            android:textSize="15sp" />
+        <RelativeLayout
+            android:id="@+id/widgetHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-        <Spinner
-            android:id="@+id/accommodationTypes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/accommodationTypeContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/bedsCountContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:orientation="horizontal"
-        android:layout_below="@+id/accommodationTypeContainer" >
+                <TextView
+                    android:id="@+id/accommodationTypeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Accommodation Type"
+                    android:textSize="15sp" />
 
-        <TextView
-            android:id="@+id/bedsLabel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.7"
-            android:text="Number of Beds"
-            android:textSize="15sp" />
+                <Spinner
+                    android:id="@+id/accommodationTypes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
 
-        <Spinner
-            android:id="@+id/bedsCount"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.3"  />
-        
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/accommodationStartDateContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/accommodationTypeContainer"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/accommodationStartDateLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Start Date" />
+
+                <EditText
+                    android:id="@+id/accommodationStartDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="date"
+                    android:text="23-05-2015" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/daysCountContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/accommodationStartDateContainer"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/daysLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.7"
+                    android:text="Number of Days"
+                    android:textSize="15sp" />
+
+                <Spinner
+                    android:id="@+id/daysCount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/bedsCountContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/daysCountContainer"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/bedsLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.7"
+                    android:text="Number of Beds"
+                    android:textSize="15sp" />
+
+                <Spinner
+                    android:id="@+id/bedsCount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3" />
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/next"
@@ -70,7 +127,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:text="Next"
-        android:onClick="next" />
+        android:onClick="next"
+        android:text="Next" />
 
 </RelativeLayout>
