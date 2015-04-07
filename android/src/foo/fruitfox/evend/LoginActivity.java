@@ -179,7 +179,7 @@ public class LoginActivity extends ActionBarActivity implements
 
 	public void verify(View view) {
 		identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
-		verificationCode = (EditText) findViewById(R.id.verificationCodeText);
+		verificationCode = (EditText) findViewById(R.id.verificationCode);
 		userData = StorageHelper.PreferencesHelper
 				.getUserData(this, identifier);
 
@@ -221,21 +221,25 @@ public class LoginActivity extends ActionBarActivity implements
 		String mRawPhoneNumber = tMgr.getLine1Number();
 		String countryISO = tMgr.getSimCountryIso().toUpperCase(Locale.ENGLISH);
 		String[] countryCodeList = getResources().getStringArray(
-				R.array.CountryCodes);
-		String mPhoneNumber;
+				R.array.country_codes);
+		String mPhoneNumber = "";
 
-		if (mRawPhoneNumber.startsWith("+") == false) {
-			for (int i = 0; i < countryCodeList.length; i++) {
-				String[] countryCodePair = countryCodeList[i].split(",");
-				if (countryCodePair[1].trim().equals(countryISO.trim())) {
-					countryCode = countryCodePair[0];
-					break;
-				}
+		for (int i = 0; i < countryCodeList.length; i++) {
+			String[] countryCodePair = countryCodeList[i].split(",");
+			if (countryCodePair[1].trim().equals(countryISO.trim())) {
+				countryCode = countryCodePair[0];
+				break;
 			}
+		}
 
-			mPhoneNumber = "+" + countryCode + mRawPhoneNumber;
+		if (mRawPhoneNumber != null) {
+			if (mRawPhoneNumber.startsWith("+") == false) {
+				mPhoneNumber = "+" + countryCode + mRawPhoneNumber;
+			} else {
+				mPhoneNumber = mRawPhoneNumber;
+			}
 		} else {
-			mPhoneNumber = mRawPhoneNumber;
+			mPhoneNumber = "+" + countryCode;
 		}
 
 		return mPhoneNumber;
