@@ -45,6 +45,8 @@ public class PickupActivity extends ActionBarActivity implements
 	private ArrayAdapter<String> locationAdapter;
 	private ArrayAdapter<String> seatsCountAdapter;
 
+	private String[] locationArray;
+
 	private Spinner location;
 	private Spinner seatsCount;
 
@@ -150,9 +152,12 @@ public class PickupActivity extends ActionBarActivity implements
 
 	private void initializeAdapters() {
 		locationList = new ArrayList<String>();
-		locationList.add("Location1");
-		locationList.add("Location2");
-		locationList.add("Location3");
+
+		locationArray = getResources().getStringArray(R.array.location_names);
+
+		for (int i = 0; i < locationArray.length; i++) {
+			locationList.add(locationArray[i]);
+		}
 
 		seatsCountList = new ArrayList<String>();
 

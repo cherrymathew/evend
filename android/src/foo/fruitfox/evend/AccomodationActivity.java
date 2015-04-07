@@ -42,6 +42,8 @@ public class AccomodationActivity extends ActionBarActivity implements
 	private ArrayAdapter<String> bedsCountAdapter;
 	private ArrayAdapter<String> daysCountAdapter;
 
+	private String[] accommodationTypesArray;
+
 	private Spinner accommodationTypes;
 	private Spinner bedsCount;
 	private Spinner daysCount;
@@ -152,9 +154,12 @@ public class AccomodationActivity extends ActionBarActivity implements
 		bedsCountList = new ArrayList<String>();
 		daysCountList = new ArrayList<String>();
 
-		accommodationTypesList.add("Room");
-		accommodationTypesList.add("Bed");
-		accommodationTypesList.add("Tent");
+		accommodationTypesArray = getResources().getStringArray(
+				R.array.accommodation_types);
+
+		for (int i = 0; i < accommodationTypesArray.length; i++) {
+			accommodationTypesList.add(accommodationTypesArray[i]);
+		}
 
 		for (int i = 1; i < 6; i++) {
 			bedsCountList.add("" + i);
