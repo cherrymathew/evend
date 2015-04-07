@@ -2,16 +2,42 @@
 <resources>
 
     <string name="app_name">evend</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_second">SecondActivity</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_startup">Startup</string>
     <string name="title_activity_welcome">WelcomeActivity</string>
     <string name="title_activity_talks">TalksActivity</string>
-    <string name="server_url">http://192.168.1.105:3000/</string>
+    <string name="hello_world">Hello world!</string>
+    <!-- Strings used in the Login Page -->
+    <string name="username_label">Username</string>
+    <string name="username_hint">username@example.com</string>
+    <string name="login_label">Login</string>
+    <string name="register_label">Register</string>
+    <string name="verification_label">Verification Code</string>
+    <string name="verify_label">Verify</string>
+    <!-- Generic Label for the Next Button -->
+    <string name="next_label">Next</string>
+    <!-- Server URL -->
+    <string name="server_url">http://192.168.1.106:3000/</string>
 
-    <string-array name="CountryCodes">
+    <!-- The Accommmodation types -->
+    <string-array name="accommodation_types">
+        <item>Room</item>
+        <item>Bed</item>
+        <item>Tent</item>
+    </string-array>
+    
+    <!-- Various Pickup Locations -->
+    <string-array name="location_names">
+	    <item>Lower Dharamsala Post Office Bus stop</item>
+	    <item>Dharamsala Bus station</item>
+	    <item>Pathankot Railway station</item>
+	    <item>Kangra Airport (DHM)</item>
+    </string-array>
+    
+    <!-- International Country Codes -->
+    <string-array name="country_codes">
         <item>93,AF</item>
         <item>355,AL</item>
         <item>213,DZ</item>
