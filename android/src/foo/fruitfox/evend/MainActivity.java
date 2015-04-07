@@ -42,7 +42,7 @@ public class MainActivity extends ActionBarActivity implements
 		setContentView(R.layout.activity_main);
 
 		Intent intent = new Intent(this, StartupActivity.class);
-		startActivity(intent);
+		// startActivity(intent);
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class MainActivity extends ActionBarActivity implements
 		String mPhoneNumber = tMgr.getLine1Number();
 		String countryISO = tMgr.getSimCountryIso().toUpperCase(Locale.ENGLISH);
 		String[] countryCodeList = this.getResources().getStringArray(
-				R.array.CountryCodes);
+				R.array.country_codes);
 
 		for (int i = 0; i < countryCodeList.length; i++) {
 			String[] countryCodePair = countryCodeList[i].split(",");
