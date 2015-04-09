@@ -29,9 +29,11 @@ import foo.fruitfox.helpers.DebugHelper;
 import foo.fruitfox.helpers.NetworkHelper;
 import foo.fruitfox.helpers.StorageHelper;
 import foo.fruitfox.tasks.UserDataWebAPITask;
+import foo.fruitfox.tasks.UserDataWebAPITask.AsyncJobNotifier;
 
 public class LoginActivity extends ActionBarActivity implements
-		UserDataWebAPITask.AsyncResponseListener {
+		UserDataWebAPITask.AsyncResponseListener,
+		UserDataWebAPITask.AsyncJobNotifierAccessors {
 
 	private String registrationType;
 	private String serverURL;
@@ -48,6 +50,8 @@ public class LoginActivity extends ActionBarActivity implements
 	private EditText verificationCode;
 
 	private ProgressDialog progDialog;
+
+	private AsyncJobNotifier unitTestNotifier;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -159,7 +163,8 @@ public class LoginActivity extends ActionBarActivity implements
 		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
 
 		if (NetworkHelper.Utilities.isConnected(this)) {
-			UserDataWebAPITask udwTask = new UserDataWebAPITask(this, this);
+			UserDataWebAPITask udwTask = new UserDataWebAPITask(this, this,
+					this);
 			try {
 				progDialog = ProgressDialog.show(this, "Processing...",
 						"Fetching data", true, false);
@@ -185,7 +190,8 @@ public class LoginActivity extends ActionBarActivity implements
 
 		if (verificationCode.getText().toString()
 				.equals(userData.getVerificationCode())) {
-			UserDataWebAPITask udwTask = new UserDataWebAPITask(this, this);
+			UserDataWebAPITask udwTask = new UserDataWebAPITask(this, this,
+					this);
 			try {
 				progDialog = ProgressDialog.show(this, "Processing...",
 						"Fetching data", true, false);
@@ -297,5 +303,23 @@ public class LoginActivity extends ActionBarActivity implements
 			}
 		}
 		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
+	}
+
+	public String getServerURL() {
+		return serverURL;
+	}
+
+	public void setServerURL(String serverURL) {
+		this.serverURL = serverURL;
+	}
+
+	@Override
+	public AsyncJobNotifier getUnitTestNotifier() {
+		return this.unitTestNotifier;
+	}
+
+	@Override
+	public void setUnitTestNotifier(AsyncJobNotifier unitTestNotifier) {
+		this.unitTestNotifier = unitTestNotifier;
 	}
 }
