@@ -19,9 +19,9 @@ public class StartupActivityUnitTest extends
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		ContextThemeWrapper context = new ContextThemeWrapper(
+		ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(
 				getInstrumentation().getTargetContext(), R.style.AppTheme);
-		setActivityContext(context);
+		setActivityContext(contextThemeWrapper);
 
 		Intent intent = new Intent(getInstrumentation().getTargetContext(),
 				StartupActivity.class);
@@ -33,6 +33,12 @@ public class StartupActivityUnitTest extends
 				.findViewById(R.id.phoneVerification);
 		emailVerification = (Button) startupActivity
 				.findViewById(R.id.emailVerification);
+	}
+
+	protected void tearDown() throws Exception {
+		super.tearDown();
+
+		startupActivity.finish();
 	}
 
 	public void testPreconditions() {
