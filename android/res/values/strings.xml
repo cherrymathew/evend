@@ -11,7 +11,7 @@
     <string name="hello_world">Hello world!</string>
     <!-- Strings used in the Login Page -->
     <string name="username_label">Username</string>
-    <string name="username_hint">username@example.com</string>
+    <string name="username_hint">user@example.com</string>
     <string name="login_label">Login</string>
     <string name="register_label">Register</string>
     <string name="verification_label">Verification Code</string>
@@ -19,7 +19,7 @@
     <!-- Generic Label for the Next Button -->
     <string name="next_label">Next</string>
     <!-- Server URL -->
-    <string name="server_url">http://192.168.1.106:3000/</string>
+    <string name="server_url">http://192.168.1.117:3000/</string>
 
     <!-- The Accommmodation types -->
     <string-array name="accommodation_types">
