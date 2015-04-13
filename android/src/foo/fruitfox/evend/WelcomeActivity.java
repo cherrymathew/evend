@@ -78,7 +78,7 @@ public class WelcomeActivity extends ActionBarActivity implements
 
 		initalizeAdapter();
 
-		getEventDaysUpdate();
+		// getEventDaysUpdate();
 	}
 
 	@Override
