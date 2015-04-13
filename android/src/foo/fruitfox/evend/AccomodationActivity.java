@@ -7,8 +7,11 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,10 +33,15 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import foo.fruitfox.data.AccommodationData;
 import foo.fruitfox.data.UserData;
+import foo.fruitfox.helpers.DebugHelper;
+import foo.fruitfox.helpers.NetworkHelper;
 import foo.fruitfox.helpers.StorageHelper;
+import foo.fruitfox.tasks.UserDataWebAPITask;
+import foo.fruitfox.tasks.UserDataWebAPITask.AsyncResponseListener;
 
 public class AccomodationActivity extends ActionBarActivity implements
-		OnItemSelectedListener, OnClickListener, OnFocusChangeListener {
+		OnItemSelectedListener, OnClickListener, OnFocusChangeListener,
+		AsyncResponseListener {
 	private List<String> accommodationTypesList;
 	private List<String> bedsCountList;
 	private List<String> daysCountList;
@@ -44,9 +52,13 @@ public class AccomodationActivity extends ActionBarActivity implements
 
 	private String[] accommodationTypesArray;
 
+	private Context context;
+
 	private Spinner accommodationTypes;
 	private Spinner bedsCount;
 	private Spinner daysCount;
+
+	private ProgressDialog progDialog;
 
 	private String identifier;
 	private UserData userData;
@@ -54,7 +66,7 @@ public class AccomodationActivity extends ActionBarActivity implements
 
 	private boolean hasPickup;
 
-	private Context context;
+	private String serverURL;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +86,8 @@ public class AccomodationActivity extends ActionBarActivity implements
 		accommodationTypes.setFocusable(true);
 		accommodationTypes.setFocusableInTouchMode(true);
 		accommodationTypes.requestFocus();
+
+		serverURL = getResources().getString(R.string.server_url);
 
 		Intent intent = getIntent();
 		hasPickup = intent.getBooleanExtra("hasPickup", false);
@@ -279,6 +293,7 @@ public class AccomodationActivity extends ActionBarActivity implements
 
 	public void next(View view) {
 		Intent intent;
+		JSONObject requestJSON = new JSONObject();
 
 		if (hasPickup == true) {
 			intent = new Intent(this, PickupActivity.class);
@@ -292,6 +307,39 @@ public class AccomodationActivity extends ActionBarActivity implements
 				.getText().toString());
 
 		userData.setAccommodationData(accommodationData);
+
+		try {
+			requestJSON.put("hhtoken", userData.getAuthToken());
+			requestJSON.put("date", userData.getAccommodationData()
+					.getStartDate("dd-MM-yyyy"));
+			requestJSON.put("type", userData.getAccommodationData()
+					.getAccommodationType().toLowerCase());
+			requestJSON.put("beds", userData.getAccommodationData()
+					.getBedsCount());
+			requestJSON.put("days", userData.getAccommodationData()
+					.getDaysCount());
+		} catch (JSONException e) {
+			DebugHelper.ShowMessage.t(this,
+					"An error occured processing the response");
+		}
+
+		if (NetworkHelper.Utilities.isConnected(this)) {
+			UserDataWebAPITask udwTask = new UserDataWebAPITask(this, this);
+			try {
+				progDialog = ProgressDialog.show(this, "Processing...",
+						"Fetching data", true, false);
+				udwTask.execute("POST", serverURL + "users/accommodation",
+						requestJSON.toString());
+
+			} catch (Exception e) {
+				if (progDialog.isShowing()) {
+					progDialog.dismiss();
+				}
+				udwTask.cancel(true);
+			}
+		} else {
+			DebugHelper.ShowMessage.t(this, "Connection error");
+		}
 
 		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
 
@@ -336,6 +384,23 @@ public class AccomodationActivity extends ActionBarActivity implements
 			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
 			displayCalendar();
+		}
+	}
+
+	@Override
+	public void postAsyncTaskCallback(String responseBody, String responseCode) {
+		// TODO Auto-generated method stub
+		if (progDialog.isShowing()) {
+			progDialog.dismiss();
+		}
+
+		// DebugHelper.ShowMessage.d(responseCode);
+		// DebugHelper.ShowMessage.d(responseBody);
+
+		if (responseBody.length() == 0) {
+			DebugHelper.ShowMessage
+					.t(this,
+							"There was an error processing your request. Please try again later.");
 		}
 	}
 }
