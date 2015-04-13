@@ -113,6 +113,16 @@ public class PickupActivity extends ActionBarActivity implements
 
 		} else {
 			pickupData = new PickupData();
+
+			position = seatsCountAdapter.getPosition(userData
+					.getAccommodationData().getBedsCount());
+			seatsCount.setSelection(position);
+
+			dateString = userData.getAccommodationData().getStartDate(
+					"dd-MM-yyyy");
+			if (dateString.length() > 0) {
+				pickupDate.setText(dateString);
+			}
 		}
 
 	}
