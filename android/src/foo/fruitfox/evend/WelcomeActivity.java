@@ -1,6 +1,7 @@
 package foo.fruitfox.evend;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.TimeZone;
 
 import org.joda.time.DateTime;
@@ -27,6 +28,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.GridView;
 import android.widget.TextView;
 import foo.fruitfox.adapters.EventCalendarAdapter;
+import foo.fruitfox.data.TalkData;
 import foo.fruitfox.data.UserData;
 import foo.fruitfox.helpers.DebugHelper;
 import foo.fruitfox.helpers.NetworkHelper;
@@ -40,12 +42,14 @@ public class WelcomeActivity extends ActionBarActivity implements
 	private GridView eventCalendarGrid;
 	private CheckBox accommodationCheck;
 	private CheckBox pickupCheck;
+	private CheckBox talkCheck;
 
 	private EventCalendarAdapter eventCalendarAdapter;
 
 	private Boolean[] eventDays = null;
 	private Boolean needsAccommodation = false;
 	private Boolean needsPickup = false;
+	private Boolean hasTalk = false;
 
 	private String identifier;
 	private UserData userData;
@@ -64,6 +68,7 @@ public class WelcomeActivity extends ActionBarActivity implements
 
 		accommodationCheck = (CheckBox) findViewById(R.id.accommodationCheck);
 		pickupCheck = (CheckBox) findViewById(R.id.pickupCheck);
+		talkCheck = (CheckBox) findViewById(R.id.talkCheck);
 		eventCalendarGrid = (GridView) findViewById(R.id.eventCalendarGrid);
 
 		identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
@@ -156,6 +161,10 @@ public class WelcomeActivity extends ActionBarActivity implements
 			needsPickup = isChecked;
 			break;
 
+		case R.id.talkCheck:
+			hasTalk = isChecked;
+			break;
+
 		default:
 			break;
 
@@ -183,6 +192,13 @@ public class WelcomeActivity extends ActionBarActivity implements
 		} else {
 			userData.setNeedsPickUp(false);
 			userData.setPickupData(null);
+		}
+
+		if (hasTalk == true) {
+			userData.setHasTalk(true);
+		} else {
+			userData.setHasTalk(false);
+			userData.setTalkDataList(new ArrayList<TalkData>());
 		}
 
 		userData.setEventDaysAttending(eventDays);
@@ -236,20 +252,45 @@ public class WelcomeActivity extends ActionBarActivity implements
 
 		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
 
-		Intent intent;
-		if (userData.getNeedsAccommodation() == true
-				&& userData.getNeedsPickUp() == false) {
-			intent = new Intent(this, AccomodationActivity.class);
-			intent.putExtra("hasPickup", false);
-		} else if (userData.getNeedsAccommodation() == false
-				&& userData.getNeedsPickUp() == true) {
-			intent = new Intent(this, PickupActivity.class);
-		} else if (userData.getNeedsAccommodation() == true
-				&& userData.getNeedsPickUp() == true) {
-			intent = new Intent(this, AccomodationActivity.class);
+		Intent intent = null;
+
+		// if (userData.getNeedsAccommodation() == true
+		// && userData.getNeedsPickUp() == false) {
+		// intent = new Intent(this, AccomodationActivity.class);
+		// intent.putExtra("hasPickup", false);
+		// } else if (userData.getNeedsAccommodation() == false
+		// && userData.getNeedsPickUp() == true) {
+		// intent = new Intent(this, PickupActivity.class);
+		// } else if (userData.getNeedsAccommodation() == true
+		// && userData.getNeedsPickUp() == true) {
+		// intent = new Intent(this, AccomodationActivity.class);
+		// intent.putExtra("hasPickup", true);
+		// } else {
+		// intent = new Intent(this, TalksActivity.class);
+		// }
+
+		if (userData.getNeedsAccommodation() == true) {
+			if (intent == null) {
+				intent = new Intent(this, AccomodationActivity.class);
+			}
+		}
+
+		if (userData.getNeedsPickUp() == true) {
+			if (intent == null) {
+				intent = new Intent(this, PickupActivity.class);
+			}
 			intent.putExtra("hasPickup", true);
-		} else {
-			intent = new Intent(this, TalksActivity.class);
+		}
+
+		if (userData.getHasTalk() == true) {
+			if (intent == null) {
+				intent = new Intent(this, TalksActivity.class);
+			}
+			intent.putExtra("hasTalk", true);
+		}
+
+		if (intent == null) {
+			intent = new Intent(this, SummaryActivity.class);
 		}
 
 		startActivity(intent);
@@ -355,6 +396,7 @@ public class WelcomeActivity extends ActionBarActivity implements
 	private void initializeListeners() {
 		accommodationCheck.setOnCheckedChangeListener(this);
 		pickupCheck.setOnCheckedChangeListener(this);
+		talkCheck.setOnCheckedChangeListener(this);
 
 		eventCalendarGrid.setOnItemClickListener(this);
 	}

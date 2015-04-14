@@ -14,36 +14,39 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
         android:text="Welcome to Hillhacks Buddy Application"
         android:textSize="15sp" />
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/calenderHolder"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/scrollWrapper"
+        android:layout_alignRight="@+id/scrollWrapper"
+        android:layout_below="@+id/welcomeHeader" >
 
         <GridView
             android:id="@+id/eventCalendarGrid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginTop="35dp"
             android:columnWidth="60dp"
             android:horizontalSpacing="10dp"
             android:numColumns="7"
             android:stretchMode="spacingWidth"
-            android:verticalSpacing="10dp" >
+            android:verticalSpacing="10dp"
+            tools:listitem="@layout/calendar_single_day" >
         </GridView>
-    </RelativeLayout>
+    </LinearLayout>
 
     <ScrollView
         android:id="@+id/scrollWrapper"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/next"
         android:layout_alignLeft="@+id/welcomeHeader"
-        android:layout_below="@+id/calenderHolder"
-        android:fadeScrollbars="false"
-        android:layout_above="@+id/next" >
+        android:layout_marginBottom="50dp"
+        android:fadeScrollbars="false" >
 
         <RelativeLayout
             android:id="@+id/widgetHolder"
@@ -56,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:text="Would you like Accommodation and Food?" />
+                android:text="Would you like Accommodation" />
 
             <CheckBox
                 android:id="@+id/pickupCheck"
@@ -64,8 +67,17 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/accommodationCheck"
                 android:layout_below="@+id/accommodationCheck"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="15dp"
                 android:text="Would you like a Pick up?" />
+
+            <CheckBox
+                android:id="@+id/talkCheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/accommodationCheck"
+                android:layout_below="@+id/pickupCheck"
+                android:layout_marginTop="15dp"
+                android:text="Would you like to present a Talk?" />
         </RelativeLayout>
     </ScrollView>
 
