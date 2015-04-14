@@ -79,4 +79,14 @@
         android:text="Get Email" 
         android:onClick="getEmail" />
 
+    <Button
+        android:id="@+id/summaryPage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/button1"
+        android:layout_alignLeft="@+id/getEmail"
+        android:layout_alignRight="@+id/getEmail"
+        android:text="Show Summary" 
+        android:onClick="summary"/>
+
 </RelativeLayout>

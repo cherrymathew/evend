@@ -198,6 +198,11 @@ public class MainActivity extends ActionBarActivity implements
 		}
 	}
 
+	public void summary(View view) {
+		Intent intent = new Intent(this, SummaryActivity.class);
+		startActivity(intent);
+	}
+
 	@Override
 	public void postAsyncTaskCallback(String responseBody, String responseCode) {
 		// TODO Auto-generated method stub
