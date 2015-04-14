@@ -50,6 +50,8 @@ public class PickupActivity extends ActionBarActivity implements
 	private Spinner location;
 	private Spinner seatsCount;
 
+	private Boolean hasTalk;
+
 	private String identifier;
 	private UserData userData;
 	private PickupData pickupData;
@@ -73,6 +75,9 @@ public class PickupActivity extends ActionBarActivity implements
 		identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
 		userData = StorageHelper.PreferencesHelper
 				.getUserData(this, identifier);
+
+		Intent intent = getIntent();
+		hasTalk = intent.getBooleanExtra("hasTalk", false);
 
 		initializeAdapters();
 		initializeListeners();
@@ -114,14 +119,16 @@ public class PickupActivity extends ActionBarActivity implements
 		} else {
 			pickupData = new PickupData();
 
-			position = seatsCountAdapter.getPosition(userData
-					.getAccommodationData().getBedsCount());
-			seatsCount.setSelection(position);
+			if (userData.getNeedsAccommodation()) {
+				position = seatsCountAdapter.getPosition(userData
+						.getAccommodationData().getBedsCount());
+				seatsCount.setSelection(position);
 
-			dateString = userData.getAccommodationData().getStartDate(
-					"dd-MM-yyyy");
-			if (dateString.length() > 0) {
-				pickupDate.setText(dateString);
+				dateString = userData.getAccommodationData().getStartDate(
+						"dd-MM-yyyy");
+				if (dateString.length() > 0) {
+					pickupDate.setText(dateString);
+				}
 			}
 		}
 
@@ -379,7 +386,18 @@ public class PickupActivity extends ActionBarActivity implements
 	}
 
 	public void next(View view) {
-		Intent intent = new Intent(this, TalksActivity.class);
+		Intent intent = null;
+
+		if (hasTalk == true) {
+			if (intent == null) {
+				intent = new Intent(this, TalksActivity.class);
+			}
+			intent.putExtra("hasTalk", true);
+		}
+
+		if (intent == null) {
+			intent = new Intent(this, SummaryActivity.class);
+		}
 
 		EditText pickupDate = (EditText) findViewById(R.id.pickupDate);
 		EditText pickupTime = (EditText) findViewById(R.id.pickupTime);
