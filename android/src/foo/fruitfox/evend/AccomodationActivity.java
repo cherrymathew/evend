@@ -64,7 +64,8 @@ public class AccomodationActivity extends ActionBarActivity implements
 	private UserData userData;
 	private AccommodationData accommodationData;
 
-	private boolean hasPickup;
+	private Boolean hasPickup;
+	private Boolean hasTalk;
 
 	private String serverURL;
 
@@ -91,6 +92,7 @@ public class AccomodationActivity extends ActionBarActivity implements
 
 		Intent intent = getIntent();
 		hasPickup = intent.getBooleanExtra("hasPickup", false);
+		hasTalk = intent.getBooleanExtra("hasTalk", false);
 
 		initializeAdapters();
 		initializeListeners();
@@ -292,13 +294,22 @@ public class AccomodationActivity extends ActionBarActivity implements
 	}
 
 	public void next(View view) {
-		Intent intent;
+		Intent intent = null;
 		JSONObject requestJSON = new JSONObject();
 
 		if (hasPickup == true) {
 			intent = new Intent(this, PickupActivity.class);
-		} else {
-			intent = new Intent(this, TalksActivity.class);
+		}
+
+		if (hasTalk == true) {
+			if (intent == null) {
+				intent = new Intent(this, TalksActivity.class);
+			}
+			intent.putExtra("hasTalk", true);
+		}
+
+		if (intent == null) {
+			intent = new Intent(this, SummaryActivity.class);
 		}
 
 		EditText accommodationStartDate = (EditText) findViewById(R.id.accommodationStartDate);
