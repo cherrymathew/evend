@@ -138,7 +138,7 @@ public class UserData {
 	}
 
 	public Boolean getHasTalk() {
-		return hasTalk;
+		return this.hasTalk;
 	}
 
 	public void setHasTalk(Boolean hasTalk) {
