@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -262,6 +263,8 @@ public class TalksActivity extends ActionBarActivity implements
 	}
 
 	public void next(View view) {
+		Intent intent = new Intent(this, SummaryActivity.class);
+
 		JSONObject requestJSON = new JSONObject();
 		JSONArray talksJSONArray = new JSONArray();
 
@@ -299,6 +302,8 @@ public class TalksActivity extends ActionBarActivity implements
 			DebugHelper.ShowMessage.t(this,
 					"An error occured processing the response");
 		}
+
+		startActivity(intent);
 	}
 
 	private void initializeListeners() {

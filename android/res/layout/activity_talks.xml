@@ -20,7 +20,7 @@
 
     <LinearLayout
         android:id="@+id/addTalkLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/participateHeader"
         android:orientation="horizontal" >
@@ -62,7 +62,8 @@
         android:layout_above="@+id/next"
         android:layout_below="@+id/addTalkLayout"
         android:layout_marginTop="10dp"
-        android:fadeScrollbars="false" />
+        android:fadeScrollbars="false"
+        tools:listitem="@layout/talk_single_row" />
 
     <Button
         android:id="@+id/next"
