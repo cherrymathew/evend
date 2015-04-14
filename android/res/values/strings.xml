@@ -249,5 +249,6 @@
     <string name="title_activity_accomodation">AccomodationActivity</string>
     <string name="title_activity_pickup">PickupActivity</string>
     <string name="title_activity_summary">SummaryActivity</string>
+    <string name="title_activity_chat">ChatActivity</string>
 
 </resources>
