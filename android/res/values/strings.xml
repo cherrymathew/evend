@@ -27,15 +27,15 @@
         <item>Bed</item>
         <item>Tent</item>
     </string-array>
-    
+
     <!-- Various Pickup Locations -->
     <string-array name="location_names">
-	    <item>Lower Dharamsala Post Office Bus stop</item>
-	    <item>Dharamsala Bus station</item>
-	    <item>Pathankot Railway station</item>
-	    <item>Kangra Airport (DHM)</item>
+        <item>Lower Dharamsala \nPost Office Bus stop</item>
+        <item>Dharamsala Bus station</item>
+        <item>Pathankot Railway station</item>
+        <item>Kangra Airport (DHM)</item>
     </string-array>
-    
+
     <!-- International Country Codes -->
     <string-array name="country_codes">
         <item>93,AF</item>
@@ -248,5 +248,6 @@
 
     <string name="title_activity_accomodation">AccomodationActivity</string>
     <string name="title_activity_pickup">PickupActivity</string>
+    <string name="title_activity_summary">SummaryActivity</string>
 
 </resources>
