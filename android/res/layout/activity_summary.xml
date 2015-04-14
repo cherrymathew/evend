@@ -163,7 +163,8 @@
                 android:id="@+id/liveChat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Join live chat in IRC" />
+                android:text="Join live chat in IRC"
+                android:onClick="liveChat" />
 
             <Button
                 android:id="@+id/openMap"
@@ -172,7 +173,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:text="Open Map"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:onClick="openMap" />
 
             <Button
                 android:id="@+id/finalize"
@@ -180,7 +182,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:text="Finalize" />
+                android:text="Finalize"
+                android:onClick="finalize" />
         </RelativeLayout>
     </RelativeLayout>
 

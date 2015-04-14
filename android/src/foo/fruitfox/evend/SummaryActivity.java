@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import foo.fruitfox.adapters.EventCalendarAdapter;
 import foo.fruitfox.data.TalkData;
 import foo.fruitfox.data.UserData;
+import foo.fruitfox.helpers.DebugHelper;
 import foo.fruitfox.helpers.StorageHelper;
 
 public class SummaryActivity extends ActionBarActivity {
@@ -198,5 +200,18 @@ public class SummaryActivity extends ActionBarActivity {
 				endDateString, userData.getEventDaysAttending());
 
 		eventCalendarGrid.setAdapter(eventCalendarAdapter);
+	}
+
+	public void finalize(View view) {
+		DebugHelper.ShowMessage.t(this, "Clicked finalize");
+	}
+
+	public void openMap(View view) {
+		DebugHelper.ShowMessage.t(this, "Clicked openmap");
+	}
+
+	public void liveChat(View view) {
+		Intent intent = new Intent(this, ChatActivity.class);
+		startActivity(intent);
 	}
 }
