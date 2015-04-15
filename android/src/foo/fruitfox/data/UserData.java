@@ -27,9 +27,9 @@ public class UserData {
 
 		this.registrationIdType = registrationIdType;
 
-		if (registrationIdType == "email") {
+		if (registrationIdType.equalsIgnoreCase("email")) {
 			this.email = data;
-		} else if (registrationIdType == "phone") {
+		} else if (registrationIdType.equalsIgnoreCase("phone")) {
 			this.phone = data;
 		}
 
