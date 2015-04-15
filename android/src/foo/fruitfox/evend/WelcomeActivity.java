@@ -302,10 +302,12 @@ public class WelcomeActivity extends ActionBarActivity implements
 				new DateTime(endDateString).toLocalDate()).getDays() + 1;
 		needsAccommodation = userData.getNeedsAccommodation();
 		needsPickup = userData.getNeedsPickUp();
+		hasTalk = userData.getHasTalk();
 
 		CheckBox accommodationCheck = (CheckBox) this
 				.findViewById(R.id.accommodationCheck);
 		CheckBox pickupCheck = (CheckBox) findViewById(R.id.pickupCheck);
+		CheckBox talkCheck = (CheckBox) findViewById(R.id.talkCheck);
 
 		if (needsAccommodation == true) {
 			accommodationCheck.setChecked(true);
@@ -313,6 +315,10 @@ public class WelcomeActivity extends ActionBarActivity implements
 
 		if (needsPickup == true) {
 			pickupCheck.setChecked(true);
+		}
+
+		if (hasTalk == true) {
+			talkCheck.setChecked(true);
 		}
 
 		if (userData.getEventDaysAttending() != null) {
