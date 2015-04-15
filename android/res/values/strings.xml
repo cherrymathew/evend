@@ -19,7 +19,7 @@
     <!-- Generic Label for the Next Button -->
     <string name="next_label">Next</string>
     <!-- Server URL -->
-    <string name="server_url">http://192.168.1.117:3000/</string>
+    <string name="server_url">http://192.168.1.119:3000/</string>
 
     <!-- The Accommmodation types -->
     <string-array name="accommodation_types">
