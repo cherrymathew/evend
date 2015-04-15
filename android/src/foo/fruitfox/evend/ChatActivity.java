@@ -44,6 +44,8 @@ public class ChatActivity extends Activity implements
 	private int startPort;
 	private int endPort;
 
+	private Timer connectionCheckTimer;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -80,7 +82,7 @@ public class ChatActivity extends Activity implements
 		IRCChatAPITask task = new IRCChatAPITask(this, connection, this);
 		task.execute();
 
-		initializeConnectionCheck();
+		initializeIRCConnectionCheckTimer();
 	}
 
 	protected void onDestroy() {
@@ -89,21 +91,21 @@ public class ChatActivity extends Activity implements
 		connection.doQuit("User closed connection.");
 		connection.close();
 		connection = null;
+
+		connectionCheckTimer.cancel();
 	}
 
-	private void initializeConnectionCheck() {
+	private void initializeIRCConnectionCheckTimer() {
 		int delay = 30000; // delay for 30 sec.
-		int period = 30000; // repeat every 30 secs.
+		int period = 15000; // repeat every 15 secs.
 
 		final Context context = this;
 		final AsyncResponseListener listener = this;
 
-		Timer timer = new Timer();
+		connectionCheckTimer = new Timer();
 
-		timer.scheduleAtFixedRate(new TimerTask() {
-
+		connectionCheckTimer.scheduleAtFixedRate(new TimerTask() {
 			public void run() {
-
 				if (connection == null || !connection.isConnected()) {
 					runOnUiThread(new Runnable() {
 						@Override
@@ -114,14 +116,15 @@ public class ChatActivity extends Activity implements
 
 						}
 					});
+
 					String currentNickName = nickNameIRC;
 					if (connection != null) {
-						currentNickName = connection.getNick() + "_ ";
 						connection.close();
 					}
 					connection = null;
 
 					initializeIRCConnection(currentNickName);
+
 					IRCChatAPITask task = new IRCChatAPITask(context,
 							connection, listener);
 
@@ -213,6 +216,12 @@ public class ChatActivity extends Activity implements
 		case IRCConstants.ERR_NICKNAMEINUSE:
 			String currentNickName = connection.getNick();
 
+			// Disable the auto connect timer
+			connectionCheckTimer.cancel();
+
+			if (connection != null) {
+				connection.close();
+			}
 			connection = null;
 
 			initializeIRCConnection(currentNickName + "_");
@@ -227,8 +236,8 @@ public class ChatActivity extends Activity implements
 			});
 
 			IRCChatAPITask task = new IRCChatAPITask(this, connection, this);
-
 			task.execute();
+
 			break;
 
 		case IRCConstants.ERR_ERRONEUSNICKNAME:
@@ -253,6 +262,9 @@ public class ChatActivity extends Activity implements
 				scrollDown();
 			}
 		});
+
+		// Enable the auto connect timer again
+		initializeIRCConnectionCheckTimer();
 	}
 
 	@Override
@@ -404,7 +416,7 @@ public class ChatActivity extends Activity implements
 		} else {
 			String currentNickName = nickNameIRC;
 			if (connection != null) {
-				currentNickName = connection.getNick() + "_";
+				// currentNickName = connection.getNick() + "_";
 				connection.close();
 			}
 			connection = null;
