@@ -183,10 +183,7 @@ public class LoginActivity extends ActionBarActivity implements
 	}
 
 	public void verify(View view) {
-		identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
 		verificationCode = (EditText) findViewById(R.id.verificationCode);
-		userData = StorageHelper.PreferencesHelper
-				.getUserData(this, identifier);
 
 		if (verificationCode.getText().toString()
 				.equals(userData.getVerificationCode())) {
@@ -215,6 +212,9 @@ public class LoginActivity extends ActionBarActivity implements
 		Intent intent = new Intent(this, WelcomeActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
 				| Intent.FLAG_ACTIVITY_NEW_TASK);
+
+		StorageHelper.PreferencesHelper.setIdentifier(this, identifier);
+		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
 
 		startActivity(intent);
 		finish();
