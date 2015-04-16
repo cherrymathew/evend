@@ -83,6 +83,14 @@ public class WelcomeActivity extends ActionBarActivity implements
 
 		initalizeAdapter();
 
+		if (userData.getIsFinalized() == true) {
+			Intent intent = new Intent(this, SummaryActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
+					| Intent.FLAG_ACTIVITY_NEW_TASK);
+
+			startActivity(intent);
+			finish();
+		}
 		// getEventDaysUpdate();
 	}
 
