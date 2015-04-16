@@ -9,7 +9,7 @@
     <string name="title_activity_welcome">WelcomeActivity</string>
     <string name="title_activity_talks">TalksActivity</string>
     <string name="hello_world">Hello world!</string>
-    <!-- Strings used in the Login Page -->
+    <!-- Strings used in the Login Activity -->
     <string name="username_label">Username</string>
     <string name="username_hint">user@example.com</string>
     <string name="login_label">Login</string>
@@ -20,7 +20,11 @@
     <string name="next_label">Next</string>
     <!-- Server URL -->
     <string name="server_url">http://192.168.1.119:3000/</string>
-
+    <!-- Strings used in the Summary Activity  -->
+    <string name="finalize_dialog_message">Once you Finalize the changes you will no longer be able to edit any of the registration details.\nAre you sure you wish to continue?</string>
+	<!-- The location Map URL -->
+    <string name="map_url">http://www.openstreetmap.org/?mlat=32.24159&amp;mlon=76.32994#map=17/32.24161/76.32873</string>
+    
     <!-- The Accommmodation types -->
     <string-array name="accommodation_types">
         <item>Room</item>
@@ -250,5 +254,6 @@
     <string name="title_activity_pickup">PickupActivity</string>
     <string name="title_activity_summary">SummaryActivity</string>
     <string name="title_activity_chat">ChatActivity</string>
+    <string name="title_activity_map">MapActivity</string>
 
 </resources>
