@@ -82,7 +82,7 @@ public class ChatActivity extends Activity implements
 		IRCChatAPITask task = new IRCChatAPITask(this, connection, this);
 		task.execute();
 
-		initializeIRCConnectionCheckTimer();
+		// initializeIRCConnectionCheckTimer();
 	}
 
 	protected void onDestroy() {
