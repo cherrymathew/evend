@@ -199,8 +199,18 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	public void summary(View view) {
+		String identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
+		UserData userData = StorageHelper.PreferencesHelper.getUserData(this,
+				identifier);
+
+		userData.setIsFinalized(false);
+
+		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
+
 		Intent intent = new Intent(this, SummaryActivity.class);
+
 		startActivity(intent);
+
 	}
 
 	@Override
