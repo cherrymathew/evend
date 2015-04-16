@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -12,16 +14,17 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import foo.fruitfox.adapters.EventCalendarAdapter;
 import foo.fruitfox.data.TalkData;
 import foo.fruitfox.data.UserData;
-import foo.fruitfox.helpers.DebugHelper;
 import foo.fruitfox.helpers.StorageHelper;
 
-public class SummaryActivity extends ActionBarActivity {
+public class SummaryActivity extends ActionBarActivity implements
+		DialogInterface.OnClickListener {
 	private Map<String, String> summaryMap;
 
 	private LinearLayout accommodationSummary;
@@ -29,6 +32,8 @@ public class SummaryActivity extends ActionBarActivity {
 	private LinearLayout talksSummary;
 
 	private GridView eventCalendarGrid;
+
+	AlertDialog.Builder finalizeAlertDialogBuilder;
 
 	private Context context;
 
@@ -51,16 +56,39 @@ public class SummaryActivity extends ActionBarActivity {
 
 		context = this;
 
+		finalizeAlertDialogBuilder = new AlertDialog.Builder(context);
+
 		eventCalendarGrid = (GridView) findViewById(R.id.attendanceSummaryGrid);
 
 		accommodationSummary = (LinearLayout) findViewById(R.id.accommodationSummary);
 		pickupSummary = (LinearLayout) findViewById(R.id.pickupSummary);
 		talksSummary = (LinearLayout) findViewById(R.id.talksSummary);
 
+		initalizeLayout();
 		initalizeAdapters();
+		initalizeListeners();
 		initializeAccommodationSummary();
 		initializePickupSummary();
 		initializeTalksSummary();
+	}
+
+	private void initalizeLayout() {
+		String finalizeDialogMessage = getResources().getString(
+				R.string.finalize_dialog_message);
+		finalizeAlertDialogBuilder.setMessage(finalizeDialogMessage);
+
+		if (userData.getIsFinalized() == true) {
+			Button openMap = (Button) findViewById(R.id.openMap);
+			Button finalize = (Button) findViewById(R.id.finalize);
+
+			openMap.setVisibility(View.VISIBLE);
+			finalize.setVisibility(View.GONE);
+		}
+	}
+
+	private void initalizeListeners() {
+		finalizeAlertDialogBuilder.setPositiveButton("Yes", this);
+		finalizeAlertDialogBuilder.setNegativeButton("No", this);
 	}
 
 	@Override
@@ -203,15 +231,39 @@ public class SummaryActivity extends ActionBarActivity {
 	}
 
 	public void finalize(View view) {
-		DebugHelper.ShowMessage.t(this, "Clicked finalize");
+		finalizeAlertDialogBuilder.show();
 	}
 
 	public void openMap(View view) {
-		DebugHelper.ShowMessage.t(this, "Clicked openmap");
+		Intent intent = new Intent(this, MapActivity.class);
+		startActivity(intent);
 	}
 
 	public void liveChat(View view) {
 		Intent intent = new Intent(this, ChatActivity.class);
 		startActivity(intent);
+	}
+
+	@Override
+	public void onClick(DialogInterface dialog, int which) {
+		switch (which) {
+		case DialogInterface.BUTTON_POSITIVE:
+			userData.setIsFinalized(true);
+
+			Intent intent = new Intent(this, SummaryActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
+					| Intent.FLAG_ACTIVITY_NEW_TASK);
+
+			startActivity(intent);
+			finish();
+			break;
+
+		case DialogInterface.BUTTON_NEGATIVE:
+			userData.setIsFinalized(false);
+			break;
+		}
+
+		StorageHelper.PreferencesHelper.setUserData(context, identifier,
+				userData);
 	}
 }
