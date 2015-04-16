@@ -17,6 +17,7 @@ public class UserData {
 	private Boolean hasTalk;
 	private Boolean hasOauth;
 	private Boolean isVerified;
+	private Boolean isFinalized;
 	private UserOauthData oauthData;
 	private AccommodationData accommodationData;
 	private PickupData pickupData;
@@ -38,6 +39,7 @@ public class UserData {
 		this.hasTalk = false;
 		this.hasOauth = false;
 		this.isVerified = false;
+		this.isFinalized = false;
 		this.talkDataList = new ArrayList<TalkData>();
 	}
 
@@ -54,6 +56,7 @@ public class UserData {
 		this.hasTalk = false;
 		this.hasOauth = true;
 		this.isVerified = false;
+		this.isFinalized = false;
 		this.talkDataList = new ArrayList<TalkData>();
 	}
 
@@ -201,4 +204,11 @@ public class UserData {
 		this.pickupData = pickupData;
 	}
 
+	public Boolean getIsFinalized() {
+		return isFinalized;
+	}
+
+	public void setIsFinalized(Boolean isFinalized) {
+		this.isFinalized = isFinalized;
+	}
 }
