@@ -8,8 +8,11 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -35,10 +38,14 @@ import android.widget.TimePicker.OnTimeChangedListener;
 import foo.fruitfox.data.PickupData;
 import foo.fruitfox.data.UserData;
 import foo.fruitfox.helpers.DebugHelper;
+import foo.fruitfox.helpers.NetworkHelper;
 import foo.fruitfox.helpers.StorageHelper;
+import foo.fruitfox.tasks.UserDataWebAPITask;
+import foo.fruitfox.tasks.UserDataWebAPITask.AsyncResponseListener;
 
 public class PickupActivity extends ActionBarActivity implements
-		OnItemSelectedListener, OnClickListener, OnFocusChangeListener {
+		OnItemSelectedListener, OnClickListener, OnFocusChangeListener,
+		AsyncResponseListener {
 	private List<String> locationList;
 	private List<String> seatsCountList;
 
@@ -50,13 +57,17 @@ public class PickupActivity extends ActionBarActivity implements
 	private Spinner location;
 	private Spinner seatsCount;
 
+	private Context context;
+
+	private ProgressDialog progDialog;
+
 	private Boolean hasTalk;
 
 	private String identifier;
 	private UserData userData;
 	private PickupData pickupData;
 
-	private Context context;
+	private String serverURL;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +86,8 @@ public class PickupActivity extends ActionBarActivity implements
 		identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
 		userData = StorageHelper.PreferencesHelper
 				.getUserData(this, identifier);
+
+		serverURL = getResources().getString(R.string.server_url);
 
 		Intent intent = getIntent();
 		hasTalk = intent.getBooleanExtra("hasTalk", false);
@@ -214,7 +227,7 @@ public class PickupActivity extends ActionBarActivity implements
 		final Dialog dialog = new Dialog(context);
 		EditText pickupDate = (EditText) findViewById(R.id.pickupDate);
 
-		DateTime startDate = new DateTime("2015-05-23");
+		DateTime startDate = new DateTime("2015-05-01");
 		DateTime endDate = new DateTime("2015-06-07");
 
 		dialog.setTitle("Select your arrival date");
@@ -387,6 +400,7 @@ public class PickupActivity extends ActionBarActivity implements
 
 	public void next(View view) {
 		Intent intent = null;
+		JSONObject requestJSON = new JSONObject();
 
 		if (hasTalk == true) {
 			if (intent == null) {
@@ -406,6 +420,37 @@ public class PickupActivity extends ActionBarActivity implements
 		pickupData.setPickupTime("HH:mm", pickupTime.getText().toString());
 
 		userData.setPickupData(pickupData);
+
+		try {
+			requestJSON.put("hhtoken", userData.getAuthToken());
+			requestJSON.put("date",
+					userData.getPickupData().getPickupDate("dd-MM-yyyy"));
+			requestJSON.put("location", userData.getPickupData().getLocation());
+			requestJSON.put("seats", userData.getPickupData().getSeatsCount());
+			requestJSON.put("time",
+					userData.getPickupData().getPickupTime("HH:mm"));
+		} catch (JSONException e) {
+			DebugHelper.ShowMessage.t(this,
+					"An error occured processing the response");
+		}
+
+		if (NetworkHelper.Utilities.isConnected(this)) {
+			UserDataWebAPITask udwTask = new UserDataWebAPITask(this, this);
+			try {
+				progDialog = ProgressDialog.show(this, "Processing...",
+						"Fetching data", true, false);
+				udwTask.execute("POST", serverURL + "users/pickup",
+						requestJSON.toString());
+
+			} catch (Exception e) {
+				if (progDialog.isShowing()) {
+					progDialog.dismiss();
+				}
+				udwTask.cancel(true);
+			}
+		} else {
+			DebugHelper.ShowMessage.t(this, "Connection error");
+		}
 
 		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
 
@@ -462,5 +507,33 @@ public class PickupActivity extends ActionBarActivity implements
 
 	@Override
 	public void onNothingSelected(AdapterView<?> parent) {
+	}
+
+	@Override
+	public void postAsyncTaskCallback(String responseBody, String responseCode) {
+		JSONObject responseJSON;
+
+		if (progDialog.isShowing()) {
+			progDialog.dismiss();
+		}
+
+		if (responseBody.length() == 0) {
+			DebugHelper.ShowMessage
+					.t(this,
+							"There was an error processing your request. Please try again later.");
+		} else {
+			try {
+				responseJSON = new JSONObject(responseBody);
+
+				if (responseJSON.has("error") == true) {
+					DebugHelper.ShowMessage.t(this,
+							"An error occured processing the response");
+				}
+			} catch (JSONException e) {
+				DebugHelper.ShowMessage.t(this,
+						"An error occured processing the response");
+			}
+		}
+
 	}
 }
