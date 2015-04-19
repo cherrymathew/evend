@@ -35,6 +35,7 @@
         android:layout_toLeftOf="@+id/send"
         android:ems="10"
         android:inputType="none"
+        android:hint="Enter your chat text here..."
         android:enabled="false" />
 
     <Button
