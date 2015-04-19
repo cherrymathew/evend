@@ -31,98 +31,79 @@
             android:layout_height="wrap_content" >
 
             <LinearLayout
-                android:id="@+id/accommodationTypeContainer"
+                android:id="@+id/campingGearContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:orientation="vertical" >
 
                 <TextView
-                    android:id="@+id/accommodationTypeLabel"
+                    android:id="@+id/campingGearLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Accommodation Type"
+                    android:text="Please select the gear you are bringing"
                     android:textSize="15sp" />
 
-                <Spinner
-                    android:id="@+id/accommodationTypes"
+                <CheckBox
+                    android:id="@+id/tentCheck"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:listitem="@android:layout/simple_list_item_1" />
+                    android:layout_marginTop="15dp"
+                    android:text="Yes, I am bringing a Tent" />
 
+                <CheckBox
+                    android:id="@+id/sleepingBagCheck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Yes, I am bringing a Sleeping Bag" />
+
+                <CheckBox
+                    android:id="@+id/matressCheck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Yes, I am bringing a Matress" />
+
+                <CheckBox
+                    android:id="@+id/pillowCheck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Yes, I am bringing a Pillow" />
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/accommodationStartDateContainer"
+                android:id="@+id/familyContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/accommodationTypeContainer"
-                android:layout_marginTop="10dp"
+                android:layout_below="@+id/campingGearContainer"
+                android:layout_marginTop="20dp"
                 android:orientation="vertical" >
 
                 <TextView
-                    android:id="@+id/accommodationStartDateLabel"
+                    android:id="@+id/familyLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Start Date" />
+                    android:text="Are you coming with your family?"
+                    android:textSize="15sp" />
+
+                <CheckBox
+                    android:id="@+id/familyCheck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="Yes, I am coming with my family" />
 
                 <EditText
-                    android:id="@+id/accommodationStartDate"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/familyDetails"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:inputType="date"
-                    android:text="23-05-2015" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/daysCountContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/accommodationStartDateContainer"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:id="@+id/daysLabel"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.7"
-                    android:text="Number of Days"
-                    android:textSize="15sp" />
-
-                <Spinner
-                    android:id="@+id/daysCount"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.3"
-                    tools:listitem="@android:layout/simple_list_item_1" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/bedsCountContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/daysCountContainer"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:id="@+id/bedsLabel"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.7"
-                    android:text="Number of Beds"
-                    android:textSize="15sp" />
-
-                <Spinner
-                    android:id="@+id/bedsCount"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.3"
-                    tools:listitem="@android:layout/simple_list_item_1" />
-
+                    android:inputType="textMultiLine" 
+                    android:hint="Please provide us with the details of your family members"
+                    android:visibility="gone"/>
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>

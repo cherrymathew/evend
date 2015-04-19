@@ -12,6 +12,12 @@ public class AccommodationData {
 	private String bedsCount;
 	private DateTime accommodationStartDate;
 	private String daysCount;
+	private Boolean hasTent;
+	private Boolean hasSleeplingBag;
+	private Boolean hasMatress;
+	private Boolean hasPillow;
+	private Boolean hasFamily;
+	private String familyDetails;
 
 	public AccommodationData() {
 		super();
@@ -19,6 +25,11 @@ public class AccommodationData {
 		this.bedsCount = "";
 		this.accommodationStartDate = null;
 		this.daysCount = "";
+		this.hasTent = false;
+		this.hasSleeplingBag = false;
+		this.hasMatress = false;
+		this.hasPillow = false;
+		this.hasFamily = false;
 	}
 
 	public AccommodationData(String accommodationType, String bedsCount) {
@@ -96,7 +107,65 @@ public class AccommodationData {
 			String currentTimeZone = TimeZone.getDefault().getID();
 			DateTimeFormatter dtf = DateTimeFormat.forPattern(pattern);
 			this.accommodationStartDate = dtf.parseDateTime(date);
-			this.accommodationStartDate.withZone(DateTimeZone.forID(currentTimeZone));
+			this.accommodationStartDate.withZone(DateTimeZone
+					.forID(currentTimeZone));
 		}
 	}
+
+	public DateTime getAccommodationStartDate() {
+		return accommodationStartDate;
+	}
+
+	public void setAccommodationStartDate(DateTime accommodationStartDate) {
+		this.accommodationStartDate = accommodationStartDate;
+	}
+
+	public Boolean getHasTent() {
+		return hasTent;
+	}
+
+	public void setHasTent(Boolean hasTent) {
+		this.hasTent = hasTent;
+	}
+
+	public Boolean getHasSleeplingBag() {
+		return hasSleeplingBag;
+	}
+
+	public void setHasSleeplingBag(Boolean hasSleeplingBag) {
+		this.hasSleeplingBag = hasSleeplingBag;
+	}
+
+	public Boolean getHasMatress() {
+		return hasMatress;
+	}
+
+	public void setHasMatress(Boolean hasMatress) {
+		this.hasMatress = hasMatress;
+	}
+
+	public Boolean getHasPillow() {
+		return hasPillow;
+	}
+
+	public void setHasPillow(Boolean hasPillow) {
+		this.hasPillow = hasPillow;
+	}
+
+	public Boolean getHasFamily() {
+		return hasFamily;
+	}
+
+	public void setHasFamily(Boolean hasFamily) {
+		this.hasFamily = hasFamily;
+	}
+
+	public String getFamilyDetails() {
+		return familyDetails;
+	}
+
+	public void setFamilyDetails(String familyDetails) {
+		this.familyDetails = familyDetails;
+	}
+
 }
