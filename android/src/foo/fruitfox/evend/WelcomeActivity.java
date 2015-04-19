@@ -2,32 +2,36 @@ package foo.fruitfox.evend;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.TimeZone;
+import java.util.Calendar;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.Days;
-import org.json.JSONArray;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
+import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.CalendarView;
+import android.widget.CalendarView.OnDateChangeListener;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.GridView;
-import android.widget.TextView;
-import foo.fruitfox.adapters.EventCalendarAdapter;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import foo.fruitfox.data.TalkData;
 import foo.fruitfox.data.UserData;
 import foo.fruitfox.helpers.DebugHelper;
@@ -37,25 +41,30 @@ import foo.fruitfox.tasks.UserDataWebAPITask;
 import foo.fruitfox.tasks.UserDataWebAPITask.AsyncResponseListener;
 
 public class WelcomeActivity extends ActionBarActivity implements
-		OnItemClickListener, OnCheckedChangeListener, AsyncResponseListener {
+		OnCheckedChangeListener, OnClickListener, OnFocusChangeListener,
+		AsyncResponseListener, android.content.DialogInterface.OnClickListener {
 
-	private GridView eventCalendarGrid;
+	private EditText attendanceStartDate;
+	private EditText attendanceEndDate;
 	private CheckBox accommodationCheck;
 	private CheckBox pickupCheck;
 	private CheckBox talkCheck;
 
-	private EventCalendarAdapter eventCalendarAdapter;
+	private Context context;
 
-	private Boolean[] eventDays = null;
 	private Boolean needsAccommodation = false;
 	private Boolean needsPickup = false;
 	private Boolean hasTalk = false;
 
+	AlertDialog.Builder pickupAlertDialogBuilder;
+
 	private String identifier;
 	private UserData userData;
 
-	private String startDateString = "2015-05-23";
-	private String endDateString = "2015-06-07";
+	private String startDateString = "07-05-2015";
+	private String endDateString = "07-06-2015";
+	private String currentStartDateString = "07-05-2015";
+	private String currentEndDateString = "07-06-2015";
 
 	private String serverURL;
 
@@ -66,10 +75,16 @@ public class WelcomeActivity extends ActionBarActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_welcome);
 
+		context = this;
+
 		accommodationCheck = (CheckBox) findViewById(R.id.accommodationCheck);
 		pickupCheck = (CheckBox) findViewById(R.id.pickupCheck);
 		talkCheck = (CheckBox) findViewById(R.id.talkCheck);
-		eventCalendarGrid = (GridView) findViewById(R.id.eventCalendarGrid);
+
+		attendanceStartDate = (EditText) findViewById(R.id.attendanceStartDate);
+		attendanceEndDate = (EditText) findViewById(R.id.attendanceEndDate);
+
+		pickupAlertDialogBuilder = new AlertDialog.Builder(context);
 
 		identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
 		userData = StorageHelper.PreferencesHelper
@@ -80,8 +95,6 @@ public class WelcomeActivity extends ActionBarActivity implements
 		initializeLayout();
 
 		initializeListeners();
-
-		initalizeAdapter();
 
 		if (userData.getIsFinalized() == true) {
 			Intent intent = new Intent(this, SummaryActivity.class);
@@ -120,45 +133,6 @@ public class WelcomeActivity extends ActionBarActivity implements
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
-		TextView dateText = (TextView) view.findViewById(R.id.dayText);
-		ColorDrawable backgroundColor = (ColorDrawable) dateText
-				.getBackground();
-
-		// For API less than 11
-
-		// if (backgroundColor.getC != null) {
-		// Bitmap bitmap = Bitmap.createBitmap(1, 1, Config.ARGB_8888);
-		// Canvas canvas = new Canvas(bitmap);
-		// backgroundColor.draw(canvas);
-		//
-		// if (bitmap.getPixel(0, 0) == Color.GREEN) {
-		// dateText.setBackgroundColor(Color.TRANSPARENT);
-		// } else {
-		// dateText.setBackgroundColor(Color.GREEN);
-		// }
-		// } else {
-		// dateText.setBackgroundColor(Color.GREEN);
-		// }
-
-		if (backgroundColor != null) {
-			if (backgroundColor.getColor() == Color.GREEN) {
-				dateText.setBackgroundColor(Color.TRANSPARENT);
-				eventDays[position] = false;
-			} else {
-				dateText.setBackgroundColor(Color.GREEN);
-				eventDays[position] = true;
-			}
-		} else {
-			dateText.setBackgroundColor(Color.GREEN);
-			eventDays[position] = true;
-		}
-
-		eventCalendarAdapter.notifyDataSetChanged();
-	}
-
-	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		switch (buttonView.getId()) {
 		case R.id.accommodationCheck:
@@ -166,6 +140,10 @@ public class WelcomeActivity extends ActionBarActivity implements
 			break;
 
 		case R.id.pickupCheck:
+			if (isChecked) {
+				pickupAlertDialogBuilder.show();
+			}
+
 			needsPickup = isChecked;
 			break;
 
@@ -180,13 +158,9 @@ public class WelcomeActivity extends ActionBarActivity implements
 	}
 
 	public void next(View view) {
-		String currentTimeZone = TimeZone.getDefault().getID();
-		DateTime startDate = new DateTime(startDateString,
-				DateTimeZone.forID(currentTimeZone));
-
-		String dates = "";
-
 		JSONObject requestJSON = new JSONObject();
+
+		DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
 
 		if (needsAccommodation == true) {
 			userData.setNeedsAccommodation(true);
@@ -209,32 +183,27 @@ public class WelcomeActivity extends ActionBarActivity implements
 			userData.setTalkDataList(new ArrayList<TalkData>());
 		}
 
-		userData.setEventDaysAttending(eventDays);
+		userData.setAttendanceStartDate("dd-MM-yyyy", attendanceStartDate
+				.getText().toString());
 
-		for (int i = 0; i < eventDays.length; i++) {
-			if (eventDays[i] == true) {
-				dates += Integer
-						.toString(startDate.plusDays(i).getDayOfMonth())
-						+ "-"
-						+ Integer.toString(startDate.plusDays(i)
-								.getMonthOfYear() - 1)
-						+ "-"
-						+ Integer.toString(startDate.plusDays(i).getYear())
-						+ ",";
-			}
-		}
+		userData.setAttendanceEndDate("dd-MM-yyyy", attendanceEndDate.getText()
+				.toString());
 
-		if (dates.length() > 0) {
-			dates = dates.substring(0, dates.length() - 1);
-		}
+		userData.setEventDaysAttending(dtf.parseDateTime(startDateString),
+				dtf.parseDateTime(endDateString));
 
 		try {
 			requestJSON.put("hhtoken", userData.getAuthToken());
-			requestJSON.put("dates", dates);
+			requestJSON.put("arrival_date",
+					userData.getAttendanceStartDate("dd-MM-yyyy"));
+			requestJSON.put("departure_date",
+					userData.getAttendanceStartDate("dd-MM-yyyy"));
 			requestJSON.put("accommodation",
-					userData.getNeedsAccommodation() ? "1" : "0");
-			requestJSON.put("pickup", userData.getNeedsPickUp() ? "1" : "0");
-			requestJSON.put("seats", "0");
+					userData.getNeedsAccommodation() ? 1 : 0);
+			requestJSON.put("pickup", userData.getNeedsPickUp() ? 1 : 0);
+			requestJSON.put("accommodation",
+					userData.getNeedsAccommodation() ? 1 : 0);
+			requestJSON.put("talk", userData.getHasTalk() ? 1 : 0);
 		} catch (JSONException e) {
 			DebugHelper.ShowMessage.t(this,
 					"An error occured processing the response");
@@ -261,21 +230,6 @@ public class WelcomeActivity extends ActionBarActivity implements
 		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
 
 		Intent intent = null;
-
-		// if (userData.getNeedsAccommodation() == true
-		// && userData.getNeedsPickUp() == false) {
-		// intent = new Intent(this, AccomodationActivity.class);
-		// intent.putExtra("hasPickup", false);
-		// } else if (userData.getNeedsAccommodation() == false
-		// && userData.getNeedsPickUp() == true) {
-		// intent = new Intent(this, PickupActivity.class);
-		// } else if (userData.getNeedsAccommodation() == true
-		// && userData.getNeedsPickUp() == true) {
-		// intent = new Intent(this, AccomodationActivity.class);
-		// intent.putExtra("hasPickup", true);
-		// } else {
-		// intent = new Intent(this, TalksActivity.class);
-		// }
 
 		if (userData.getNeedsAccommodation() == true) {
 			if (intent == null) {
@@ -305,17 +259,14 @@ public class WelcomeActivity extends ActionBarActivity implements
 	}
 
 	private void initializeLayout() {
-		int daysCount = Days.daysBetween(
-				new DateTime(startDateString).toLocalDate(),
-				new DateTime(endDateString).toLocalDate()).getDays() + 1;
 		needsAccommodation = userData.getNeedsAccommodation();
 		needsPickup = userData.getNeedsPickUp();
 		hasTalk = userData.getHasTalk();
+		currentStartDateString = userData.getAttendanceStartDate("dd-MM-yyyy");
+		currentEndDateString = userData.getAttendanceEndDate("dd-MM-yyyy");
 
-		CheckBox accommodationCheck = (CheckBox) this
-				.findViewById(R.id.accommodationCheck);
-		CheckBox pickupCheck = (CheckBox) findViewById(R.id.pickupCheck);
-		CheckBox talkCheck = (CheckBox) findViewById(R.id.talkCheck);
+		pickupAlertDialogBuilder
+				.setMessage("HillHacks will not provide Taxi fare.\n\nDo you Agree to this?");
 
 		if (needsAccommodation == true) {
 			accommodationCheck.setChecked(true);
@@ -329,22 +280,12 @@ public class WelcomeActivity extends ActionBarActivity implements
 			talkCheck.setChecked(true);
 		}
 
-		if (userData.getEventDaysAttending() != null) {
-			eventDays = userData.getEventDaysAttending();
-		} else {
-			eventDays = new Boolean[daysCount];
-			java.util.Arrays.fill(eventDays, false);
-			userData.setEventDaysAttending(eventDays);
-			StorageHelper.PreferencesHelper.setUserData(this, identifier,
-					userData);
-		}
+		attendanceStartDate.setText(currentStartDateString);
+		attendanceEndDate.setText(currentEndDateString);
 	}
 
 	@Override
 	public void postAsyncTaskCallback(String responseBody, String responseCode) {
-		DateTime startDate = new DateTime(startDateString);
-		int currentDay = 0;
-
 		JSONObject responseJSON;
 
 		if (progDialog.isShowing()) {
@@ -359,23 +300,9 @@ public class WelcomeActivity extends ActionBarActivity implements
 			try {
 				responseJSON = new JSONObject(responseBody);
 
-				if (responseJSON.has("user") == true) {
-					// DebugHelper.ShowMessage.d(responseJSON.getString("dates")
-					// .toString());
-					JSONArray dates = new JSONArray(
-							responseJSON.getString("dates"));
-					for (int i = 0; i < dates.length(); i++) {
-						DateTime date = new DateTime(dates.get(i));
-						currentDay = Days.daysBetween(startDate.toLocalDate(),
-								date.toLocalDate()).getDays();
-						eventDays[currentDay] = true;
-					}
-
-					needsAccommodation = responseJSON
-							.getBoolean("accommodation");
-					needsPickup = responseJSON.getBoolean("pickup");
-					// DebugHelper.ShowMessage.d(responseJSON.getString("dates")
-					// .toString());
+				if (responseJSON.has("error") == true) {
+					DebugHelper.ShowMessage.t(this,
+							"An error occured processing the response");
 				}
 			} catch (JSONException e) {
 				DebugHelper.ShowMessage.t(this,
@@ -412,13 +339,217 @@ public class WelcomeActivity extends ActionBarActivity implements
 		pickupCheck.setOnCheckedChangeListener(this);
 		talkCheck.setOnCheckedChangeListener(this);
 
-		eventCalendarGrid.setOnItemClickListener(this);
+		attendanceStartDate.setOnClickListener(this);
+		attendanceStartDate.setOnFocusChangeListener(this);
+
+		attendanceEndDate.setOnClickListener(this);
+		attendanceEndDate.setOnFocusChangeListener(this);
+
+		pickupAlertDialogBuilder.setPositiveButton("Yes", this);
+		pickupAlertDialogBuilder.setNegativeButton("No", this);
 	}
 
-	private void initalizeAdapter() {
-		eventCalendarAdapter = new EventCalendarAdapter(this, startDateString,
-				endDateString, eventDays);
+	private void displayStartDateCalendar() {
+		final Dialog dialog = new Dialog(context);
 
-		eventCalendarGrid.setAdapter(eventCalendarAdapter);
+		DateTime startDate = new DateTime("2015-05-07");
+		DateTime endDate = new DateTime("2015-06-07");
+
+		dialog.setTitle("Select your attending date");
+		dialog.setContentView(R.layout.calendar_date_picker);
+
+		final Button acceptDate = (Button) dialog.findViewById(R.id.acceptDate);
+
+		CalendarView calendar = (CalendarView) dialog
+				.findViewById(R.id.eventCalendarView);
+
+		// sets whether to show the week number.
+		calendar.setShowWeekNumber(false);
+
+		calendar.setMinDate(startDate.getMillis());
+		calendar.setMaxDate(endDate.getMillis());
+
+		calendar.setMinimumHeight(50);
+
+		// sets the first day of week according to Calendar.
+		// here we set Monday as the first day of the Calendar
+		calendar.setFirstDayOfWeek(Calendar.MONDAY);
+
+		// The background color for the selected week.
+		calendar.setSelectedWeekBackgroundColor(getResources().getColor(
+				R.color.aqua));
+
+		// sets the color for the vertical bar shown at the beginning and at
+		// the end of the selected date.
+		calendar.setSelectedDateVerticalBar(R.color.silver);
+
+		DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
+		DateTime currentSelectedDate = dtf
+				.parseDateTime(currentStartDateString);
+		calendar.setDate(currentSelectedDate.getMillis());
+
+		// sets the listener to be notified upon selected date change.
+		calendar.setOnDateChangeListener(new OnDateChangeListener() {
+
+			@Override
+			public void onSelectedDayChange(CalendarView view, int year,
+					int month, int dayOfMonth) {
+				LinearLayout attendanceStartDateLayout = (LinearLayout) findViewById(R.id.attendanceStartDateContainer);
+				EditText attendanceStartDate = (EditText) attendanceStartDateLayout
+						.findViewById(R.id.attendanceStartDate);
+
+				String startDateString = dayOfMonth + "-" + (month + 1) + "-"
+						+ year;
+
+				DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
+				long epochDifference = dtf.parseDateTime(startDateString)
+						.getMillis()
+						- dtf.parseDateTime(currentEndDateString).getMillis();
+
+				if (epochDifference <= 0) {
+					attendanceStartDate.setText(startDateString);
+					currentStartDateString = startDateString;
+				} else {
+					DebugHelper.ShowMessage.t(context,
+							"Your start date cannot be after the end date");
+				}
+			}
+		});
+
+		acceptDate.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+			}
+		});
+
+		dialog.show();
+	}
+
+	private void displayEndDateCalendar() {
+		final Dialog dialog = new Dialog(context);
+
+		DateTime startDate = new DateTime("2015-05-07");
+		DateTime endDate = new DateTime("2015-06-07");
+
+		dialog.setTitle("Select your leaving date");
+		dialog.setContentView(R.layout.calendar_date_picker);
+
+		Button acceptDate = (Button) dialog.findViewById(R.id.acceptDate);
+
+		CalendarView calendar = (CalendarView) dialog
+				.findViewById(R.id.eventCalendarView);
+
+		// sets whether to show the week number.
+		calendar.setShowWeekNumber(false);
+
+		calendar.setMinDate(startDate.getMillis());
+		calendar.setMaxDate(endDate.getMillis());
+
+		calendar.setMinimumHeight(50);
+
+		// sets the first day of week according to Calendar.
+		// here we set Monday as the first day of the Calendar
+		calendar.setFirstDayOfWeek(Calendar.MONDAY);
+
+		// The background color for the selected week.
+		calendar.setSelectedWeekBackgroundColor(getResources().getColor(
+				R.color.aqua));
+
+		// sets the color for the vertical bar shown at the beginning and at
+		// the end of the selected date.
+		calendar.setSelectedDateVerticalBar(R.color.silver);
+
+		DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
+		DateTime currentSelectedDate = dtf.parseDateTime(currentEndDateString);
+		calendar.setDate(currentSelectedDate.getMillis());
+
+		// sets the listener to be notified upon selected date change.
+		calendar.setOnDateChangeListener(new OnDateChangeListener() {
+
+			@Override
+			public void onSelectedDayChange(CalendarView view, int year,
+					int month, int dayOfMonth) {
+				LinearLayout attendanceEndDateLayout = (LinearLayout) findViewById(R.id.attendanceEndDateContainer);
+				EditText attendanceEndDate = (EditText) attendanceEndDateLayout
+						.findViewById(R.id.attendanceEndDate);
+
+				String endDateString = dayOfMonth + "-" + (month + 1) + "-"
+						+ year;
+
+				DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
+				long epochDifference = dtf
+						.parseDateTime(currentStartDateString).getMillis()
+						- dtf.parseDateTime(endDateString).getMillis();
+
+				if (epochDifference <= 0) {
+					attendanceEndDate.setText(endDateString);
+					currentEndDateString = endDateString;
+				} else {
+					DebugHelper.ShowMessage.t(context,
+							"Your end date cannot be before the start date");
+				}
+			}
+		});
+
+		acceptDate.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+			}
+		});
+
+		dialog.show();
+	}
+
+	@Override
+	public void onFocusChange(View view, boolean hasFocus) {
+		if (view.getId() == R.id.attendanceStartDate && hasFocus) {
+			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+			displayStartDateCalendar();
+		}
+
+		if (view.getId() == R.id.attendanceEndDate && hasFocus) {
+			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+			displayEndDateCalendar();
+		}
+	}
+
+	@Override
+	public void onClick(View view) {
+		if (view.getId() == R.id.attendanceStartDate) {
+			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+			displayStartDateCalendar();
+		}
+
+		if (view.getId() == R.id.attendanceEndDate) {
+			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+			displayEndDateCalendar();
+		}
+	}
+
+	@Override
+	public void onClick(DialogInterface dialog, int which) {
+		switch (which) {
+		case DialogInterface.BUTTON_POSITIVE:
+			needsPickup = true;
+			pickupCheck.setChecked(true);
+			break;
+
+		case DialogInterface.BUTTON_NEGATIVE:
+			needsPickup = false;
+			pickupCheck.setChecked(false);
+			break;
+		}
 	}
 }

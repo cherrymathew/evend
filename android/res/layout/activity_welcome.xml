@@ -18,34 +18,12 @@
         android:text="Welcome to Hillhacks Buddy Application"
         android:textSize="15sp" />
 
-    <LinearLayout
-        android:id="@+id/calenderHolder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/scrollWrapper"
-        android:layout_alignRight="@+id/scrollWrapper"
-        android:layout_below="@+id/welcomeHeader" >
-
-        <GridView
-            android:id="@+id/eventCalendarGrid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:columnWidth="60dp"
-            android:horizontalSpacing="10dp"
-            android:numColumns="7"
-            android:stretchMode="spacingWidth"
-            android:verticalSpacing="10dp"
-            tools:listitem="@layout/calendar_single_day" >
-        </GridView>
-    </LinearLayout>
-
     <ScrollView
         android:id="@+id/scrollWrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/next"
         android:layout_alignLeft="@+id/welcomeHeader"
-        android:layout_marginBottom="50dp"
+        android:layout_below="@+id/welcomeHeader"
         android:fadeScrollbars="false" >
 
         <RelativeLayout
@@ -53,13 +31,63 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
+            <LinearLayout
+                android:id="@+id/attendanceStartDateContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/attendanceStartDateLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="When do you plan to attend?" />
+
+                <EditText
+                    android:id="@+id/attendanceStartDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="date"
+                    android:text="07-05-2015" >
+
+                    <requestFocus />
+                </EditText>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/attendanceEndDateContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/attendanceStartDateContainer"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/attendanceEndDateLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="When do you plan to leave?" />
+
+                <EditText
+                    android:id="@+id/attendanceEndDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="date"
+                    android:text="07-06-2015" >
+                </EditText>
+            </LinearLayout>
+
             <CheckBox
                 android:id="@+id/accommodationCheck"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:text="Would you like Accommodation" />
+                android:layout_marginTop="15dp"
+                android:layout_below="@+id/attendanceEndDateContainer"
+                android:text="Would you like to Camp on-site?" />
 
             <CheckBox
                 android:id="@+id/pickupCheck"

@@ -2,6 +2,13 @@ package foo.fruitfox.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Days;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 public class UserData {
 	private String email;
@@ -12,6 +19,8 @@ public class UserData {
 	private String verificationCode;
 	private String authToken;
 	private Boolean[] eventDaysAttending;
+	private DateTime attendanceStartDate;
+	private DateTime attendanceEndDate;
 	private Boolean needsPickUp;
 	private Boolean needsAccommodation;
 	private Boolean hasTalk;
@@ -157,7 +166,7 @@ public class UserData {
 	}
 
 	public Boolean getIsVerified() {
-		return this.isVerified;
+		return isVerified;
 	}
 
 	public void setIsVerified(Boolean isVerified) {
@@ -210,5 +219,125 @@ public class UserData {
 
 	public void setIsFinalized(Boolean isFinalized) {
 		this.isFinalized = isFinalized;
+	}
+
+	public DateTime getAttendanceStartDate() {
+		return attendanceStartDate;
+	}
+
+	public void setAttendanceStartDate(DateTime attendanceStartDate) {
+		this.attendanceStartDate = attendanceStartDate;
+	}
+
+	/**
+	 * @param pattern
+	 *            for the date string to be returned. All the patterns adhere to
+	 *            the Joda Time string standards.
+	 * 
+	 * @see Link
+	 *      http://joda-time.sourceforge.net/apidocs/org/joda/time/format/
+	 *      DateTimeFormat.html
+	 * @return The formatted date string according to the pattern passed.
+	 */
+	public String getAttendanceStartDate(String pattern) {
+		String dateString = "";
+
+		if (this.attendanceStartDate != null) {
+			DateTimeFormatter dtf = DateTimeFormat.forPattern(pattern);
+			dateString = dtf.print(this.attendanceStartDate);
+		}
+
+		return dateString;
+	}
+
+	/**
+	 * 
+	 * @param date
+	 *            string matching the passed date pattern.
+	 * @param pattern
+	 *            for the date string to be returned. All the patterns adhere to
+	 *            the Joda Time string standards.
+	 * @see Link
+	 *      http://joda-time.sourceforge.net/apidocs/org/joda/time/format/
+	 *      DateTimeFormat.html
+	 */
+	public void setAttendanceStartDate(String pattern, String date) {
+		if (date.length() > 0 && pattern.length() > 0) {
+			String currentTimeZone = TimeZone.getDefault().getID();
+			DateTimeFormatter dtf = DateTimeFormat.forPattern(pattern);
+			this.attendanceStartDate = dtf.parseDateTime(date);
+			this.attendanceStartDate.withZone(DateTimeZone
+					.forID(currentTimeZone));
+		}
+	}
+
+	public DateTime getAttendanceEndDate() {
+		return attendanceEndDate;
+	}
+
+	public void setAttendanceEndDate(DateTime attendanceEndDate) {
+		this.attendanceEndDate = attendanceEndDate;
+	}
+
+	/**
+	 * @param pattern
+	 *            for the date string to be returned. All the patterns adhere to
+	 *            the Joda Time string standards.
+	 * 
+	 * @see Link
+	 *      http://joda-time.sourceforge.net/apidocs/org/joda/time/format/
+	 *      DateTimeFormat.html
+	 * @return The formatted date string according to the pattern passed.
+	 */
+	public String getAttendanceEndDate(String pattern) {
+		String dateString = "";
+
+		if (this.attendanceEndDate != null) {
+			DateTimeFormatter dtf = DateTimeFormat.forPattern(pattern);
+			dateString = dtf.print(this.attendanceEndDate);
+		}
+
+		return dateString;
+	}
+
+	/**
+	 * 
+	 * @param date
+	 *            string matching the passed date pattern.
+	 * @param pattern
+	 *            for the date string to be returned. All the patterns adhere to
+	 *            the Joda Time string standards.
+	 * @see Link
+	 *      http://joda-time.sourceforge.net/apidocs/org/joda/time/format/
+	 *      DateTimeFormat.html
+	 */
+	public void setAttendanceEndDate(String pattern, String date) {
+		if (date.length() > 0 && pattern.length() > 0) {
+			String currentTimeZone = TimeZone.getDefault().getID();
+			DateTimeFormatter dtf = DateTimeFormat.forPattern(pattern);
+			this.attendanceEndDate = dtf.parseDateTime(date);
+			this.attendanceEndDate
+					.withZone(DateTimeZone.forID(currentTimeZone));
+		}
+	}
+
+	public void setEventDaysAttending(DateTime eventStartDate,
+			DateTime eventEndDate) {
+		int daysCount = Days.daysBetween(eventStartDate.toLocalDate(),
+				eventEndDate.toLocalDate()).getDays() + 1;
+
+		this.eventDaysAttending = new Boolean[daysCount];
+		java.util.Arrays.fill(this.eventDaysAttending, false);
+
+		for (int i = 0; i < daysCount; i++) {
+			if (eventStartDate.plusDays(i).isAfter(attendanceEndDate)) {
+				break;
+			}
+
+			if (attendanceStartDate.isEqual(eventStartDate.plusDays(i))
+					|| eventStartDate.plusDays(i).isAfter(attendanceStartDate)) {
+				eventDaysAttending[i] = true;
+			}
+		}
 	}
 }
