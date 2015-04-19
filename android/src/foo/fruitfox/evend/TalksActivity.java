@@ -1,11 +1,8 @@
 package foo.fruitfox.evend;
 
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,16 +17,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CalendarView;
-import android.widget.CalendarView.OnDateChangeListener;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import foo.fruitfox.adapters.TalksAdapter;
 import foo.fruitfox.data.TalkData;
@@ -41,8 +37,7 @@ import foo.fruitfox.tasks.UserDataWebAPITask;
 import foo.fruitfox.tasks.UserDataWebAPITask.AsyncResponseListener;
 
 public class TalksActivity extends ActionBarActivity implements
-		OnFocusChangeListener, OnClickListener, OnItemClickListener,
-		AsyncResponseListener {
+		OnClickListener, OnItemClickListener, AsyncResponseListener {
 
 	private List<TalkData> talksList;
 	private ListView talksListView;
@@ -56,6 +51,7 @@ public class TalksActivity extends ActionBarActivity implements
 	private String serverURL;
 
 	private ProgressDialog progDialog;
+	private Dialog talkAddDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +64,11 @@ public class TalksActivity extends ActionBarActivity implements
 				.getUserData(this, identifier);
 
 		serverURL = getResources().getString(R.string.server_url);
+
+		if (talkAddDialog == null) {
+			talkAddDialog = new Dialog(context);
+			talkAddDialog.setContentView(R.layout.talk_add_layout);
+		}
 
 		initalizeAdapter();
 		initializeListeners();
@@ -115,151 +116,81 @@ public class TalksActivity extends ActionBarActivity implements
 	}
 
 	public void addTalk(View view) {
-		LinearLayout addTalkLayout = (LinearLayout) findViewById(R.id.addTalkLayout);
-		EditText talkTitle = (EditText) addTalkLayout
-				.findViewById(R.id.talkTitleEdit);
-		EditText talkDate = (EditText) addTalkLayout
-				.findViewById(R.id.talkDateEdit);
+		talkAddDialog.setTitle("Your presentation details");
 
-		String talkTitleText = talkTitle.getText().toString();
-		String talkDateText = talkDate.getText().toString();
-
-		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-
-		if (talkTitle.getTag() == null) {
-			if (talkTitleText.length() > 0 && talkDateText.length() > 0) {
-				String date = talkDateText.split("-")[2] + "-"
-						+ talkDateText.split("-")[1] + "-"
-						+ talkDateText.split("-")[0];
-
-				TalkData talk = new TalkData(talkTitleText, date);
-
-				talksList.add(talk);
-				talksAdapter.notifyDataSetChanged();
-
-				talkTitle.setText("");
-				talkDate.setText("");
-			} else if (talkTitleText.length() > 0) {
-				TalkData talk = new TalkData(talkTitleText);
-
-				talksList.add(talk);
-				talksAdapter.notifyDataSetChanged();
-
-				talkTitle.setText("");
-				talkDate.setText("");
-			}
-		} else {
-			int position = (int) talkTitle.getTag();
-			talkTitle.setTag(null);
-
-			if (talkTitleText.length() > 0 && talkDateText.length() > 0) {
-				talksList.get(position).setTitle(talkTitleText);
-				talksList.get(position).setDate("dd-MM-yyyy", talkDateText);
-
-				talksAdapter.notifyDataSetChanged();
-
-				talkTitle.setText("");
-				talkDate.setText("");
-			}
-		}
-
-		userData.setTalkDataList(talksList);
-		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
-	}
-
-	private void displayCalendar() {
-		final Dialog dialog = new Dialog(context);
-
-		DateTime startDate = new DateTime("2015-05-23");
-		DateTime endDate = new DateTime("2015-06-07");
-		EditText talkDate = (EditText) findViewById(R.id.talkDateEdit);
-
-		dialog.setTitle("Select your preferred date");
-		dialog.setContentView(R.layout.calendar_date_picker);
-
-		Button acceptDate = (Button) dialog.findViewById(R.id.acceptDate);
-
-		CalendarView calendar = (CalendarView) dialog
-				.findViewById(R.id.eventCalendarView);
-
-		// sets whether to show the week number.
-		calendar.setShowWeekNumber(false);
-
-		calendar.setMinDate(startDate.getMillis());
-		calendar.setMaxDate(endDate.getMillis());
-
-		calendar.setMinimumHeight(50);
-
-		// sets the first day of week according to Calendar.
-		// here we set Monday as the first day of the Calendar
-		calendar.setFirstDayOfWeek(Calendar.MONDAY);
-
-		// The background color for the selected week.
-		calendar.setSelectedWeekBackgroundColor(getResources().getColor(
-				R.color.aqua));
-
-		// sets the color for the vertical bar shown at the beginning and at
-		// the end of the selected date.
-		calendar.setSelectedDateVerticalBar(R.color.silver);
-
-		if (talkDate.getText().toString().length() > 0) {
-			DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
-			DateTime currentSelectedDate = dtf.parseDateTime(talkDate.getText()
-					.toString());
-			calendar.setDate(currentSelectedDate.getMillis());
-		}
-
-		// sets the listener to be notified upon selected date change.
-		calendar.setOnDateChangeListener(new OnDateChangeListener() {
-
-			@Override
-			public void onSelectedDayChange(CalendarView view, int year,
-					int month, int dayOfMonth) {
-				LinearLayout addTalkLayout = (LinearLayout) findViewById(R.id.addTalkLayout);
-				EditText talkDate = (EditText) addTalkLayout
-						.findViewById(R.id.talkDateEdit);
-				talkDate.setText(dayOfMonth + "-" + (month + 1) + "-" + year);
-				dialog.dismiss();
-			}
-		});
-
-		acceptDate.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View view) {
-				LinearLayout addTalkLayout = (LinearLayout) findViewById(R.id.addTalkLayout);
-				EditText talkDate = (EditText) addTalkLayout
-						.findViewById(R.id.talkDateEdit);
-
-				if (talkDate.getText().toString().length() == 0) {
-					talkDate.setText("23-05-2015");
-				}
-				dialog.dismiss();
-			}
-		});
-
-		dialog.show();
-	}
-
-	@Override
-	public void onFocusChange(View view, boolean hasFocus) {
-		if (view.getId() == R.id.talkDateEdit && hasFocus) {
-			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-
-			displayCalendar();
-		}
+		talkAddDialog.show();
 	}
 
 	@Override
 	public void onClick(View view) {
-		if (view.getId() == R.id.talkDateEdit) {
-			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+		if (view.getId() == R.id.saveTalk) {
+			EditText talkTitle = (EditText) talkAddDialog
+					.findViewById(R.id.talkTitle);
+			Spinner talkType = (Spinner) talkAddDialog
+					.findViewById(R.id.talkType);
+			Spinner talkEvent = (Spinner) talkAddDialog
+					.findViewById(R.id.talkEvent);
+			EditText talkDuration = (EditText) talkAddDialog
+					.findViewById(R.id.talkDuration);
+			CheckBox coPresenterCheck = (CheckBox) talkAddDialog
+					.findViewById(R.id.coPresenterCheck);
+			CheckBox projectorCheck = (CheckBox) talkAddDialog
+					.findViewById(R.id.projectorCheck);
+			CheckBox toolsCheck = (CheckBox) talkAddDialog
+					.findViewById(R.id.toolsCheck);
+			EditText talkNotes = (EditText) talkAddDialog
+					.findViewById(R.id.talkNotes);
 
-			displayCalendar();
+			if (talkTitle.getText().toString().length() > 0) {
+				if (talkTitle.getTag() == null) {
+					TalkData talkData = new TalkData(talkTitle.getText()
+							.toString());
+
+					talkData.setType((String) talkType.getSelectedItem());
+					talkData.setEvent((String) talkEvent.getSelectedItem());
+					talkData.setDuration(talkDuration.getText().toString());
+					talkData.setHasCoPresenters(coPresenterCheck.isChecked());
+					talkData.setNeedsProjector(projectorCheck.isChecked());
+					talkData.setNeedsTools(toolsCheck.isChecked());
+					talkData.setNotes(talkNotes.getText().toString());
+
+					talksList.add(talkData);
+					talksAdapter.notifyDataSetChanged();
+
+					talkAddDialog.dismiss();
+				} else {
+					int position = (int) talkTitle.getTag();
+					talksList.get(position).setTitle(
+							talkTitle.getText().toString());
+
+					talksList.get(position).setType(
+							(String) talkType.getSelectedItem());
+					talksList.get(position).setEvent(
+							(String) talkEvent.getSelectedItem());
+					talksList.get(position).setDuration(
+							talkDuration.getText().toString());
+					talksList.get(position).setHasCoPresenters(
+							coPresenterCheck.isChecked());
+					talksList.get(position).setNeedsProjector(
+							projectorCheck.isChecked());
+					talksList.get(position).setNeedsTools(
+							toolsCheck.isChecked());
+					talksList.get(position).setNotes(
+							talkNotes.getText().toString());
+
+					talksAdapter.notifyDataSetChanged();
+
+					talkAddDialog.dismiss();
+				}
+			} else {
+				DebugHelper.ShowMessage.t(context,
+						"Your presentation title cannot be empty");
+			}
+
 		}
+
+		userData.setTalkDataList(talksList);
+		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
 	}
 
 	public void next(View view) {
@@ -268,56 +199,104 @@ public class TalksActivity extends ActionBarActivity implements
 		JSONObject requestJSON = new JSONObject();
 		JSONArray talksJSONArray = new JSONArray();
 
-		try {
-			requestJSON.put("hhtoken", userData.getAuthToken());
-			if (talksList.size() > 0) {
+		if (talksList.size() > 0) {
+			try {
+				requestJSON.put("hhtoken", userData.getAuthToken());
+
 				for (TalkData talk : talksList) {
 					JSONObject talksJSON = new JSONObject();
 					talksJSON.put("title", talk.getTitle());
-					talksJSON.put("datetime", talk.getDate("yyyy-MM-dd"));
+					talksJSON.put("type", talk.getType());
+					talksJSON.put("event", talk.getEvent());
+					talksJSON.put("duration", talk.getDuration());
+					talksJSON.put("hasCoPresenters",
+							talk.getHasCoPresenters() ? 1 : 0);
+					talksJSON.put("needsProjector",
+							talk.getNeedsProjector() ? 1 : 0);
+					talksJSON.put("needsTools", talk.getNeedsTools() ? 1 : 0);
+					talksJSON.put("notes", talk.getNotes());
 					talksJSONArray.put(talksJSON);
 				}
-			}
 
-			requestJSON.put("talks", talksJSONArray);
+				requestJSON.put("talks", talksJSONArray);
 
-			if (NetworkHelper.Utilities.isConnected(this)) {
-				UserDataWebAPITask udwTask = new UserDataWebAPITask(this, this);
-				try {
-					progDialog = ProgressDialog.show(this, "Processing...",
-							"Fetching data", true, false);
-					udwTask.execute("POST", serverURL + "users/talk/add",
-							requestJSON.toString());
+				if (NetworkHelper.Utilities.isConnected(this)) {
+					UserDataWebAPITask udwTask = new UserDataWebAPITask(this,
+							this);
+					try {
+						progDialog = ProgressDialog.show(this, "Processing...",
+								"Fetching data", true, false);
+						udwTask.execute("POST", serverURL + "users/talk/add",
+								requestJSON.toString());
 
-				} catch (Exception e) {
-					if (progDialog.isShowing()) {
-						progDialog.dismiss();
+					} catch (Exception e) {
+						if (progDialog.isShowing()) {
+							progDialog.dismiss();
+						}
+						udwTask.cancel(true);
 					}
-					udwTask.cancel(true);
+				} else {
+					DebugHelper.ShowMessage.t(this, "Connection error");
 				}
-			} else {
-				DebugHelper.ShowMessage.t(this, "Connection error");
+			} catch (JSONException e) {
+				DebugHelper.ShowMessage.t(this,
+						"An error occured processing the response");
 			}
-		} catch (JSONException e) {
-			DebugHelper.ShowMessage.t(this,
-					"An error occured processing the response");
-		}
 
-		startActivity(intent);
+			startActivity(intent);
+		} else {
+			DebugHelper.ShowMessage.t(this, "You have not entered any talks.");
+		}
 	}
 
 	private void initializeListeners() {
-		LinearLayout addTalkLayout = (LinearLayout) findViewById(R.id.addTalkLayout);
-		EditText talkDate = (EditText) addTalkLayout
-				.findViewById(R.id.talkDateEdit);
+		LinearLayout talkAddLayout = (LinearLayout) talkAddDialog
+				.findViewById(R.id.talkAddLayout);
+		Button saveTalk = (Button) talkAddLayout.findViewById(R.id.saveTalk);
 
-		talkDate.setOnFocusChangeListener(this);
-		talkDate.setOnClickListener(this);
+		saveTalk.setOnClickListener(this);
 
 		talksListView.setOnItemClickListener(this);
 	}
 
 	private void initalizeAdapter() {
+		List<String> talkTypeList = new ArrayList<String>();
+		List<String> talkEventList = new ArrayList<String>();
+
+		ArrayAdapter<String> talkTypeAdapter;
+		ArrayAdapter<String> talkEventAdapter;
+
+		String[] talkTypeArray = getResources().getStringArray(
+				R.array.talk_types);
+		String[] talkEventArray = getResources().getStringArray(
+				R.array.talk_events);
+
+		LinearLayout talkAddLayout = (LinearLayout) talkAddDialog
+				.findViewById(R.id.talkAddLayout);
+		Spinner talkType = (Spinner) talkAddLayout.findViewById(R.id.talkType);
+		Spinner talkEvent = (Spinner) talkAddLayout
+				.findViewById(R.id.talkEvent);
+
+		for (int i = 0; i < talkTypeArray.length; i++) {
+			talkTypeList.add(talkTypeArray[i]);
+		}
+
+		for (int i = 0; i < talkEventArray.length; i++) {
+			talkEventList.add(talkEventArray[i]);
+		}
+
+		talkTypeAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, talkTypeList);
+		talkTypeAdapter
+				.setDropDownViewResource(android.R.layout.simple_expandable_list_item_1);
+		talkType.setAdapter(talkTypeAdapter);
+
+		talkEventAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, talkEventList);
+		talkEventAdapter
+				.setDropDownViewResource(android.R.layout.simple_expandable_list_item_1);
+		talkEvent.setAdapter(talkEventAdapter);
+
 		talksListView = (ListView) findViewById(R.id.talksList);
 
 		talksList = userData.getTalkDataList();
@@ -327,30 +306,92 @@ public class TalksActivity extends ActionBarActivity implements
 		talksListView.setAdapter(talksAdapter);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		LinearLayout addTalkLayout = (LinearLayout) findViewById(R.id.addTalkLayout);
-		EditText talkTitle = (EditText) addTalkLayout
-				.findViewById(R.id.talkTitleEdit);
-		EditText talkDate = (EditText) addTalkLayout
-				.findViewById(R.id.talkDateEdit);
+		ArrayAdapter<String> talkTypeAdapter;
+		ArrayAdapter<String> talkEventAdapter;
 
-		TextView talkTitleText = (TextView) view.findViewById(R.id.talkTitle);
-		TextView talkDateText = (TextView) view.findViewById(R.id.talkDate);
+		EditText talkTitle = (EditText) talkAddDialog
+				.findViewById(R.id.talkTitle);
+		Spinner talkType = (Spinner) talkAddDialog.findViewById(R.id.talkType);
+		Spinner talkEvent = (Spinner) talkAddDialog
+				.findViewById(R.id.talkEvent);
+		EditText talkDuration = (EditText) talkAddDialog
+				.findViewById(R.id.talkDuration);
+		CheckBox coPresenterCheck = (CheckBox) talkAddDialog
+				.findViewById(R.id.coPresenterCheck);
+		CheckBox projectorCheck = (CheckBox) talkAddDialog
+				.findViewById(R.id.projectorCheck);
+		CheckBox toolsCheck = (CheckBox) talkAddDialog
+				.findViewById(R.id.toolsCheck);
+		EditText talkNotes = (EditText) talkAddDialog
+				.findViewById(R.id.talkNotes);
 
-		talkTitle.setText(talkTitleText.getText().toString());
-		talkDate.setText(talkDateText.getText().toString());
+		TextView rowTalkTitle = (TextView) view.findViewById(R.id.talkTitle);
+		TextView rowTalkType = (TextView) view.findViewById(R.id.talkType);
+		TextView rowTalkDuration = (TextView) view
+				.findViewById(R.id.talkDuration);
+		TextView rowTalkEvent = (TextView) view.findViewById(R.id.talkEvent);
+		TextView rowTalkHasCoPresenters = (TextView) view
+				.findViewById(R.id.talkHasCoPresenters);
+		TextView rowTalkNeedsProjector = (TextView) view
+				.findViewById(R.id.talkNeedsProjector);
+		TextView rowTalkNeedsTools = (TextView) view
+				.findViewById(R.id.talkNeedsTools);
+		TextView rowTalkNotes = (TextView) view.findViewById(R.id.talkNotes);
+
+		talkAddDialog.setTitle("Edit your presentation");
+
+		talkTypeAdapter = (ArrayAdapter<String>) talkType.getAdapter();
+		talkEventAdapter = (ArrayAdapter<String>) talkEvent.getAdapter();
+
+		talkTitle.setText(rowTalkTitle.getText().toString());
+		talkType.setSelection(talkTypeAdapter.getPosition((String) rowTalkType
+				.getText()));
+		talkEvent.setSelection(talkEventAdapter
+				.getPosition((String) rowTalkEvent.getText()));
+		talkDuration.setText(rowTalkDuration.getText().toString());
+		coPresenterCheck
+				.setChecked(rowTalkHasCoPresenters.getText() == "Yes" ? true
+						: false);
+		projectorCheck
+				.setChecked(rowTalkNeedsProjector.getText() == "Yes" ? true
+						: false);
+		toolsCheck.setChecked(rowTalkNeedsTools.getText() == "Yes" ? true
+				: false);
+		talkNotes.setText(rowTalkNotes.getText().toString());
+
 		talkTitle.setTag(position);
+
+		talkAddDialog.show();
 	}
 
 	@Override
 	public void postAsyncTaskCallback(String responseBody, String responseCode) {
+		JSONObject responseJSON;
+
 		if (progDialog.isShowing()) {
 			progDialog.dismiss();
 		}
 
-		DebugHelper.ShowMessage.d(responseBody);
-		DebugHelper.ShowMessage.d(responseCode);
+		if (responseBody.length() == 0) {
+			DebugHelper.ShowMessage
+					.t(this,
+							"There was an error processing your request. Please try again later.");
+		} else {
+			try {
+				responseJSON = new JSONObject(responseBody);
+
+				if (responseJSON.has("error") == true) {
+					DebugHelper.ShowMessage.t(this,
+							"An error occured processing the response");
+				}
+			} catch (JSONException e) {
+				DebugHelper.ShowMessage.t(this,
+						"An error occured processing the response");
+			}
+		}
 	}
 }

@@ -10,13 +10,14 @@ import org.joda.time.format.DateTimeFormatter;
 public class TalkData {
 
 	private String title;
-	private String description;
+	private String notes;
 	private DateTime date;
 	private String type;
 	private String duration;
-	private String location;
-	private String editLink;
-	private String viewLink;
+	private String event;
+	private Boolean hasCoPresenters;
+	private Boolean needsProjector;
+	private Boolean needsTools;
 
 	public TalkData(String title, String date) {
 		super();
@@ -45,12 +46,12 @@ public class TalkData {
 		this.title = title;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getNotes() {
+		return notes;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
 
 	public DateTime getDate() {
@@ -118,27 +119,36 @@ public class TalkData {
 		this.duration = duration;
 	}
 
-	public String getLocation() {
-		return location;
+	public String getEvent() {
+		return event;
 	}
 
-	public void setLocation(String location) {
-		this.location = location;
+	public void setEvent(String event) {
+		this.event = event;
 	}
 
-	public String getEditLink() {
-		return editLink;
+	public Boolean getHasCoPresenters() {
+		return hasCoPresenters;
 	}
 
-	public void setEditLink(String editLink) {
-		this.editLink = editLink;
+	public void setHasCoPresenters(Boolean hasCoPresenters) {
+		this.hasCoPresenters = hasCoPresenters;
 	}
 
-	public String getViewLink() {
-		return viewLink;
+	public Boolean getNeedsProjector() {
+		return needsProjector;
 	}
 
-	public void setViewLink(String viewLink) {
-		this.viewLink = viewLink;
+	public void setNeedsProjector(Boolean needsProjector) {
+		this.needsProjector = needsProjector;
 	}
+
+	public Boolean getNeedsTools() {
+		return needsTools;
+	}
+
+	public void setNeedsTools(Boolean needsTools) {
+		this.needsTools = needsTools;
+	}
+
 }

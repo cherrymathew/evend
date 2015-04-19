@@ -19,7 +19,13 @@ public class TalksAdapter extends BaseAdapter {
 
 	public static class ViewHolder {
 		public TextView talkTitle;
-		public TextView talkDate;
+		public TextView talkType;
+		public TextView talkDuration;
+		public TextView talkEvent;
+		public TextView talkHasCoPresenters;
+		public TextView talkNeedsProjector;
+		public TextView talkNeedsTools;
+		public TextView talkNotes;
 		public Button removeTalk;
 	}
 
@@ -58,22 +64,54 @@ public class TalksAdapter extends BaseAdapter {
 
 			viewHolder.talkTitle = (TextView) talkDataRow
 					.findViewById(R.id.talkTitle);
-			viewHolder.talkDate = (TextView) talkDataRow
-					.findViewById(R.id.talkDate);
+			viewHolder.talkType = (TextView) talkDataRow
+					.findViewById(R.id.talkType);
+			viewHolder.talkDuration = (TextView) talkDataRow
+					.findViewById(R.id.talkDuration);
+			viewHolder.talkEvent = (TextView) talkDataRow
+					.findViewById(R.id.talkEvent);
+			viewHolder.talkHasCoPresenters = (TextView) talkDataRow
+					.findViewById(R.id.talkHasCoPresenters);
+			viewHolder.talkNeedsProjector = (TextView) talkDataRow
+					.findViewById(R.id.talkNeedsProjector);
+			viewHolder.talkNeedsTools = (TextView) talkDataRow
+					.findViewById(R.id.talkNeedsTools);
+			viewHolder.talkNotes = (TextView) talkDataRow
+					.findViewById(R.id.talkNotes);
 			viewHolder.removeTalk = (Button) talkDataRow
 					.findViewById(R.id.removeTalk);
 
 			viewHolder.talkTitle.setText(talkList.get(position).getTitle());
-			viewHolder.talkDate.setText(talkList.get(position).getDate(
-					"dd-MM-yyyy"));
+			viewHolder.talkType.setText(talkList.get(position).getType());
+			viewHolder.talkDuration.setText(talkList.get(position)
+					.getDuration().length() > 0 ? talkList.get(position)
+					.getDuration() : "N/A");
+			viewHolder.talkEvent.setText(talkList.get(position).getEvent());
+			viewHolder.talkHasCoPresenters.setText(talkList.get(position)
+					.getHasCoPresenters() ? "Yes" : "No");
+			viewHolder.talkNeedsProjector.setText(talkList.get(position)
+					.getNeedsProjector() ? "Yes" : "No");
+			viewHolder.talkNeedsTools.setText(talkList.get(position)
+					.getNeedsTools() ? "Yes" : "No");
+			viewHolder.talkNotes.setText(talkList.get(position).getNotes());
 
 			talkDataRow.setTag(viewHolder);
 		} else {
 			ViewHolder viewHolder = (ViewHolder) talkDataRow.getTag();
 
 			viewHolder.talkTitle.setText(talkList.get(position).getTitle());
-			viewHolder.talkDate.setText(talkList.get(position).getDate(
-					"dd-MM-yyyy"));
+			viewHolder.talkType.setText(talkList.get(position).getType());
+			viewHolder.talkDuration.setText(talkList.get(position)
+					.getDuration().length() > 0 ? talkList.get(position)
+					.getDuration() : "N/A");
+			viewHolder.talkEvent.setText(talkList.get(position).getEvent());
+			viewHolder.talkHasCoPresenters.setText(talkList.get(position)
+					.getHasCoPresenters() ? "Yes" : "No");
+			viewHolder.talkNeedsProjector.setText(talkList.get(position)
+					.getNeedsProjector() ? "Yes" : "No");
+			viewHolder.talkNeedsTools.setText(talkList.get(position)
+					.getNeedsTools() ? "Yes" : "No");
+			viewHolder.talkNotes.setText(talkList.get(position).getNotes());
 		}
 
 		return talkDataRow;

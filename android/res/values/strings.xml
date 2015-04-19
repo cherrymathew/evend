@@ -19,12 +19,12 @@
     <!-- Generic Label for the Next Button -->
     <string name="next_label">Next</string>
     <!-- Server URL -->
-    <string name="server_url">http://192.168.1.119:3000/</string>
-    <!-- Strings used in the Summary Activity  -->
-    <string name="finalize_dialog_message">Once you Finalize the changes you will no longer be able to edit any of the registration details.\nAre you sure you wish to continue?</string>
-	<!-- The location Map URL -->
+    <string name="server_url">http://192.168.1.117:3000/</string>
+    <!-- Strings used in the Summary Activity -->
+    <string name="finalize_dialog_message">Once you Confirm the changes you will no longer be able to edit any of the registration details.\n\nAre you sure you wish to continue?</string>
+    <!-- The location Map URL -->
     <string name="map_url">http://www.openstreetmap.org/?mlat=32.24159&amp;mlon=76.32994#map=17/32.24161/76.32873</string>
-    
+
     <!-- The Accommmodation types -->
     <string-array name="accommodation_types">
         <item>Room</item>
@@ -34,10 +34,26 @@
 
     <!-- Various Pickup Locations -->
     <string-array name="location_names">
-        <item>Lower Dharamsala \nPost Office Bus stop</item>
-        <item>Dharamsala Bus station</item>
-        <item>Pathankot Railway station</item>
-        <item>Kangra Airport (DHM)</item>
+        <item>McLeod Ganj\nFare: Rs 350</item>
+        <item>Dharamsala Bus station\nFare: Rs 250</item>
+        <item>Pathankot Railway station\nFare: Rs 350</item>
+        <item>Kangra Airport (DHM)\nFare: Rs 550</item>
+    </string-array>
+
+    <!-- Various Talk Types Locations -->
+    <string-array name="talk_types">
+        <item>Talk</item>
+        <item>Workshop</item>
+        <item>Session</item>
+    </string-array>
+
+    <!-- Various Pickup Locations -->
+    <string-array name="talk_events">
+        <item>CodeCamp</item>
+        <item>School Program</item>
+        <item>Unconference</item>
+        <item>Main Conference</item>
+        <item>Other</item>
     </string-array>
 
     <!-- International Country Codes -->

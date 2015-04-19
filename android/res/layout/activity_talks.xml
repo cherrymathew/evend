@@ -18,41 +18,25 @@
         android:text="Participate"
         android:textSize="20sp" />
 
-    <LinearLayout
-        android:id="@+id/addTalkLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/participateHeader"
-        android:orientation="horizontal" >
-
-        <EditText
-            android:id="@+id/talkTitleEdit"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.6"
-            android:hint="Talk Title"
-            android:inputType="text"
-            android:textSize="15sp" />
-
-        <EditText
-            android:id="@+id/talkDateEdit"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.4"
-            android:ems="10"
-            android:hint="Talk Date"
-            android:inputType="date"
-            android:textSize="15sp" />
+   <LinearLayout
+       android:id="@+id/addTalkLayout"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_alignParentLeft="true"
+       android:layout_alignParentRight="true"
+       android:layout_below="@+id/participateHeader"
+       android:orientation="horizontal" >
 
         <Button
             android:id="@+id/addTalk"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:minHeight="28dp"
             android:minWidth="48dp"
             android:onClick="addTalk"
-            android:text="+"
-            android:textSize="12sp" />
+            android:text="Add a new talk"
+            android:textSize="15sp" />
+
     </LinearLayout>
 
     <ListView
