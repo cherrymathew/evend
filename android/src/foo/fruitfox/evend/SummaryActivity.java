@@ -1,6 +1,6 @@
 package foo.fruitfox.evend;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +42,7 @@ public class SummaryActivity extends ActionBarActivity implements
 	private String identifier;
 	private UserData userData;
 
-	private String startDateString = "2015-05-23";
+	private String startDateString = "2015-05-07";
 	private String endDateString = "2015-06-07";
 
 	@Override
@@ -115,17 +115,26 @@ public class SummaryActivity extends ActionBarActivity implements
 		TextView itemTitle;
 		TextView itemDetail;
 
-		summaryMap = new HashMap<String, String>();
+		summaryMap = new LinkedHashMap<String, String>();
 
 		if (userData.getAccommodationData() != null) {
-			summaryMap.put("Type of Accommodation", userData
-					.getAccommodationData().getAccommodationType());
-			summaryMap.put("Starting date of Booking", userData
-					.getAccommodationData().getStartDate("dd-MM-yyyy"));
-			summaryMap.put("Duration of the booking", userData
-					.getAccommodationData().getDaysCount());
-			summaryMap.put("Total number of people", userData
-					.getAccommodationData().getBedsCount());
+			summaryMap.put("Will you be bringing a Tent?", userData
+					.getAccommodationData().getHasTent() ? "Yes" : "No");
+			summaryMap
+					.put("Will you be bringing a Sleeping Bag?",
+							userData.getAccommodationData()
+									.getHasSleeplingBag() ? "Yes" : "No");
+			summaryMap.put("Will you be bringing a Matress?", userData
+					.getAccommodationData().getHasMatress() ? "Yes" : "No");
+			summaryMap.put("Will you be bringing a Pillow?", userData
+					.getAccommodationData().getHasPillow() ? "Yes" : "No");
+			summaryMap.put("Will you be bringing your family along?", userData
+					.getAccommodationData().getHasFamily() ? "Yes" : "No");
+
+			if (userData.getAccommodationData().getHasFamily()) {
+				summaryMap.put("Family Details", userData
+						.getAccommodationData().getFamilyDetails());
+			}
 		} else {
 			summaryMap.put("You have not selected any items for this", "");
 		}
@@ -154,7 +163,7 @@ public class SummaryActivity extends ActionBarActivity implements
 		TextView itemTitle;
 		TextView itemDetail;
 
-		summaryMap = new HashMap<String, String>();
+		summaryMap = new LinkedHashMap<String, String>();
 
 		if (userData.getPickupData() != null) {
 			summaryMap.put("Preferred pickup Location", userData
@@ -192,14 +201,15 @@ public class SummaryActivity extends ActionBarActivity implements
 		TextView itemTitle;
 		TextView itemDetail;
 
-		summaryMap = new HashMap<String, String>();
+		summaryMap = new LinkedHashMap<String, String>();
 
 		List<TalkData> talkDataList = userData.getTalkDataList();
 
 		if (talkDataList.size() > 0) {
 			for (int i = 0; i < talkDataList.size(); i++) {
-				summaryMap.put(talkDataList.get(i).getTitle(), talkDataList
-						.get(i).getDate("dd-MM-yyyy"));
+				summaryMap.put(talkDataList.get(i).getTitle(), "A "
+						+ talkDataList.get(i).getType() + " for "
+						+ talkDataList.get(i).getEvent());
 			}
 		} else {
 			summaryMap.put("You are not presenting any talks.", "");
