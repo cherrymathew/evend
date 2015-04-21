@@ -19,7 +19,8 @@
     <!-- Generic Label for the Next Button -->
     <string name="next_label">Next</string>
     <!-- Server URL -->
-    <string name="server_url">http://192.168.1.117:3000/</string>
+    <!--  <string name="server_url">http://192.168.1.117:3000/</string> -->
+    <string name="server_url">http://fooobar.mooo.com:3000/</string> 
     <!-- Strings used in the Summary Activity -->
     <string name="finalize_dialog_message">Once you Confirm the changes you will no longer be able to edit any of the registration details.\n\nAre you sure you wish to continue?</string>
     <!-- The location Map URL -->
@@ -40,14 +41,14 @@
         <item>Kangra Airport (DHM)\nFare: Rs 550</item>
     </string-array>
 
-    <!-- Various Talk Types Locations -->
+    <!-- Various Talk Types -->
     <string-array name="talk_types">
         <item>Talk</item>
         <item>Workshop</item>
         <item>Session</item>
     </string-array>
 
-    <!-- Various Pickup Locations -->
+    <!-- Various Talk Events -->
     <string-array name="talk_events">
         <item>CodeCamp</item>
         <item>School Program</item>
