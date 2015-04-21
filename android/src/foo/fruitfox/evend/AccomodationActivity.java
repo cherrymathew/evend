@@ -173,7 +173,8 @@ public class AccomodationActivity extends ActionBarActivity implements
 					.getFamilyDetails());
 		} catch (JSONException e) {
 			DebugHelper.ShowMessage.t(this,
-					"An error occured processing the response");
+					"An error occured while creating the JSON request.");
+			DebugHelper.ShowMessage.d("AccommodationActivity", e.getMessage());
 		}
 
 		if (NetworkHelper.Utilities.isConnected(this)) {
@@ -189,9 +190,14 @@ public class AccomodationActivity extends ActionBarActivity implements
 					progDialog.dismiss();
 				}
 				udwTask.cancel(true);
+				DebugHelper.ShowMessage
+						.t(this,
+								"An error occurred while processing your request. Please try again later.");
+				DebugHelper.ShowMessage.d("AccommodationActivity",
+						e.getMessage());
 			}
 		} else {
-			DebugHelper.ShowMessage.t(this, "Connection error");
+			DebugHelper.ShowMessage.t(this, "Unable to connect to the server.");
 		}
 
 		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
@@ -211,17 +217,31 @@ public class AccomodationActivity extends ActionBarActivity implements
 			DebugHelper.ShowMessage
 					.t(this,
 							"There was an error processing your request. Please try again later.");
+			DebugHelper.ShowMessage.d("AccommodationActivity",
+					"Response Code : " + responseCode);
+			DebugHelper.ShowMessage.d("AccommodationActivity",
+					"Response Body : " + responseBody);
 		} else {
 			try {
 				responseJSON = new JSONObject(responseBody);
 
 				if (responseJSON.has("error") == true) {
 					DebugHelper.ShowMessage.t(this,
-							"An error occured processing the response");
+							responseJSON.getString("error"));
+					DebugHelper.ShowMessage.d("AccommodationActivity",
+							"Response Code :" + responseCode);
+					DebugHelper.ShowMessage.d("AccommodationActivity",
+							"Response Body :" + responseBody);
 				}
 			} catch (JSONException e) {
 				DebugHelper.ShowMessage.t(this,
-						"An error occured processing the response");
+						"An error occured trying to parse the JSON response");
+				DebugHelper.ShowMessage.d("AccommodationActivity",
+						"Response Code : " + responseCode);
+				DebugHelper.ShowMessage.d("AccommodationActivity",
+						"Response Body : " + responseBody);
+				DebugHelper.ShowMessage.d("AccommodationActivity",
+						e.getMessage());
 			}
 		}
 	}

@@ -20,6 +20,7 @@ import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -156,7 +157,8 @@ public class LoginActivity extends ActionBarActivity implements
 
 		} catch (JSONException e) {
 			DebugHelper.ShowMessage.t(this,
-					"An error occured processing the response");
+					"An error occured while creating the JSON request.");
+			DebugHelper.ShowMessage.d("LoginActivity", e.getMessage());
 		}
 
 		StorageHelper.PreferencesHelper.setIdentifier(this, identifier);
@@ -176,9 +178,13 @@ public class LoginActivity extends ActionBarActivity implements
 					progDialog.dismiss();
 				}
 				udwTask.cancel(true);
+				DebugHelper.ShowMessage
+						.t(this,
+								"An error occurred while processing your request. Please try again later.");
+				DebugHelper.ShowMessage.d("LoginActivity", e.getMessage());
 			}
 		} else {
-			DebugHelper.ShowMessage.t(this, "Connection error");
+			DebugHelper.ShowMessage.t(this, "Unable to connect to the server.");
 		}
 	}
 
@@ -187,24 +193,38 @@ public class LoginActivity extends ActionBarActivity implements
 
 		if (verificationCode.getText().toString()
 				.equals(userData.getVerificationCode())) {
-			UserDataWebAPITask udwTask = new UserDataWebAPITask(this, this,
-					this);
-			try {
-				progDialog = ProgressDialog.show(this, "Processing...",
-						"Fetching data", true, false);
-				udwTask.execute("GET", serverURL + "verify" + "?identifier="
-						+ URLEncoder.encode(identifier, "UTF-8") + "&code="
-						+ userData.getVerificationCode());
+			if (NetworkHelper.Utilities.isConnected(this)) {
+				UserDataWebAPITask udwTask = new UserDataWebAPITask(this, this,
+						this);
+				try {
+					progDialog = ProgressDialog.show(this, "Processing...",
+							"Fetching data", true, false);
+					udwTask.execute(
+							"GET",
+							serverURL + "verify" + "?identifier="
+									+ URLEncoder.encode(identifier, "UTF-8")
+									+ "&code=" + userData.getVerificationCode());
 
-			} catch (Exception e) {
-				if (progDialog.isShowing()) {
-					progDialog.dismiss();
+				} catch (Exception e) {
+					if (progDialog.isShowing()) {
+						progDialog.dismiss();
+					}
+					udwTask.cancel(true);
+					DebugHelper.ShowMessage
+							.t(this,
+									"An error occurred while processing your request. Please try again later.");
+					DebugHelper.ShowMessage.d("LoginActivity", e.getMessage());
 				}
-				udwTask.cancel(true);
-			}
 
+			} else {
+				DebugHelper.ShowMessage.t(this,
+						"Unable to connect to the server.");
+				DebugHelper.ShowMessage.d("LoginActivity", "Entered code: "
+						+ verificationCode.getText().toString()
+						+ ", Received code: " + userData.getVerificationCode());
+			}
 		} else {
-			DebugHelper.ShowMessage.t(this, "Verification Code did not match");
+			DebugHelper.ShowMessage.t(this, "Verification Code did not match.");
 		}
 	}
 
@@ -264,6 +284,10 @@ public class LoginActivity extends ActionBarActivity implements
 			DebugHelper.ShowMessage
 					.t(this,
 							"There was an error processing your request. Please try again later.");
+			DebugHelper.ShowMessage.d("LoginActivity", "Response Code : "
+					+ responseCode);
+			DebugHelper.ShowMessage.d("LoginActivity", "Response Body : "
+					+ responseBody);
 		} else {
 			try {
 				responseJSON = new JSONObject(responseBody);
@@ -278,7 +302,7 @@ public class LoginActivity extends ActionBarActivity implements
 						userData.setVerificationCode(verifier);
 					}
 				} else if (responseJSON.has("hhtoken") == true) {
-					DebugHelper.ShowMessage.d("verified");
+					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
 					login = (Button) findViewById(R.id.login);
 					register = (Button) findViewById(R.id.register);
@@ -286,7 +310,11 @@ public class LoginActivity extends ActionBarActivity implements
 					username = (EditText) findViewById(R.id.username);
 
 					username.setEnabled(false);
+					username.setInputType(InputType.TYPE_NULL);
+					username.setFocusable(false);
+					imm.hideSoftInputFromWindow(username.getWindowToken(), 0);
 					login.setVisibility(View.VISIBLE);
+					login.requestFocus();
 					register.setVisibility(View.GONE);
 					verificationLayout.setVisibility(View.GONE);
 
@@ -295,11 +323,20 @@ public class LoginActivity extends ActionBarActivity implements
 
 				} else if (responseJSON.has("error") == true) {
 					DebugHelper.ShowMessage.t(this,
-							"An error occured processing your request");
+							responseJSON.getString("error"));
+					DebugHelper.ShowMessage.d("LoginActivity",
+							"Response Code :" + responseCode);
+					DebugHelper.ShowMessage.d("LoginActivity",
+							"Response Body :" + responseBody);
 				}
 			} catch (JSONException e) {
 				DebugHelper.ShowMessage.t(this,
-						"An error occured processing the response");
+						"An error occured trying to parse the JSON response");
+				DebugHelper.ShowMessage.d("LoginActivity", "Response Code : "
+						+ responseCode);
+				DebugHelper.ShowMessage.d("LoginActivity", "Response Body : "
+						+ responseBody);
+				DebugHelper.ShowMessage.d("LoginActivity", e.getMessage());
 			}
 		}
 		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);

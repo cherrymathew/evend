@@ -28,12 +28,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SecondActivity"
-            android:label="@string/title_activity_second" >
-        </activity>
-        <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login" >
+            android:label="@string/title_activity_login" 
+            android:windowSoftInputMode="stateHidden|adjustPan" >
         </activity>
         <activity
             android:name=".StartupActivity"
@@ -41,7 +38,8 @@
         </activity>
         <activity
             android:name=".WelcomeActivity"
-            android:label="@string/title_activity_welcome" >
+            android:label="@string/title_activity_welcome" 
+            android:windowSoftInputMode="stateHidden|adjustPan" >
         </activity>
         <activity
             android:name=".TalksActivity"

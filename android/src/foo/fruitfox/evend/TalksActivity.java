@@ -236,11 +236,13 @@ public class TalksActivity extends ActionBarActivity implements
 						udwTask.cancel(true);
 					}
 				} else {
-					DebugHelper.ShowMessage.t(this, "Connection error");
+					DebugHelper.ShowMessage.t(this,
+							"Unable to connect to the server.");
 				}
 			} catch (JSONException e) {
 				DebugHelper.ShowMessage.t(this,
-						"An error occured processing the response");
+						"An error occured while creating the JSON request.");
+				DebugHelper.ShowMessage.d("TalksActivity", e.getMessage());
 			}
 
 			startActivity(intent);
@@ -380,17 +382,30 @@ public class TalksActivity extends ActionBarActivity implements
 			DebugHelper.ShowMessage
 					.t(this,
 							"There was an error processing your request. Please try again later.");
+			DebugHelper.ShowMessage.d("TalksActivity", "Response Code : "
+					+ responseCode);
+			DebugHelper.ShowMessage.d("TalksActivity", "Response Body : "
+					+ responseBody);
 		} else {
 			try {
 				responseJSON = new JSONObject(responseBody);
 
 				if (responseJSON.has("error") == true) {
 					DebugHelper.ShowMessage.t(this,
-							"An error occured processing the response");
+							responseJSON.getString("error"));
+					DebugHelper.ShowMessage.d("TalksActivity",
+							"Response Code :" + responseCode);
+					DebugHelper.ShowMessage.d("TalksActivity",
+							"Response Body :" + responseBody);
 				}
 			} catch (JSONException e) {
 				DebugHelper.ShowMessage.t(this,
-						"An error occured processing the response");
+						"An error occured trying to parse the JSON response");
+				DebugHelper.ShowMessage.d("TalksActivity", "Response Code : "
+						+ responseCode);
+				DebugHelper.ShowMessage.d("TalksActivity", "Response Body : "
+						+ responseBody);
+				DebugHelper.ShowMessage.d("TalksActivity", e.getMessage());
 			}
 		}
 	}

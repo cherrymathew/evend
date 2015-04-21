@@ -42,7 +42,8 @@ import foo.fruitfox.tasks.UserDataWebAPITask.AsyncResponseListener;
 
 public class WelcomeActivity extends ActionBarActivity implements
 		OnCheckedChangeListener, OnClickListener, OnFocusChangeListener,
-		AsyncResponseListener, android.content.DialogInterface.OnClickListener {
+		AsyncResponseListener, android.content.DialogInterface.OnClickListener,
+		android.content.DialogInterface.OnCancelListener {
 
 	private EditText attendanceStartDate;
 	private EditText attendanceEndDate;
@@ -206,7 +207,8 @@ public class WelcomeActivity extends ActionBarActivity implements
 			requestJSON.put("talk", userData.getHasTalk() ? 1 : 0);
 		} catch (JSONException e) {
 			DebugHelper.ShowMessage.t(this,
-					"An error occured processing the response");
+					"An error occured while creating the JSON request.");
+			DebugHelper.ShowMessage.d("WelcomeActivity", e.getMessage());
 		}
 
 		if (NetworkHelper.Utilities.isConnected(this)) {
@@ -262,8 +264,15 @@ public class WelcomeActivity extends ActionBarActivity implements
 		needsAccommodation = userData.getNeedsAccommodation();
 		needsPickup = userData.getNeedsPickUp();
 		hasTalk = userData.getHasTalk();
-		currentStartDateString = userData.getAttendanceStartDate("dd-MM-yyyy");
-		currentEndDateString = userData.getAttendanceEndDate("dd-MM-yyyy");
+
+		if (userData.getAttendanceStartDate("dd-MM-yyyy").length() > 0) {
+			currentStartDateString = userData
+					.getAttendanceStartDate("dd-MM-yyyy");
+		}
+
+		if (userData.getAttendanceEndDate("dd-MM-yyyy").length() > 0) {
+			currentEndDateString = userData.getAttendanceEndDate("dd-MM-yyyy");
+		}
 
 		pickupAlertDialogBuilder
 				.setMessage("HillHacks will not provide Taxi fare.\n\nDo you Agree to this?");
@@ -280,8 +289,17 @@ public class WelcomeActivity extends ActionBarActivity implements
 			talkCheck.setChecked(true);
 		}
 
-		attendanceStartDate.setText(currentStartDateString);
-		attendanceEndDate.setText(currentEndDateString);
+		if (currentStartDateString.length() > 0) {
+			attendanceStartDate.setText(currentStartDateString);
+		} else {
+			attendanceStartDate.setText(startDateString);
+		}
+
+		if (currentEndDateString.length() > 0) {
+			attendanceEndDate.setText(currentEndDateString);
+		} else {
+			attendanceEndDate.setText(endDateString);
+		}
 	}
 
 	@Override
@@ -296,17 +314,30 @@ public class WelcomeActivity extends ActionBarActivity implements
 			DebugHelper.ShowMessage
 					.t(this,
 							"There was an error processing your request. Please try again later.");
+			DebugHelper.ShowMessage.d("WelcomeActivity", "Response Code : "
+					+ responseCode);
+			DebugHelper.ShowMessage.d("WelcomeActivity", "Response Body : "
+					+ responseBody);
 		} else {
 			try {
 				responseJSON = new JSONObject(responseBody);
 
 				if (responseJSON.has("error") == true) {
 					DebugHelper.ShowMessage.t(this,
-							"An error occured processing the response");
+							responseJSON.getString("error"));
+					DebugHelper.ShowMessage.d("WelcomeActivity",
+							"Response Code :" + responseCode);
+					DebugHelper.ShowMessage.d("WelcomeActivity",
+							"Response Body :" + responseBody);
 				}
 			} catch (JSONException e) {
 				DebugHelper.ShowMessage.t(this,
-						"An error occured processing the response");
+						"An error occured trying to parse the JSON response");
+				DebugHelper.ShowMessage.d("WelcomeActivity", "Response Code : "
+						+ responseCode);
+				DebugHelper.ShowMessage.d("WelcomeActivity", "Response Body : "
+						+ responseBody);
+				DebugHelper.ShowMessage.d("WelcomeActivity", e.getMessage());
 			}
 		}
 	}
@@ -328,9 +359,13 @@ public class WelcomeActivity extends ActionBarActivity implements
 					progDialog.dismiss();
 				}
 				udwTask.cancel(true);
+				DebugHelper.ShowMessage
+						.t(this,
+								"An error occurred while processing your request. Please try again later.");
+				DebugHelper.ShowMessage.d("WelcomeActivity", e.getMessage());
 			}
 		} else {
-			DebugHelper.ShowMessage.t(this, "Connection error");
+			DebugHelper.ShowMessage.t(this, "Unable to connect to the server.");
 		}
 	}
 
@@ -347,6 +382,7 @@ public class WelcomeActivity extends ActionBarActivity implements
 
 		pickupAlertDialogBuilder.setPositiveButton("Yes", this);
 		pickupAlertDialogBuilder.setNegativeButton("No", this);
+		pickupAlertDialogBuilder.setOnCancelListener(this);
 	}
 
 	private void displayStartDateCalendar() {
@@ -551,5 +587,10 @@ public class WelcomeActivity extends ActionBarActivity implements
 			pickupCheck.setChecked(false);
 			break;
 		}
+	}
+
+	@Override
+	public void onCancel(DialogInterface dialog) {
+		pickupCheck.setChecked(false);
 	}
 }

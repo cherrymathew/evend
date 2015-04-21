@@ -21,6 +21,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import foo.fruitfox.data.UserData;
+import foo.fruitfox.helpers.DebugHelper;
+import foo.fruitfox.helpers.NetworkHelper;
 import foo.fruitfox.helpers.StorageHelper;
 import foo.fruitfox.tasks.IRCChatAPITask;
 import foo.fruitfox.tasks.IRCChatAPITask.AsyncResponseListener;
@@ -37,6 +39,7 @@ public class ChatActivity extends Activity implements
 	private UserData userData;
 
 	private IRCConnection connection;
+	private IRCChatAPITask connectionTask;
 
 	private String nickNameIRC;
 	private String serverIRC;
@@ -45,6 +48,10 @@ public class ChatActivity extends Activity implements
 	private int endPort;
 
 	private Timer connectionCheckTimer;
+	private TimerTask connectionCheckTimerTask;
+
+	private int errorCodeIRC;
+	private int period;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +66,11 @@ public class ChatActivity extends Activity implements
 
 		serverIRC = "irc.oftc.net";
 		startPort = 6667;
-		endPort = 6667;
-		channelIRC = "#d41d8cd98f00b204e9800998ecf8427e";
+		endPort = 6670;
+		// channelIRC = "#d41d8cd98f00b204e9800998ecf8427e";
+		channelIRC = "#hillhacks";
+
+		period = 30000;
 
 		messageBox = (EditText) findViewById(R.id.messageBox);
 		chatBox = (EditText) findViewById(R.id.chatBox);
@@ -76,71 +86,122 @@ public class ChatActivity extends Activity implements
 		initializeIRCConnection();
 
 		chatBox.setText(Html
+				.fromHtml("<font color='#FF0000'><b>- NOTICE: IRC Live Chat may *NOT* work reliably on mobile internet. </b></font><br />"));
+		chatBox.append(Html
 				.fromHtml("<font color='#007845'><em>- Connecting...</em></font><br />"));
+
+		if (NetworkHelper.Utilities.isConnected(this)) {
+			connectionTask = new IRCChatAPITask(this, connection, this);
+
+			connectionTask.execute();
+		} else {
+			chatBox.append(Html
+					.fromHtml("<font color='#007845'><em>- Lost network connection, try again later...</em></font><br />"));
+		}
+
 		scrollDown();
-
-		IRCChatAPITask task = new IRCChatAPITask(this, connection, this);
-		task.execute();
-
-		// initializeIRCConnectionCheckTimer();
 	}
 
-	protected void onDestroy() {
-		super.onDestroy();
+	protected void onStop() {
+		super.onStop();
 
-		connection.doQuit("User closed connection.");
-		connection.close();
+		if (connection != null && connection.isConnected()) {
+			connection.doQuit("User closed connection.");
+			connection.close();
+		}
 		connection = null;
 
-		connectionCheckTimer.cancel();
+		if (connectionCheckTimer != null) {
+			connectionCheckTimerTask.cancel();
+			connectionCheckTimer.cancel();
+			connectionCheckTimer.purge();
+			connectionCheckTimer = null;
+			DebugHelper.ShowMessage.d("IRC onStop()", "Timer Check stopped");
+		}
+
+		if (connectionTask != null) {
+			connectionTask.cancel(true);
+			connectionTask = null;
+		}
 	}
 
 	private void initializeIRCConnectionCheckTimer() {
-		int delay = 30000; // delay for 30 sec.
-		int period = 15000; // repeat every 15 secs.
+		int delay = 15000; // delay for 30 sec.
+		// int period = 30000; // repeat every 15 secs.
 
 		final Context context = this;
 		final AsyncResponseListener listener = this;
 
 		connectionCheckTimer = new Timer();
 
-		connectionCheckTimer.scheduleAtFixedRate(new TimerTask() {
+		connectionCheckTimerTask = new TimerTask() {
+
+			@Override
 			public void run() {
-				if (connection == null || !connection.isConnected()) {
+				if (NetworkHelper.Utilities.isConnected(context) == true) {
+					if (connection == null || !connection.isConnected()) {
+						DebugHelper.ShowMessage.d("Inside timer");
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								chatBox.append(Html
+										.fromHtml("<font color='#007845'><em>- Trying to connect back to the server in 30 seconds...</em></font><br />"));
+								scrollDown();
+
+							}
+						});
+
+						String currentNickName = nickNameIRC;
+						if (connection != null) {
+							connection.close();
+						}
+						connection = null;
+
+						if (connectionTask != null) {
+							connectionTask.cancel(true);
+						}
+
+						if ((errorCodeIRC == IRCConstants.ERR_NICKCOLLISION)
+								|| (errorCodeIRC == IRCConstants.ERR_NICKNAMEINUSE)) {
+							initializeIRCConnection(currentNickName + "_");
+							DebugHelper.ShowMessage.d("IRC Nick",
+									currentNickName + "_");
+							errorCodeIRC = 0;
+						} else {
+							initializeIRCConnection(currentNickName);
+							DebugHelper.ShowMessage.d("IRC Nick",
+									currentNickName);
+						}
+
+						connectionTask = new IRCChatAPITask(context,
+								connection, listener);
+
+						connectionTask.execute();
+					}
+				} else {
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
 							chatBox.append(Html
-									.fromHtml("<font color='#007845'><em>- Trying to connect back to the server...</em></font><br />"));
+									.fromHtml("<font color='#007845'><em>- Lost network connection, trying again in 30 seconds...</em></font><br />"));
 							scrollDown();
 
 						}
 					});
-
-					String currentNickName = nickNameIRC;
-					if (connection != null) {
-						connection.close();
-					}
-					connection = null;
-
-					initializeIRCConnection(currentNickName);
-
-					IRCChatAPITask task = new IRCChatAPITask(context,
-							connection, listener);
-
-					task.execute();
 				}
 			}
+		};
 
-		}, delay, period);
+		connectionCheckTimer.scheduleAtFixedRate(connectionCheckTimerTask,
+				delay, period);
 
 	}
 
 	private void generateIRCNick() {
 		if (userData.getRegistrationIdType().equalsIgnoreCase("email")) {
-			nickNameIRC = "ehh_" + userData.getEmail().split("@")[0];
+			nickNameIRC = "app_" + userData.getEmail().split("@")[0];
 		} else {
-			nickNameIRC = "ehh_" + userData.getPhone().replaceAll("[^0-9]", "");
+			nickNameIRC = "app_" + userData.getPhone().replaceAll("[^0-9]", "");
 		}
 
 		nickNameIRC = nickNameIRC.replaceAll("[^A-Za-z0-9_]", "");
@@ -151,27 +212,23 @@ public class ChatActivity extends Activity implements
 	}
 
 	private void initializeIRCConnection() {
-		if (connection == null) {
-			connection = new IRCConnection(serverIRC, startPort, endPort, "",
-					nickNameIRC, nickNameIRC, nickNameIRC);
-			connection.addIRCEventListener((IRCEventListener) this);
-			connection.setEncoding("UTF-8");
-			connection.setPong(true);
-			connection.setDaemon(false);
-			connection.setColors(false);
-		}
+		connection = new IRCConnection(serverIRC, startPort, endPort, "",
+				nickNameIRC, nickNameIRC, nickNameIRC);
+		connection.addIRCEventListener((IRCEventListener) this);
+		connection.setEncoding("UTF-8");
+		connection.setPong(true);
+		connection.setDaemon(false);
+		connection.setColors(false);
 	}
 
 	private void initializeIRCConnection(String newNickNameIRC) {
-		if (connection == null) {
-			connection = new IRCConnection(serverIRC, startPort, endPort, "",
-					newNickNameIRC, nickNameIRC, nickNameIRC);
-			connection.addIRCEventListener((IRCEventListener) this);
-			connection.setEncoding("UTF-8");
-			connection.setPong(true);
-			connection.setDaemon(false);
-			connection.setColors(false);
-		}
+		connection = new IRCConnection(serverIRC, startPort, endPort, "",
+				newNickNameIRC, nickNameIRC, nickNameIRC);
+		connection.addIRCEventListener((IRCEventListener) this);
+		connection.setEncoding("UTF-8");
+		connection.setPong(true);
+		connection.setDaemon(false);
+		connection.setColors(false);
 	}
 
 	private void scrollDown() {
@@ -201,30 +258,65 @@ public class ChatActivity extends Activity implements
 				}
 			});
 		}
+
+		DebugHelper.ShowMessage.d("IRC Disconnected",
+				"Timer Check started + period: " + (period / 1000));
+		initializeIRCConnectionCheckTimer();
+		period = period + 10000;
 	}
 
 	@Override
 	public void onError(String arg0) {
-		// TODO Auto-generated method stub
+		DebugHelper.ShowMessage.d("IRC Error MSG", "Error Message: " + arg0);
+
+		if (arg0.equalsIgnoreCase("Trying to reconnect too fast.")) {
+			if (connection != null) {
+				connection.close();
+			}
+			connection = null;
+
+			if (connectionTask != null) {
+				connectionTask.cancel(true);
+			}
+
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					chatBox.append(Html
+							.fromHtml("<font color='#007845'><em>- Too many connection attempts, retrying in 15 seconds...</em></font><br />"));
+					scrollDown();
+				}
+			});
+		}
 
 	}
 
 	@Override
 	public void onError(int arg0, String arg1) {
+		DebugHelper.ShowMessage.d("IRC Error", "Error Code: " + arg0
+				+ "\n Error Message: " + arg1);
+
 		switch (arg0) {
 		case IRCConstants.ERR_NICKCOLLISION:
 		case IRCConstants.ERR_NICKNAMEINUSE:
-			String currentNickName = connection.getNick();
+			errorCodeIRC = arg0;
 
 			// Disable the auto connect timer
-			connectionCheckTimer.cancel();
+			if (connectionCheckTimer != null) {
+				DebugHelper.ShowMessage.d("IRC Error", "Timer Check stopped");
+				connectionCheckTimerTask.cancel();
+				connectionCheckTimer.cancel();
+				connectionCheckTimer.purge();
+			}
 
 			if (connection != null) {
 				connection.close();
 			}
 			connection = null;
 
-			initializeIRCConnection(currentNickName + "_");
+			if (connectionTask != null) {
+				connectionTask.cancel(true);
+			}
 
 			runOnUiThread(new Runnable() {
 				@Override
@@ -235,12 +327,13 @@ public class ChatActivity extends Activity implements
 				}
 			});
 
-			IRCChatAPITask task = new IRCChatAPITask(this, connection, this);
-			task.execute();
-
 			break;
 
 		case IRCConstants.ERR_ERRONEUSNICKNAME:
+			break;
+
+		default:
+
 			break;
 		}
 
@@ -259,12 +352,10 @@ public class ChatActivity extends Activity implements
 			public void run() {
 				chatBox.append(Html.fromHtml("<b>- Joined " + channelIRC
 						+ " channel</b><br/>"));
+				send.setEnabled(true);
 				scrollDown();
 			}
 		});
-
-		// Enable the auto connect timer again
-		initializeIRCConnectionCheckTimer();
 	}
 
 	@Override
@@ -348,10 +439,21 @@ public class ChatActivity extends Activity implements
 				scrollDown();
 			}
 		});
+
+		if (connectionCheckTimer != null) {
+			connectionCheckTimerTask.cancel();
+			connectionCheckTimer.cancel();
+			connectionCheckTimer.purge();
+			DebugHelper.ShowMessage.d("IRC Register", "Timer Check stopped");
+			period = 30000;
+		}
 	}
 
 	@Override
 	public void onReply(int arg0, String arg1, String arg2) {
+		// DebugHelper.ShowMessage.d("IRC", "Reply code: " + arg0 +
+		// "\n Channel: "
+		// + arg1 + "\n Message: " + arg2);
 		String topic = "";
 
 		final String message;
@@ -381,7 +483,8 @@ public class ChatActivity extends Activity implements
 
 	@Override
 	public void unknown(String arg0, String arg1, String arg2, String arg3) {
-		// TODO Auto-generated method stub
+		DebugHelper.ShowMessage.d("IRC", "Reply code: " + arg0 + "\n Channel: "
+				+ arg1 + "\n Message: " + arg2);
 
 	}
 
@@ -423,11 +526,13 @@ public class ChatActivity extends Activity implements
 
 			initializeIRCConnection(currentNickName);
 
-			IRCChatAPITask task = new IRCChatAPITask(this, connection, this);
-			task.execute();
+			connectionTask = new IRCChatAPITask(this, connection, this);
+			connectionTask.execute();
 
 			chatBox.append(Html
 					.fromHtml("<font color='#007845'><em>- Trying to connect back to the server...</em></font><br />"));
+
+			send.setEnabled(false);
 		}
 
 		scrollDown();

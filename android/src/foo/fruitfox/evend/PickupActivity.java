@@ -137,8 +137,7 @@ public class PickupActivity extends ActionBarActivity implements
 						.getAccommodationData().getBedsCount());
 				seatsCount.setSelection(position);
 
-				dateString = userData.getAccommodationData().getStartDate(
-						"dd-MM-yyyy");
+				dateString = userData.getAttendanceStartDate("dd-MM-yyyy");
 				if (dateString.length() > 0) {
 					pickupDate.setText(dateString);
 				}
@@ -431,7 +430,8 @@ public class PickupActivity extends ActionBarActivity implements
 					userData.getPickupData().getPickupTime("HH:mm"));
 		} catch (JSONException e) {
 			DebugHelper.ShowMessage.t(this,
-					"An error occured processing the response");
+					"An error occured while creating the JSON request.");
+			DebugHelper.ShowMessage.d("PickupActivity", e.getMessage());
 		}
 
 		if (NetworkHelper.Utilities.isConnected(this)) {
@@ -447,9 +447,13 @@ public class PickupActivity extends ActionBarActivity implements
 					progDialog.dismiss();
 				}
 				udwTask.cancel(true);
+				DebugHelper.ShowMessage
+						.t(this,
+								"An error occurred while processing your request. Please try again later.");
+				DebugHelper.ShowMessage.d("PickupActivity", e.getMessage());
 			}
 		} else {
-			DebugHelper.ShowMessage.t(this, "Connection error");
+			DebugHelper.ShowMessage.t(this, "Unable to connect to the server.");
 		}
 
 		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
@@ -521,17 +525,30 @@ public class PickupActivity extends ActionBarActivity implements
 			DebugHelper.ShowMessage
 					.t(this,
 							"There was an error processing your request. Please try again later.");
+			DebugHelper.ShowMessage.d("PickupActivity", "Response Code : "
+					+ responseCode);
+			DebugHelper.ShowMessage.d("PickupActivity", "Response Body : "
+					+ responseBody);
 		} else {
 			try {
 				responseJSON = new JSONObject(responseBody);
 
 				if (responseJSON.has("error") == true) {
 					DebugHelper.ShowMessage.t(this,
-							"An error occured processing the response");
+							responseJSON.getString("error"));
+					DebugHelper.ShowMessage.d("PickupActivity",
+							"Response Code :" + responseCode);
+					DebugHelper.ShowMessage.d("PickupActivity",
+							"Response Body :" + responseBody);
 				}
 			} catch (JSONException e) {
 				DebugHelper.ShowMessage.t(this,
-						"An error occured processing the response");
+						"An error occured trying to parse the JSON response");
+				DebugHelper.ShowMessage.d("PickupActivity", "Response Code : "
+						+ responseCode);
+				DebugHelper.ShowMessage.d("PickupActivity", "Response Body : "
+						+ responseBody);
+				DebugHelper.ShowMessage.d("PickupActivity", e.getMessage());
 			}
 		}
 
