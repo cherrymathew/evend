@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="${relativePackage}.${activityClass}" >
+    tools:context="foo.fruitfox.evend.ChatActivity" >
 
     <ScrollView
         android:id="@+id/chatBoxContainer"
@@ -35,7 +35,7 @@
         android:layout_toLeftOf="@+id/send"
         android:ems="10"
         android:inputType="none"
-        android:hint="Enter your chat text here..."
+        android:hint="@string/chat_messagebox_hint"
         android:enabled="false" />
 
     <Button
@@ -46,6 +46,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/messageBox"
         android:onClick="send"
-        android:text="Connect" />
+        android:text="@string/chat_send_label" />
 
 </RelativeLayout>

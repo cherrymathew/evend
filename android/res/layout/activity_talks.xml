@@ -14,9 +14,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:text="Participate"
-        android:textSize="20sp" />
+        android:layout_marginBottom="@dimen/view_horizontal_margin_10dp"
+        android:text="@string/talks_header_label"
+        android:textSize="@dimen/view_text_size_20sp" />
 
    <LinearLayout
        android:id="@+id/addTalkLayout"
@@ -31,11 +31,9 @@
             android:id="@+id/addTalk"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:minHeight="28dp"
-            android:minWidth="48dp"
             android:onClick="addTalk"
-            android:text="Add a new talk"
-            android:textSize="15sp" />
+            android:text="@string/talks_add_label"
+            android:textSize="@dimen/view_text_size_15sp" />
 
     </LinearLayout>
 
@@ -45,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/next"
         android:layout_below="@+id/addTalkLayout"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/view_horizontal_margin_10dp"
         android:fadeScrollbars="false"
         tools:listitem="@layout/talk_single_row" />
 
@@ -56,6 +54,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/talksList"
         android:onClick="next"
-        android:text="Next" />
+        android:text="@string/next_label" />
 
 </RelativeLayout>

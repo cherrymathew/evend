@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="Accommodation Details"
+        android:text="@string/accommodation_header_label"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ScrollView
@@ -34,43 +34,43 @@
                 android:id="@+id/campingGearContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/view_horizontal_margin_20dp"
                 android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/campingGearLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Please select the gear you are bringing"
-                    android:textSize="15sp" />
+                    android:text="@string/accommodation_camping_gear_label"
+                    android:textSize="@dimen/view_text_size_15sp" />
 
                 <CheckBox
                     android:id="@+id/tentCheck"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:text="Yes, I am bringing a Tent" />
+                    android:layout_marginTop="@dimen/view_horizontal_margin_15dp"
+                    android:text="@string/accommodation_tent_check_label" />
 
                 <CheckBox
                     android:id="@+id/sleepingBagCheck"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:text="Yes, I am bringing a Sleeping Bag" />
+                    android:layout_marginTop="@dimen/view_horizontal_margin_15dp"
+                    android:text="@string/accommodation_sleeping_bag_check_label" />
 
                 <CheckBox
                     android:id="@+id/matressCheck"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:text="Yes, I am bringing a Matress" />
+                    android:layout_marginTop="@dimen/view_horizontal_margin_15dp"
+                    android:text="@string/accommodation_matress_check_label" />
 
                 <CheckBox
                     android:id="@+id/pillowCheck"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:text="Yes, I am bringing a Pillow" />
+                    android:layout_marginTop="@dimen/view_horizontal_margin_15dp"
+                    android:text="@string/accommodation_pillow_check_label" />
             </LinearLayout>
 
             <LinearLayout
@@ -78,23 +78,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/campingGearContainer"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/view_horizontal_margin_20dp"
                 android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/familyLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Are you coming with your family?"
-                    android:textSize="15sp" />
+                    android:text="@string/accommodation_family_label"
+                    android:textSize="@dimen/view_text_size_15sp" />
 
                 <CheckBox
                     android:id="@+id/familyCheck"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="Yes, I am coming with my family" />
+                    android:layout_marginTop="@dimen/view_horizontal_margin_15dp"
+                    android:layout_marginBottom="@dimen/view_horizontal_margin_10dp"
+                    android:text="@string/accommodation_family_check_label" />
 
                 <EditText
                     android:id="@+id/familyDetails"
@@ -102,7 +102,7 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:inputType="textMultiLine" 
-                    android:hint="Please provide us with the details of your family members"
+                    android:hint="@string/accommodation_family_details_hint"
                     android:visibility="gone"/>
             </LinearLayout>
         </RelativeLayout>
@@ -115,6 +115,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:onClick="next"
-        android:text="Next" />
+        android:text="@string/next_label" />
 
 </RelativeLayout>
