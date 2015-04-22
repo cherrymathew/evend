@@ -3,35 +3,120 @@
 
     <string name="app_name">evend</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_second">SecondActivity</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="title_activity_startup">Startup</string>
-    <string name="title_activity_welcome">WelcomeActivity</string>
-    <string name="title_activity_talks">TalksActivity</string>
     <string name="hello_world">Hello world!</string>
+
+    <!-- Strings used in the Startup Activity -->
+    <string name="title_activity_startup">Startup</string>
+    <string name="startup_phone_verification_label">Phone Number Registration</string>
+    <string name="startup_email_verification_label">E-mail Registration</string>
+
     <!-- Strings used in the Login Activity -->
-    <string name="username_label">Username</string>
-    <string name="username_hint">user@example.com</string>
-    <string name="login_label">Login</string>
-    <string name="register_label">Register</string>
-    <string name="verification_label">Verification Code</string>
-    <string name="verify_label">Verify</string>
-    <!-- Generic Label for the Next Button -->
-    <string name="next_label">Next</string>
-    <!-- Server URL -->
-    <!--  <string name="server_url">http://192.168.1.117:3000/</string> -->
-    <string name="server_url">http://fooobar.mooo.com:3000/</string> 
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="login_username_label">Username</string>
+    <string name="login_username_hint">user@example.com</string>
+    <string name="login_type_label">Login</string>
+    <string name="login_register_label">Register</string>
+    <string name="login_verification_label">Verification Code</string>
+    <string name="login_verify_label">Verify</string>
+
+    <!-- Strings used in the Welcome Activity -->
+    <string name="title_activity_welcome">WelcomeActivity</string>
+    <string name="welcome_header_label">Welcome to Hillhacks Buddy Application</string>
+    <string name="welcome_attendance_name_label">Your name</string>
+    <string name="welcome_attendance_name_hint">Enter your name here</string>
+    <string name="welcome_attendance_start_date_label">When do you plan to attend?</string>
+    <string name="welcome_attendance_end_date_label">When do you plan to leave?</string>
+    <string name="welcome_accommodation_check_label">Would you like to Camp on-site?</string>
+    <string name="welcome_pickup_check_label">Would you like a Pick up?</string>
+    <string name="welcome_talk_check_label">Would you like to present a Talk?</string>
+    <string name="welcome_pickup_warning_text">HillHacks will not provide Taxi fare.\n\nDo you Agree to this?</string>
+
+    <!-- Strings used in the Accommodation Activity -->
+    <string name="title_activity_accomodation">AccomodationActivity</string>
+    <string name="accommodation_header_label">Accommodation Details</string>
+    <string name="accommodation_camping_gear_label">Please select the gear you are bringing</string>
+    <string name="accommodation_tent_check_label">Yes, I am bringing a Tent</string>
+    <string name="accommodation_sleeping_bag_check_label">Yes, I am bringing a Sleeping Bag</string>
+    <string name="accommodation_matress_check_label">Yes, I am bringing a Matress</string>
+    <string name="accommodation_pillow_check_label">Yes, I am bringing a Pillow</string>
+    <string name="accommodation_family_label">Are you coming with your family?</string>
+    <string name="accommodation_family_check_label">Yes, I am coming with my family</string>
+    <string name="accommodation_family_details_hint">Please provide us with the details of your family members</string>
+
+    <!-- Strings used in the Pickup Activity -->
+    <string name="title_activity_pickup">PickupActivity</string>
+    <string name="pickup_header_label">Arrival Details</string>
+    <string name="pickup_location_label">Arrival Location</string>
+    <string name="pickup_date_label">Arrival Date</string>
+    <string name="pickup_time_label">Arrival Time</string>
+    <string name="pickup_seats_label">Number of Seats</string>
+    <string name="pickup_seats_count">5</string>
+
+    <!-- Strings used in the Talks Activity -->
+    <string name="title_activity_talks">TalksActivity</string>
+    <string name="talks_header_label">Participate</string>
+    <string name="talks_add_label">Add a new talk</string>
+    <string name="talks_title_label">Title</string>
+    <string name="talks_title_hint">Your preentation title</string>
+    <string name="talks_type_label">Type</string>
+    <string name="talks_event_label">Event</string>
+    <string name="talks_duration_label">Duration</string>
+    <string name="talks_duration_hint">e.g. 1 hr , 2 days</string>
+    <string name="talks_co_presenter_check_label">Do you have Co-Presenters for your event?</string>
+    <string name="talks_projector_check_label">Do you need a projecter for your event?</string>
+    <string name="talks_tools_check_label">Do you need tools for your event?</string>
+    <string name="talks_notes_label">Notes</string>
+    <string name="talks_notes_hint">Any additional information you would like to provide</string>
+    <string name="talks_row_type_label">Type :</string>
+    <string name="talks_row_duration_label">Duration :</string>
+    <string name="talks_row_event_label">Event :</string>
+    <string name="talks_row_co_presenter_label">Has Co-Presenters :</string>
+    <string name="talks_row_projector_label">Needs Projector :</string>
+    <string name="talks_row_tools_label">Needs Tools :</string>
+    <string name="talks_row_notes_label">Notes</string>
+    <string name="talks_row_delete_label">X</string>
+
     <!-- Strings used in the Summary Activity -->
-    <string name="finalize_dialog_message">Once you Confirm the changes you will no longer be able to edit any of the registration details.\n\nAre you sure you wish to continue?</string>
+    <string name="title_activity_summary">SummaryActivity</string>
+    <string name="summary_header_label">Registration Summary</string>
+    <string name="summary_attendance_label">Attendance Summary</string>
+    <string name="summary_accommodation_label">Accommodation Summary</string>
+    <string name="summary_pickup_label">Pickup Summary</string>
+    <string name="summary_talks_label">Talks Summary</string>
+    <string name="summary_join_irc_label">Join live chat in IRC</string>
+    <string name="summary_finalize_label">Confirm</string>
+    <string name="summary_open_map_label">Open Map</string>
+    <string name="summary_name_label">Name :</string>
+    <string name="summary_family_details">Family Details</string>
+    <string name="summary_finalize_dialog_message">Once you Confirm the changes you will no longer be able to edit any of the registration details.\n\nAre you sure you wish to continue?</string>
+
+    <!-- Strings used in the Chat Activity -->
+    <string name="title_activity_chat">ChatActivity</string>
+    <string name="chat_messagebox_hint">Enter your chat text here &#8230;</string>
+    <string name="chat_send_label">Connect</string>
+
+    <!-- Strings used in the Map Activity -->
+    <string name="title_activity_map">MapActivity</string>
+
+    <!-- Generic Labels for commonly used buttons -->
+    <string name="next_label">Next</string>
+    <string name="accept_label">Accept</string>
+    <string name="save_label">Save</string>
+
+    <!-- Generic Placeholder Text for dynamic layouts -->
+    <string name="placeholder_text_label_1">Lorem ipsum</string>
+    <string name="placeholder_text_label_2">Lorem ipsum dolor sit amet</string>
+    <string name="placeholder_text_label_3">Lorem ipsum dolor sit amet, consectetur adipiscing elit.\nVivamus condimentum ullamcorper mauris.\nUt nunc nulla, condimentum sed.</string>
+    <string name="placeholder_number_label_1">15</string>
+    <string name="placeholder_text_label_yes">Yes</string>
+    <string name="placeholder_text_label_no">No</string>
+
+    <!-- Server URL -->
+    <!-- <string name="server_url">http://192.168.1.117:3000/</string> -->
+    <string name="server_url">http://fooobar.mooo.com:3000/</string>
+
     <!-- The location Map URL -->
     <string name="map_url">http://www.openstreetmap.org/?mlat=32.24159&amp;mlon=76.32994#map=17/32.24161/76.32873</string>
-
-    <!-- The Accommmodation types -->
-    <string-array name="accommodation_types">
-        <item>Room</item>
-        <item>Bed</item>
-        <item>Tent</item>
-    </string-array>
 
     <!-- Various Pickup Locations -->
     <string-array name="location_names">
@@ -266,11 +351,5 @@
         <item>260,ZM</item>
         <item>263,ZW</item>
     </string-array>
-
-    <string name="title_activity_accomodation">AccomodationActivity</string>
-    <string name="title_activity_pickup">PickupActivity</string>
-    <string name="title_activity_summary">SummaryActivity</string>
-    <string name="title_activity_chat">ChatActivity</string>
-    <string name="title_activity_map">MapActivity</string>
 
 </resources>
