@@ -14,8 +14,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.1"
-            android:text="A very long Talk Title (very long) "
-            android:textSize="15sp" />
+            android:text="@string/placeholder_text_label_2"
+            android:textSize="@dimen/view_text_size_15sp" />
 
         <Button
             android:id="@+id/removeTalk"
@@ -25,14 +25,14 @@
             android:minHeight="28dp"
             android:minWidth="48dp"
             android:onClick="talkRemove"
-            android:text="X"
-            android:textSize="15sp" />
+            android:text="@string/talks_row_delete_label"
+            android:textSize="@dimen/view_text_size_15sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="@dimen/view_horizontal_margin_5dp"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -46,8 +46,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.01"
                 android:ems="10"
-                android:text="Type :"
-                android:textSize="10sp"
+                android:text="@string/talks_row_type_label"
+                android:textSize="@dimen/view_text_size_10sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -55,14 +55,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:text="Workshop"
-                android:textSize="10sp" />
+                android:text="@string/placeholder_text_label_1"
+                android:textSize="@dimen/view_text_size_10sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/view_horizontal_margin_5dp"
             android:orientation="horizontal" >
 
             <TextView
@@ -71,8 +71,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.01"
                 android:ems="10"
-                android:text="Duration :"
-                android:textSize="10sp"
+                android:text="@string/talks_row_duration_label"
+                android:textSize="@dimen/view_text_size_10sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -80,14 +80,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:text="1 - 2 Hours"
-                android:textSize="10sp" />
+                android:text="@string/placeholder_text_label_1"
+                android:textSize="@dimen/view_text_size_10sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/view_horizontal_margin_5dp"
             android:orientation="horizontal" >
 
             <TextView
@@ -96,8 +96,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.01"
                 android:ems="10"
-                android:text="Event :"
-                android:textSize="10sp"
+                android:text="@string/talks_row_event_label"
+                android:textSize="@dimen/view_text_size_10sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -105,14 +105,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:text="School Program"
-                android:textSize="10sp" />
+                android:text="@string/placeholder_text_label_1"
+                android:textSize="@dimen/view_text_size_10sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/view_horizontal_margin_5dp"
             android:orientation="horizontal" >
 
             <TextView
@@ -121,8 +121,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.01"
                 android:ems="10"
-                android:text="Has Co-Presenters :"
-                android:textSize="10sp"
+                android:text="@string/talks_row_co_presenter_label"
+                android:textSize="@dimen/view_text_size_10sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -130,14 +130,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:text="Yes"
-                android:textSize="10sp" />
+                android:text="@string/placeholder_text_label_no"
+                android:textSize="@dimen/view_text_size_10sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/view_horizontal_margin_5dp"
             android:orientation="horizontal" >
 
             <TextView
@@ -146,8 +146,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.01"
                 android:ems="10"
-                android:text="Needs Projector :"
-                android:textSize="10sp"
+                android:text="@string/talks_row_projector_label"
+                android:textSize="@dimen/view_text_size_10sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -155,14 +155,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:text="Yes"
-                android:textSize="10sp" />
+                android:text="@string/placeholder_text_label_yes"
+                android:textSize="@dimen/view_text_size_10sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/view_horizontal_margin_5dp"
             android:orientation="horizontal" >
 
             <TextView
@@ -171,8 +171,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.01"
                 android:ems="10"
-                android:text="Needs Tools :"
-                android:textSize="10sp"
+                android:text="@string/talks_row_tools_label"
+                android:textSize="@dimen/view_text_size_10sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -180,14 +180,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:text="No"
-                android:textSize="10sp" />
+                android:text="@string/placeholder_text_label_no"
+                android:textSize="@dimen/view_text_size_10sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/view_horizontal_margin_5dp"
             android:orientation="vertical" >
 
             <TextView
@@ -195,8 +195,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:text="Notes"
-                android:textSize="10sp"
+                android:text="@string/talks_row_notes_label"
+                android:textSize="@dimen/view_text_size_10sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -204,8 +204,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:text="My name is Cherry, I am not a fruit.\nI would like a projector and a couple of assistants.\nAlso this will be a 5 day workshop on NetBSD"
-                android:textSize="10sp" />
+                android:text="@string/placeholder_text_label_3"
+                android:textSize="@dimen/view_text_size_10sp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -213,8 +213,8 @@
         android:id="@+id/separator"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginBottom="@dimen/view_horizontal_margin_5dp"
+        android:layout_marginTop="@dimen/view_horizontal_margin_5dp"
         android:background="@android:color/darker_gray" />
 
 </LinearLayout>

@@ -11,7 +11,7 @@
     <LinearLayout
         android:id="@+id/talkAddLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -22,8 +22,8 @@
                 android:id="@+id/talkTitleLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Title "
-                android:textSize="15sp"
+                android:text="@string/talks_title_label"
+                android:textSize="@dimen/view_text_size_15sp"
                 android:textStyle="bold" />
 
             <EditText
@@ -31,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="Your presentation title" >
+                android:hint="@string/talks_title_hint" >
 
                 <requestFocus />
             </EditText>
@@ -45,13 +45,13 @@
                 android:id="@+id/talkTypeLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Type "
-                android:textSize="15sp"
+                android:text="@string/talks_type_label"
+                android:textSize="@dimen/view_text_size_15sp"
                 android:textStyle="bold" />
 
             <Spinner
                 android:id="@+id/talkType"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 tools:listitem="@android:layout/simple_list_item_1" />
@@ -65,8 +65,8 @@
                 android:id="@+id/talkEventLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Event "
-                android:textSize="15sp"
+                android:text="@string/talks_event_label"
+                android:textSize="@dimen/view_text_size_15sp"
                 android:textStyle="bold" />
 
             <Spinner
@@ -85,8 +85,8 @@
                 android:id="@+id/talkDurationLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Duration "
-                android:textSize="15sp"
+                android:text="@string/talks_duration_label"
+                android:textSize="@dimen/view_text_size_15sp"
                 android:textStyle="bold" />
 
             <EditText
@@ -94,7 +94,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="e.g. 1 hr " >
+                android:hint="@string/talks_duration_hint" >
             </EditText>
         </LinearLayout>
 
@@ -102,25 +102,25 @@
             android:id="@+id/coPresenterCheck"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="Do you have Co-Presenters for your event?" />
+            android:layout_marginTop="@dimen/view_horizontal_margin_15dp"
+            android:text="@string/talks_co_presenter_check_label" />
 
         <CheckBox
             android:id="@+id/projectorCheck"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="Do you need a projecter for your event?" />
+            android:layout_marginTop="@dimen/view_horizontal_margin_15dp"
+            android:text="@string/talks_projector_check_label" />
 
         <CheckBox
             android:id="@+id/toolsCheck"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="Do you need tools for your event?" />
+            android:layout_marginTop="@dimen/view_horizontal_margin_15dp"
+            android:text="@string/talks_tools_check_label" />
 
         <LinearLayout
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="@dimen/view_horizontal_margin_15dp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" 
             android:orientation="vertical">
@@ -129,8 +129,8 @@
                 android:id="@+id/talkNotesLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Notes"
-                android:textSize="15sp"
+                android:text="@string/talks_notes_label"
+                android:textSize="@dimen/view_text_size_15sp"
                 android:textStyle="bold" />
 
             <EditText
@@ -139,7 +139,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textMultiLine"
-                android:hint="Any additional information you would like to provide" >
+                android:hint="@string/talks_notes_hint" >
             </EditText>
         </LinearLayout>
 
@@ -147,8 +147,8 @@
             android:id="@+id/saveTalk"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="Save" />
+            android:layout_marginTop="@dimen/view_horizontal_margin_15dp"
+            android:text="@string/save_label" />
     </LinearLayout>
 
 </ScrollView>
