@@ -29,6 +29,10 @@ public class StartupActivity extends ActionBarActivity {
 				startActivity(intent);
 				finish();
 			}
+		} else {
+			Intent intent = new Intent(this, LoginActivity.class);
+			intent.putExtra("type", "email");
+			startActivity(intent);
 		}
 	}
 
