@@ -74,8 +74,12 @@ public class SummaryActivity extends ActionBarActivity implements
 
 	private void initalizeLayout() {
 		String finalizeDialogMessage = getResources().getString(
-				R.string.finalize_dialog_message);
+				R.string.summary_finalize_dialog_message);
 		finalizeAlertDialogBuilder.setMessage(finalizeDialogMessage);
+
+		TextView username = (TextView) findViewById(R.id.name);
+
+		username.setText(userData.getFirstName());
 
 		if (userData.getIsFinalized() == true) {
 			Button openMap = (Button) findViewById(R.id.openMap);
@@ -118,22 +122,40 @@ public class SummaryActivity extends ActionBarActivity implements
 		summaryMap = new LinkedHashMap<String, String>();
 
 		if (userData.getAccommodationData() != null) {
-			summaryMap.put("Will you be bringing a Tent?", userData
-					.getAccommodationData().getHasTent() ? "Yes" : "No");
 			summaryMap
-					.put("Will you be bringing a Sleeping Bag?",
+					.put(getResources().getString(
+							R.string.accommodation_tent_check_label), userData
+							.getAccommodationData().getHasTent() ? "Yes" : "No");
+			summaryMap
+					.put(getResources().getString(
+							R.string.accommodation_sleeping_bag_check_label),
 							userData.getAccommodationData()
 									.getHasSleeplingBag() ? "Yes" : "No");
-			summaryMap.put("Will you be bringing a Matress?", userData
-					.getAccommodationData().getHasMatress() ? "Yes" : "No");
-			summaryMap.put("Will you be bringing a Pillow?", userData
-					.getAccommodationData().getHasPillow() ? "Yes" : "No");
-			summaryMap.put("Will you be bringing your family along?", userData
-					.getAccommodationData().getHasFamily() ? "Yes" : "No");
+			summaryMap.put(
+					getResources().getString(
+							R.string.accommodation_matress_check_label),
+					userData.getAccommodationData().getHasMatress() ? "Yes"
+							: "No");
+			summaryMap.put(
+					getResources().getString(
+							R.string.accommodation_pillow_check_label),
+					userData.getAccommodationData().getHasPillow() ? "Yes"
+							: "No");
+			summaryMap.put(
+					getResources().getString(
+							R.string.accommodation_family_check_label),
+					userData.getAccommodationData().getHasFamily() ? "Yes"
+							: "No");
 
 			if (userData.getAccommodationData().getHasFamily()) {
-				summaryMap.put("Family Details", userData
-						.getAccommodationData().getFamilyDetails());
+				String familyDetails = userData.getAccommodationData()
+						.getFamilyDetails();
+				if (familyDetails.trim().length() == 0) {
+					familyDetails = "N/A";
+				}
+				summaryMap
+						.put(getResources().getString(
+								R.string.summary_family_details), familyDetails);
 			}
 		} else {
 			summaryMap.put("You have not selected any items for this", "");
@@ -166,14 +188,18 @@ public class SummaryActivity extends ActionBarActivity implements
 		summaryMap = new LinkedHashMap<String, String>();
 
 		if (userData.getPickupData() != null) {
-			summaryMap.put("Preferred pickup Location", userData
-					.getPickupData().getLocation());
-			summaryMap.put("Your arrival date", userData.getPickupData()
-					.getPickupDate("dd-MM-yyyy"));
-			summaryMap.put("Your arrival time", userData.getPickupData()
-					.getPickupTime("HH:mm"));
-			summaryMap.put("Total number of people", userData.getPickupData()
-					.getSeatsCount());
+			summaryMap.put(
+					getResources().getString(R.string.pickup_location_label),
+					userData.getPickupData().getLocation());
+			summaryMap.put(
+					getResources().getString(R.string.pickup_date_label),
+					userData.getPickupData().getPickupDate("dd-MM-yyyy"));
+			summaryMap.put(
+					getResources().getString(R.string.pickup_time_label),
+					userData.getPickupData().getPickupTime("HH:mm"));
+			summaryMap.put(getResources()
+					.getString(R.string.pickup_seats_label), userData
+					.getPickupData().getSeatsCount());
 		} else {
 			summaryMap.put("You have not selected any items for this", "");
 		}

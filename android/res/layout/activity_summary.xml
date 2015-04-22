@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fadeScrollbars="false"
+    android:scrollbarStyle="outsideOverlay"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -20,14 +21,46 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Registration Summary"
-            android:textSize="20dp" />
+            android:text="@string/summary_header_label"
+            android:textSize="@dimen/view_text_size_20sp" />
+
+        <View
+            android:id="@+id/separator0"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/summaryHeading"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@android:color/darker_gray" />
+
+        <LinearLayout
+            android:id="@+id/attendanceNameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/separator0"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/nameLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:text="@string/summary_name_label" />
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.9"
+                android:gravity="left"
+                android:text="@string/placeholder_text_label_1" />
+        </LinearLayout>
 
         <View
             android:id="@+id/separator1"
             android:layout_width="fill_parent"
             android:layout_height="1dp"
-            android:layout_below="@+id/summaryHeading"
+            android:layout_below="@+id/attendanceNameLayout"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
             android:background="@android:color/darker_gray" />
@@ -39,8 +72,8 @@
             android:layout_below="@+id/separator1"
             android:layout_marginBottom="5dp"
             android:gravity="center"
-            android:text="Attendance Summary"
-            android:textSize="15dp" />
+            android:text="@string/summary_attendance_label"
+            android:textSize="@dimen/view_text_size_15sp" />
 
         <LinearLayout
             android:id="@+id/attendanceSummary"
@@ -58,7 +91,9 @@
                 android:numColumns="7"
                 android:stretchMode="spacingWidth"
                 android:verticalSpacing="5dp"
+                tools:ignore="NestedScrolling"
                 tools:listitem="@layout/calendar_single_day" >
+
             </GridView>
         </LinearLayout>
 
@@ -78,16 +113,15 @@
             android:layout_below="@+id/separator2"
             android:layout_marginBottom="5dp"
             android:gravity="center"
-            android:text="Accommodation Summary"
-            android:textSize="15dp" />
+            android:text="@string/summary_accommodation_label"
+            android:textSize="@dimen/view_text_size_15sp" />
 
-       <LinearLayout
+        <LinearLayout
             android:id="@+id/accommodationSummary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/accommodationSummaryHeading"
             android:orientation="vertical" >
-
         </LinearLayout>
 
         <View
@@ -106,8 +140,8 @@
             android:layout_below="@+id/separator3"
             android:layout_marginBottom="5dp"
             android:gravity="center"
-            android:text="Pickup Summary"
-            android:textSize="15dp" />
+            android:text="@string/summary_pickup_label"
+            android:textSize="@dimen/view_text_size_15sp" />
 
         <LinearLayout
             android:id="@+id/pickupSummary"
@@ -133,8 +167,8 @@
             android:layout_below="@+id/separator4"
             android:layout_marginBottom="5dp"
             android:gravity="center"
-            android:text="Talks Summary"
-            android:textSize="15dp" />
+            android:text="@string/summary_talks_label"
+            android:textSize="@dimen/view_text_size_15sp" />
 
         <LinearLayout
             android:id="@+id/talksSummary"
@@ -166,7 +200,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="liveChat"
-                android:text="Join live chat in IRC" />
+                android:text="@string/summary_join_irc_label" />
 
             <Button
                 android:id="@+id/openMap"
@@ -175,7 +209,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:onClick="openMap"
-                android:text="Open Map"
+                android:text="@string/summary_open_map_label"
                 android:visibility="gone" />
 
             <Button
@@ -185,7 +219,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:onClick="finalize"
-                android:text="Confirm" />
+                android:text="@string/summary_finalize_label" />
         </RelativeLayout>
     </RelativeLayout>
 
