@@ -112,7 +112,7 @@ public class LoginActivity extends ActionBarActivity implements
 		case "email":
 			username.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 			// TODO: Remove this Hardcoding
-			username.setText("john@example.com");
+			// username.setText("john@example.com");
 			usernameLabel.setText("E-Mail");
 			login.setVisibility(View.GONE);
 			register.setVisibility(View.VISIBLE);
@@ -141,6 +141,8 @@ public class LoginActivity extends ActionBarActivity implements
 				}
 				identifier = email;
 				requestJSON.put("email", email);
+				DebugHelper.ShowMessage.t(this,
+						"You may need to check your *SPAM* folder.");
 				break;
 
 			case "phone":

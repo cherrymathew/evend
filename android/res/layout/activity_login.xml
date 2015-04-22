@@ -22,7 +22,7 @@
             android:id="@+id/usernameLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/username_label" />
+            android:text="@string/login_username_label" />
 
         <EditText
             android:id="@+id/username"
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="@string/username_hint" >
+            android:hint="@string/login_username_hint" >
 
             <requestFocus />
         </EditText>
@@ -48,14 +48,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="login"
-            android:text="@string/login_label" />
+            android:text="@string/login_type_label" />
 
         <Button
             android:id="@+id/register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="register"
-            android:text="@string/register_label" />
+            android:text="@string/login_register_label" />
     </LinearLayout>
 
     <LinearLayout
@@ -70,7 +70,7 @@
             android:id="@+id/verificationCodeLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/verification_label" />
+            android:text="@string/login_verification_label" />
 
         <EditText
             android:id="@+id/verificationCode"
@@ -85,7 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="verify"
-            android:text="@string/verify_label" />
+            android:text="@string/login_verify_label" />
     </LinearLayout>
 
 </LinearLayout>
