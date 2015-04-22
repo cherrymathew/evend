@@ -14,14 +14,15 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:text="Welcome to Hillhacks Buddy Application"
+        android:layout_marginBottom="10dp"
+        android:text="@string/welcome_header_label"
         android:textSize="15sp" />
 
     <ScrollView
         android:id="@+id/scrollWrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/next"
         android:layout_alignLeft="@+id/welcomeHeader"
         android:layout_below="@+id/welcomeHeader"
         android:fadeScrollbars="false" >
@@ -32,7 +33,34 @@
             android:layout_height="wrap_content" >
 
             <LinearLayout
+                android:id="@+id/attendanceNameContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/attendanceNameLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/welcome_attendance_name_label" />
+
+                <EditText
+                    android:id="@+id/attendanceName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/welcome_attendance_name_hint"
+                    android:inputType="textPersonName" >
+
+                    <requestFocus />
+                </EditText>
+                
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/attendanceStartDateContainer"
+                android:layout_below="@+id/attendanceNameContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -42,42 +70,36 @@
                     android:id="@+id/attendanceStartDateLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="When do you plan to attend?" />
+                    android:text="@string/welcome_attendance_start_date_label" />
 
                 <EditText
                     android:id="@+id/attendanceStartDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:inputType="date"
-                    android:text="07-05-2015" >
-
-                    <requestFocus />
-                </EditText>
+                    android:inputType="date" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/attendanceEndDateContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_below="@+id/attendanceStartDateContainer"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/attendanceEndDateLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="When do you plan to leave?" />
+                    android:text="@string/welcome_attendance_end_date_label" />
 
                 <EditText
                     android:id="@+id/attendanceEndDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:inputType="date"
-                    android:text="07-06-2015" >
-                </EditText>
+                    android:inputType="date" />
             </LinearLayout>
 
             <CheckBox
@@ -85,9 +107,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_marginTop="15dp"
                 android:layout_below="@+id/attendanceEndDateContainer"
-                android:text="Would you like to Camp on-site?" />
+                android:layout_marginTop="15dp"
+                android:text="@string/welcome_accommodation_check_label" />
 
             <CheckBox
                 android:id="@+id/pickupCheck"
@@ -96,7 +118,7 @@
                 android:layout_alignLeft="@+id/accommodationCheck"
                 android:layout_below="@+id/accommodationCheck"
                 android:layout_marginTop="15dp"
-                android:text="Would you like a Pick up?" />
+                android:text="@string/welcome_pickup_check_label" />
 
             <CheckBox
                 android:id="@+id/talkCheck"
@@ -105,7 +127,7 @@
                 android:layout_alignLeft="@+id/accommodationCheck"
                 android:layout_below="@+id/pickupCheck"
                 android:layout_marginTop="15dp"
-                android:text="Would you like to present a Talk?" />
+                android:text="@string/welcome_talk_check_label" />
         </RelativeLayout>
     </ScrollView>
 
@@ -117,6 +139,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginTop="10dp"
         android:onClick="next"
-        android:text="Next" />
+        android:text="@string/next_label" />
 
 </RelativeLayout>

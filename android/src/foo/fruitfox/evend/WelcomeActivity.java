@@ -47,6 +47,7 @@ public class WelcomeActivity extends ActionBarActivity implements
 
 	private EditText attendanceStartDate;
 	private EditText attendanceEndDate;
+	private EditText attendanceName;
 	private CheckBox accommodationCheck;
 	private CheckBox pickupCheck;
 	private CheckBox talkCheck;
@@ -56,8 +57,9 @@ public class WelcomeActivity extends ActionBarActivity implements
 	private Boolean needsAccommodation = false;
 	private Boolean needsPickup = false;
 	private Boolean hasTalk = false;
+	private String userName;
 
-	AlertDialog.Builder pickupAlertDialogBuilder;
+	private AlertDialog.Builder pickupAlertDialogBuilder;
 
 	private String identifier;
 	private UserData userData;
@@ -82,6 +84,7 @@ public class WelcomeActivity extends ActionBarActivity implements
 		pickupCheck = (CheckBox) findViewById(R.id.pickupCheck);
 		talkCheck = (CheckBox) findViewById(R.id.talkCheck);
 
+		attendanceName = (EditText) findViewById(R.id.attendanceName);
 		attendanceStartDate = (EditText) findViewById(R.id.attendanceStartDate);
 		attendanceEndDate = (EditText) findViewById(R.id.attendanceEndDate);
 
@@ -163,104 +166,116 @@ public class WelcomeActivity extends ActionBarActivity implements
 
 		DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
 
-		if (needsAccommodation == true) {
-			userData.setNeedsAccommodation(true);
-		} else {
-			userData.setNeedsAccommodation(false);
-			userData.setAccommodationData(null);
-		}
+		userName = attendanceName.getText().toString().trim();
 
-		if (needsPickup == true) {
-			userData.setNeedsPickUp(true);
-		} else {
-			userData.setNeedsPickUp(false);
-			userData.setPickupData(null);
-		}
+		if (userName.length() > 0) {
+			if (needsAccommodation == true) {
+				userData.setNeedsAccommodation(true);
+			} else {
+				userData.setNeedsAccommodation(false);
+				userData.setAccommodationData(null);
+			}
 
-		if (hasTalk == true) {
-			userData.setHasTalk(true);
-		} else {
-			userData.setHasTalk(false);
-			userData.setTalkDataList(new ArrayList<TalkData>());
-		}
+			if (needsPickup == true) {
+				userData.setNeedsPickUp(true);
+			} else {
+				userData.setNeedsPickUp(false);
+				userData.setPickupData(null);
+			}
 
-		userData.setAttendanceStartDate("dd-MM-yyyy", attendanceStartDate
-				.getText().toString());
+			if (hasTalk == true) {
+				userData.setHasTalk(true);
+			} else {
+				userData.setHasTalk(false);
+				userData.setTalkDataList(new ArrayList<TalkData>());
+			}
 
-		userData.setAttendanceEndDate("dd-MM-yyyy", attendanceEndDate.getText()
-				.toString());
+			userData.setAttendanceStartDate("dd-MM-yyyy", attendanceStartDate
+					.getText().toString());
 
-		userData.setEventDaysAttending(dtf.parseDateTime(startDateString),
-				dtf.parseDateTime(endDateString));
+			userData.setAttendanceEndDate("dd-MM-yyyy", attendanceEndDate
+					.getText().toString());
 
-		try {
-			requestJSON.put("hhtoken", userData.getAuthToken());
-			requestJSON.put("arrival_date",
-					userData.getAttendanceStartDate("dd-MM-yyyy"));
-			requestJSON.put("departure_date",
-					userData.getAttendanceStartDate("dd-MM-yyyy"));
-			requestJSON.put("accommodation",
-					userData.getNeedsAccommodation() ? 1 : 0);
-			requestJSON.put("pickup", userData.getNeedsPickUp() ? 1 : 0);
-			requestJSON.put("accommodation",
-					userData.getNeedsAccommodation() ? 1 : 0);
-			requestJSON.put("talk", userData.getHasTalk() ? 1 : 0);
-		} catch (JSONException e) {
-			DebugHelper.ShowMessage.t(this,
-					"An error occured while creating the JSON request.");
-			DebugHelper.ShowMessage.d("WelcomeActivity", e.getMessage());
-		}
+			userData.setEventDaysAttending(dtf.parseDateTime(startDateString),
+					dtf.parseDateTime(endDateString));
 
-		if (NetworkHelper.Utilities.isConnected(this)) {
-			UserDataWebAPITask udwTask = new UserDataWebAPITask(this, this);
+			userData.setFirstName(userName);
+
 			try {
-				progDialog = ProgressDialog.show(this, "Processing...",
-						"Fetching data", true, false);
-				udwTask.execute("POST", serverURL + "users/reservedates",
-						requestJSON.toString());
+				requestJSON.put("hhtoken", userData.getAuthToken());
+				requestJSON.put("username", userData.getFirstName());
+				requestJSON.put("arrival_date",
+						userData.getAttendanceStartDate("dd-MM-yyyy"));
+				requestJSON.put("departure_date",
+						userData.getAttendanceStartDate("dd-MM-yyyy"));
+				requestJSON.put("accommodation",
+						userData.getNeedsAccommodation() ? 1 : 0);
+				requestJSON.put("pickup", userData.getNeedsPickUp() ? 1 : 0);
+				requestJSON.put("accommodation",
+						userData.getNeedsAccommodation() ? 1 : 0);
+				requestJSON.put("talk", userData.getHasTalk() ? 1 : 0);
+			} catch (JSONException e) {
+				DebugHelper.ShowMessage.t(this,
+						"An error occured while creating the JSON request.");
+				DebugHelper.ShowMessage.d("WelcomeActivity", e.getMessage());
+			}
 
-			} catch (Exception e) {
-				if (progDialog.isShowing()) {
-					progDialog.dismiss();
+			if (NetworkHelper.Utilities.isConnected(this)) {
+				UserDataWebAPITask udwTask = new UserDataWebAPITask(this, this);
+				try {
+					progDialog = ProgressDialog.show(this, "Processing...",
+							"Fetching data", true, false);
+					udwTask.execute("POST", serverURL + "users/reservedates",
+							requestJSON.toString());
+
+				} catch (Exception e) {
+					if (progDialog.isShowing()) {
+						progDialog.dismiss();
+					}
+					udwTask.cancel(true);
 				}
-				udwTask.cancel(true);
+			} else {
+				DebugHelper.ShowMessage.t(this, "Connection error");
 			}
+
+			StorageHelper.PreferencesHelper.setUserData(this, identifier,
+					userData);
+
+			Intent intent = null;
+
+			if (userData.getNeedsAccommodation() == true) {
+				if (intent == null) {
+					intent = new Intent(this, AccomodationActivity.class);
+				}
+			}
+
+			if (userData.getNeedsPickUp() == true) {
+				if (intent == null) {
+					intent = new Intent(this, PickupActivity.class);
+				}
+				intent.putExtra("hasPickup", true);
+			}
+
+			if (userData.getHasTalk() == true) {
+				if (intent == null) {
+					intent = new Intent(this, TalksActivity.class);
+				}
+				intent.putExtra("hasTalk", true);
+			}
+
+			if (intent == null) {
+				intent = new Intent(this, SummaryActivity.class);
+			}
+
+			startActivity(intent);
 		} else {
-			DebugHelper.ShowMessage.t(this, "Connection error");
+			DebugHelper.ShowMessage.t(this, "Your name cannot be blank");
 		}
-
-		StorageHelper.PreferencesHelper.setUserData(this, identifier, userData);
-
-		Intent intent = null;
-
-		if (userData.getNeedsAccommodation() == true) {
-			if (intent == null) {
-				intent = new Intent(this, AccomodationActivity.class);
-			}
-		}
-
-		if (userData.getNeedsPickUp() == true) {
-			if (intent == null) {
-				intent = new Intent(this, PickupActivity.class);
-			}
-			intent.putExtra("hasPickup", true);
-		}
-
-		if (userData.getHasTalk() == true) {
-			if (intent == null) {
-				intent = new Intent(this, TalksActivity.class);
-			}
-			intent.putExtra("hasTalk", true);
-		}
-
-		if (intent == null) {
-			intent = new Intent(this, SummaryActivity.class);
-		}
-
-		startActivity(intent);
 	}
 
 	private void initializeLayout() {
+		String pickupWarningText = getResources().getString(
+				R.string.welcome_pickup_warning_text);
 		needsAccommodation = userData.getNeedsAccommodation();
 		needsPickup = userData.getNeedsPickUp();
 		hasTalk = userData.getHasTalk();
@@ -274,8 +289,7 @@ public class WelcomeActivity extends ActionBarActivity implements
 			currentEndDateString = userData.getAttendanceEndDate("dd-MM-yyyy");
 		}
 
-		pickupAlertDialogBuilder
-				.setMessage("HillHacks will not provide Taxi fare.\n\nDo you Agree to this?");
+		pickupAlertDialogBuilder.setMessage(pickupWarningText);
 
 		if (needsAccommodation == true) {
 			accommodationCheck.setChecked(true);
@@ -299,6 +313,11 @@ public class WelcomeActivity extends ActionBarActivity implements
 			attendanceEndDate.setText(currentEndDateString);
 		} else {
 			attendanceEndDate.setText(endDateString);
+		}
+
+		if (userData.getFirstName() != null
+				&& userData.getFirstName().length() > 0) {
+			attendanceName.setText(userData.getFirstName().toString());
 		}
 	}
 
