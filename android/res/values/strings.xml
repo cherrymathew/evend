@@ -27,7 +27,7 @@
     <string name="welcome_attendance_start_date_label">When do you plan to attend?</string>
     <string name="welcome_attendance_end_date_label">When do you plan to leave?</string>
     <string name="welcome_accommodation_check_label">Would you like to Camp on-site?</string>
-    <string name="welcome_pickup_check_label">Would you like a Pick up?</string>
+    <string name="welcome_pickup_check_label">Would you like a Taxi Pick up?</string>
     <string name="welcome_talk_check_label">Would you like to present a Talk?</string>
     <string name="welcome_pickup_warning_text">HillHacks will not provide Taxi fare.\n\nDo you Agree to this?</string>
 
@@ -44,7 +44,7 @@
     <string name="accommodation_family_details_hint">Please provide us with the details of your family members</string>
 
     <!-- Strings used in the Pickup Activity -->
-    <string name="title_activity_pickup">Arrival Pickup to Hilhacks venu. </string>
+    <string name="title_activity_pickup">Taxi Pickup from arrival point to venue. </string>
     <string name="pickup_header_label">Arrival Details</string>
     <string name="pickup_location_label">Arrival Location</string>
     <string name="pickup_date_label">Arrival Date</string>
@@ -83,7 +83,7 @@
     <string name="summary_accommodation_label">Accommodation Summary</string>
     <string name="summary_pickup_label">Pickup Summary</string>
     <string name="summary_talks_label">Talks Summary</string>
-    <string name="summary_join_irc_label">Join live chat in IRC</string>
+    <string name="summary_join_irc_label">IRC chat</string>
     <string name="summary_finalize_label">Confirm</string>
     <string name="summary_open_map_label">Open Map</string>
     <string name="summary_name_label">Name :</string>
@@ -93,7 +93,7 @@
     <!-- Strings used in the Chat Activity -->
     <string name="title_activity_chat">Chat to hillhacks</string>
     <string name="chat_messagebox_hint">Enter your chat text here &#8230;</string>
-    <string name="chat_send_label">Connect</string>
+    <string name="chat_send_label">re-connect</string>
 
     <!-- Strings used in the Map Activity -->
     <string name="title_activity_map">MapActivity</string>
