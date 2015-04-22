@@ -141,6 +141,11 @@ public class PickupActivity extends ActionBarActivity implements
 				if (dateString.length() > 0) {
 					pickupDate.setText(dateString);
 				}
+
+				timeString = DateTime.now().toString("HH") + ":00";
+				if (timeString.length() > 0) {
+					pickupTime.setText(timeString);
+				}
 			}
 		}
 
@@ -180,6 +185,9 @@ public class PickupActivity extends ActionBarActivity implements
 	}
 
 	private void initializeAdapters() {
+		int seatsMaxCount = Integer.parseInt(getResources().getString(
+				R.string.pickup_seats_count).trim()) + 1;
+
 		locationList = new ArrayList<String>();
 
 		locationArray = getResources().getStringArray(R.array.location_names);
@@ -190,7 +198,7 @@ public class PickupActivity extends ActionBarActivity implements
 
 		seatsCountList = new ArrayList<String>();
 
-		for (int i = 1; i < 6; i++) {
+		for (int i = 1; i < seatsMaxCount; i++) {
 			seatsCountList.add("" + i);
 		}
 

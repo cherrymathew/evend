@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="Arrival Details"
+        android:text="@string/pickup_header_label"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ScrollView
@@ -35,14 +35,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/view_horizontal_margin_20dp"
                 android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/locationLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Location" />
+                    android:text="@string/pickup_location_label" />
 
                 <Spinner
                     android:id="@+id/location"
@@ -57,22 +57,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/locationContainer"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/view_horizontal_margin_10dp"
                 android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/pickupDateLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Arrival Date" />
+                    android:text="@string/pickup_date_label" />
 
                 <EditText
                     android:id="@+id/pickupDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:inputType="date"
-                    android:text="23-05-2015" />
+                    android:inputType="date" />
             </LinearLayout>
 
             <LinearLayout
@@ -80,22 +79,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/pickupDateContainer"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/view_horizontal_margin_10dp"
                 android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/pickupTimeLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Arrival Time" />
+                    android:text="@string/pickup_time_label" />
 
                 <EditText
                     android:id="@+id/pickupTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:inputType="time"
-                    android:text="06:30" />
+                    android:inputType="time" />
             </LinearLayout>
 
             <LinearLayout
@@ -103,7 +101,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/pickupTimeContainer"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/view_horizontal_margin_10dp"
                 android:orientation="horizontal" >
 
                 <TextView
@@ -111,7 +109,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7"
-                    android:text="Number of Seats" />
+                    android:text="@string/pickup_seats_label" />
 
                 <Spinner
                     android:id="@+id/seatsCount"
@@ -130,6 +128,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:onClick="next"
-        android:text="Next" />
+        android:text="@string/next_label" />
 
 </RelativeLayout>
