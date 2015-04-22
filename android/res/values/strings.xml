@@ -11,7 +11,7 @@
     <string name="startup_email_verification_label">E-mail Registration</string>
 
     <!-- Strings used in the Login Activity -->
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login">Login</string>
     <string name="login_username_label">Username</string>
     <string name="login_username_hint">user@example.com</string>
     <string name="login_type_label">Login</string>
@@ -20,8 +20,8 @@
     <string name="login_verify_label">Verify</string>
 
     <!-- Strings used in the Welcome Activity -->
-    <string name="title_activity_welcome">WelcomeActivity</string>
-    <string name="welcome_header_label">Welcome to Hillhacks Buddy Application</string>
+    <string name="title_activity_welcome">Attendance</string>
+    <string name="welcome_header_label">Welcome to the Hillhacks Signup Application</string>
     <string name="welcome_attendance_name_label">Your name</string>
     <string name="welcome_attendance_name_hint">Enter your name here</string>
     <string name="welcome_attendance_start_date_label">When do you plan to attend?</string>
@@ -32,7 +32,7 @@
     <string name="welcome_pickup_warning_text">HillHacks will not provide Taxi fare.\n\nDo you Agree to this?</string>
 
     <!-- Strings used in the Accommodation Activity -->
-    <string name="title_activity_accomodation">AccomodationActivity</string>
+    <string name="title_activity_accomodation">Accomodation</string>
     <string name="accommodation_header_label">Accommodation Details</string>
     <string name="accommodation_camping_gear_label">Please select the gear you are bringing</string>
     <string name="accommodation_tent_check_label">Yes, I am bringing a Tent</string>
@@ -44,7 +44,7 @@
     <string name="accommodation_family_details_hint">Please provide us with the details of your family members</string>
 
     <!-- Strings used in the Pickup Activity -->
-    <string name="title_activity_pickup">PickupActivity</string>
+    <string name="title_activity_pickup">Arrival Pickup to Hilhacks venu. </string>
     <string name="pickup_header_label">Arrival Details</string>
     <string name="pickup_location_label">Arrival Location</string>
     <string name="pickup_date_label">Arrival Date</string>
@@ -53,11 +53,11 @@
     <string name="pickup_seats_count">5</string>
 
     <!-- Strings used in the Talks Activity -->
-    <string name="title_activity_talks">TalksActivity</string>
+    <string name="title_activity_talks">Participate</string>
     <string name="talks_header_label">Participate</string>
     <string name="talks_add_label">Add a new talk</string>
     <string name="talks_title_label">Title</string>
-    <string name="talks_title_hint">Your preentation title</string>
+    <string name="talks_title_hint">Your presentation title</string>
     <string name="talks_type_label">Type</string>
     <string name="talks_event_label">Event</string>
     <string name="talks_duration_label">Duration</string>
@@ -77,7 +77,7 @@
     <string name="talks_row_delete_label">X</string>
 
     <!-- Strings used in the Summary Activity -->
-    <string name="title_activity_summary">SummaryActivity</string>
+    <string name="title_activity_summary">Summary</string>
     <string name="summary_header_label">Registration Summary</string>
     <string name="summary_attendance_label">Attendance Summary</string>
     <string name="summary_accommodation_label">Accommodation Summary</string>
@@ -91,7 +91,7 @@
     <string name="summary_finalize_dialog_message">Once you Confirm the changes you will no longer be able to edit any of the registration details.\n\nAre you sure you wish to continue?</string>
 
     <!-- Strings used in the Chat Activity -->
-    <string name="title_activity_chat">ChatActivity</string>
+    <string name="title_activity_chat">Chat to hillhacks</string>
     <string name="chat_messagebox_hint">Enter your chat text here &#8230;</string>
     <string name="chat_send_label">Connect</string>
 
