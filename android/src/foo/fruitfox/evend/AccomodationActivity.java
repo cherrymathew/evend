@@ -271,6 +271,8 @@ public class AccomodationActivity extends ActionBarActivity implements
 
 			if (isChecked) {
 				familyDetails.setVisibility(View.VISIBLE);
+				familyDetails.setFocusable(true);
+				familyDetails.requestFocus();
 				ScrollView scrollWrapper = (ScrollView) findViewById(R.id.scrollWrapper);
 				scrollWrapper.smoothScrollTo(0, familyDetails.getBottom());
 				scrollWrapper.fullScroll(ScrollView.FOCUS_DOWN);

@@ -70,7 +70,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/view_horizontal_margin_15dp"
-                    android:text="@string/accommodation_pillow_check_label" />
+                    android:text="@string/accommodation_pillow_check_label" 
+                    android:visibility="gone"/>
             </LinearLayout>
 
             <LinearLayout
