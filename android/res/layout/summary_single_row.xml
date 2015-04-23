@@ -8,15 +8,15 @@
         android:id="@+id/itemTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0.7"
-        android:text="Item Title" />
+        android:layout_weight="0.3"
+        android:text="@string/placeholder_text_label_1" />
 
     <TextView
         android:id="@+id/itemDetail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0.2"
+        android:layout_weight="0.7"
         android:gravity="right"
-        android:text="Item Detail" />
+        android:text="@string/placeholder_text_label_2" />
 
 </LinearLayout>

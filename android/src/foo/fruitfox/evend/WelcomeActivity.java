@@ -124,7 +124,8 @@ public class WelcomeActivity extends ActionBarActivity implements
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.action_about) {
+			DebugHelper.ShowMessage.showAbout(this);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -207,7 +208,7 @@ public class WelcomeActivity extends ActionBarActivity implements
 				requestJSON.put("arrival_date",
 						userData.getAttendanceStartDate("dd-MM-yyyy"));
 				requestJSON.put("departure_date",
-						userData.getAttendanceStartDate("dd-MM-yyyy"));
+						userData.getAttendanceEndDate("dd-MM-yyyy"));
 				requestJSON.put("accommodation",
 						userData.getNeedsAccommodation() ? 1 : 0);
 				requestJSON.put("pickup", userData.getNeedsPickUp() ? 1 : 0);
@@ -223,8 +224,8 @@ public class WelcomeActivity extends ActionBarActivity implements
 			if (NetworkHelper.Utilities.isConnected(this)) {
 				UserDataWebAPITask udwTask = new UserDataWebAPITask(this, this);
 				try {
-					progDialog = ProgressDialog.show(this, "Processing...",
-							"Fetching data", true, false);
+					progDialog = ProgressDialog.show(this, "Please wait...",
+							"Saving your data", true, false);
 					udwTask.execute("POST", serverURL + "users/reservedates",
 							requestJSON.toString());
 

@@ -4,7 +4,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,10 +25,14 @@ import android.widget.TextView;
 import foo.fruitfox.adapters.EventCalendarAdapter;
 import foo.fruitfox.data.TalkData;
 import foo.fruitfox.data.UserData;
+import foo.fruitfox.helpers.DebugHelper;
+import foo.fruitfox.helpers.NetworkHelper;
 import foo.fruitfox.helpers.StorageHelper;
+import foo.fruitfox.tasks.UserDataWebAPITask;
+import foo.fruitfox.tasks.UserDataWebAPITask.AsyncResponseListener;
 
 public class SummaryActivity extends ActionBarActivity implements
-		DialogInterface.OnClickListener {
+		DialogInterface.OnClickListener, AsyncResponseListener {
 	private Map<String, String> summaryMap;
 
 	private LinearLayout accommodationSummary;
@@ -33,7 +41,8 @@ public class SummaryActivity extends ActionBarActivity implements
 
 	private GridView eventCalendarGrid;
 
-	AlertDialog.Builder finalizeAlertDialogBuilder;
+	private AlertDialog.Builder finalizeAlertDialogBuilder;
+	private ProgressDialog progDialog;
 
 	private Context context;
 
@@ -45,6 +54,8 @@ public class SummaryActivity extends ActionBarActivity implements
 	private String startDateString = "2015-05-07";
 	private String endDateString = "2015-06-07";
 
+	private String serverURL;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,6 +64,8 @@ public class SummaryActivity extends ActionBarActivity implements
 		identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
 		userData = StorageHelper.PreferencesHelper
 				.getUserData(this, identifier);
+
+		serverURL = getResources().getString(R.string.server_url);
 
 		context = this;
 
@@ -108,7 +121,8 @@ public class SummaryActivity extends ActionBarActivity implements
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.action_about) {
+			DebugHelper.ShowMessage.showAbout(this);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -282,16 +296,37 @@ public class SummaryActivity extends ActionBarActivity implements
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
+		JSONObject requestJSON;
 		switch (which) {
 		case DialogInterface.BUTTON_POSITIVE:
-			userData.setIsFinalized(true);
+			requestJSON = new JSONObject();
 
-			Intent intent = new Intent(this, SummaryActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
-					| Intent.FLAG_ACTIVITY_NEW_TASK);
+			try {
+				requestJSON.put("hhtoken", userData.getAuthToken());
+				requestJSON.put("confirmed", true);
+			} catch (JSONException e) {
+				DebugHelper.ShowMessage.t(this,
+						"An error occured while creating the JSON request.");
+				DebugHelper.ShowMessage.d("SummaryActivity", e.getMessage());
+			}
 
-			startActivity(intent);
-			finish();
+			if (NetworkHelper.Utilities.isConnected(this)) {
+				UserDataWebAPITask udwTask = new UserDataWebAPITask(this, this);
+				try {
+					progDialog = ProgressDialog.show(this, "Please wait...",
+							"Saving your data", true, false);
+					udwTask.execute("POST", serverURL + "users/confirm",
+							requestJSON.toString());
+
+				} catch (Exception e) {
+					if (progDialog.isShowing()) {
+						progDialog.dismiss();
+					}
+					udwTask.cancel(true);
+				}
+			} else {
+				DebugHelper.ShowMessage.t(this, "Connection error");
+			}
 			break;
 
 		case DialogInterface.BUTTON_NEGATIVE:
@@ -301,5 +336,56 @@ public class SummaryActivity extends ActionBarActivity implements
 
 		StorageHelper.PreferencesHelper.setUserData(context, identifier,
 				userData);
+	}
+
+	@Override
+	public void postAsyncTaskCallback(String responseBody, String responseCode) {
+		JSONObject responseJSON;
+		Intent intent = new Intent(this, SummaryActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
+				| Intent.FLAG_ACTIVITY_NEW_TASK);
+
+		if (progDialog.isShowing()) {
+			progDialog.dismiss();
+		}
+
+		if (responseBody.length() == 0) {
+			DebugHelper.ShowMessage
+					.t(this,
+							"There was an error processing your request. Please try again later.");
+			DebugHelper.ShowMessage.d("SummaryActivity", "Response Code : "
+					+ responseCode);
+			DebugHelper.ShowMessage.d("SummaryActivity", "Response Body : "
+					+ responseBody);
+		} else {
+			try {
+				responseJSON = new JSONObject(responseBody);
+
+				if (responseJSON.has("error") == true) {
+					DebugHelper.ShowMessage.t(this,
+							responseJSON.getString("error"));
+					DebugHelper.ShowMessage.d("SummaryActivity",
+							"Response Code :" + responseCode);
+					DebugHelper.ShowMessage.d("SummaryActivity",
+							"Response Body :" + responseBody);
+				} else {
+					userData.setIsFinalized(true);
+
+					StorageHelper.PreferencesHelper.setUserData(this,
+							identifier, userData);
+
+					startActivity(intent);
+					finish();
+				}
+			} catch (JSONException e) {
+				DebugHelper.ShowMessage.t(this,
+						"An error occured trying to parse the JSON response");
+				DebugHelper.ShowMessage.d("SummaryActivity", "Response Code : "
+						+ responseCode);
+				DebugHelper.ShowMessage.d("SummaryActivity", "Response Body : "
+						+ responseBody);
+				DebugHelper.ShowMessage.d("SummaryActivity", e.getMessage());
+			}
+		}
 	}
 }

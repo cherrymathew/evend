@@ -16,24 +16,32 @@ public class StartupActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_startup);
 
+		Intent intent = null;
 		String identifier = StorageHelper.PreferencesHelper.getIdentifier(this);
 
 		if (identifier != null) {
 			UserData userData = StorageHelper.PreferencesHelper.getUserData(
 					this, identifier);
 			if (userData.getIsVerified() == true) {
-				Intent intent = new Intent(this, WelcomeActivity.class);
+				intent = new Intent(this, WelcomeActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
 						| Intent.FLAG_ACTIVITY_NEW_TASK);
 
-				startActivity(intent);
-				finish();
+			} else if (userData.getIsFinalized() == true) {
+				intent = new Intent(this, SummaryActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
+						| Intent.FLAG_ACTIVITY_NEW_TASK);
+			} else {
+				intent = new Intent(this, LoginActivity.class);
+				intent.putExtra("type", "email");
 			}
 		} else {
-			Intent intent = new Intent(this, LoginActivity.class);
+			intent = new Intent(this, LoginActivity.class);
 			intent.putExtra("type", "email");
-			startActivity(intent);
 		}
+
+		startActivity(intent);
+		finish();
 	}
 
 	@Override
@@ -49,7 +57,7 @@ public class StartupActivity extends ActionBarActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.action_about) {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

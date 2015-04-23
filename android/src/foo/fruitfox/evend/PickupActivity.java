@@ -178,7 +178,8 @@ public class PickupActivity extends ActionBarActivity implements
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.action_about) {
+			DebugHelper.ShowMessage.showAbout(this);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -445,8 +446,8 @@ public class PickupActivity extends ActionBarActivity implements
 		if (NetworkHelper.Utilities.isConnected(this)) {
 			UserDataWebAPITask udwTask = new UserDataWebAPITask(this, this);
 			try {
-				progDialog = ProgressDialog.show(this, "Processing...",
-						"Fetching data", true, false);
+				progDialog = ProgressDialog.show(this, "Please wait...",
+						"Saving your data", true, false);
 				udwTask.execute("POST", serverURL + "users/pickup",
 						requestJSON.toString());
 
