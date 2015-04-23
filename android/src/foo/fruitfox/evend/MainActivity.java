@@ -42,7 +42,8 @@ public class MainActivity extends ActionBarActivity implements
 		setContentView(R.layout.activity_main);
 
 		Intent intent = new Intent(this, StartupActivity.class);
-		// startActivity(intent);
+		startActivity(intent);
+		finish();
 	}
 
 	@Override
