@@ -119,6 +119,26 @@ public class TalksActivity extends ActionBarActivity implements
 	public void addTalk(View view) {
 		talkAddDialog.setTitle("Your presentation details");
 
+		EditText talkTitle = (EditText) talkAddDialog
+				.findViewById(R.id.talkTitle);
+		EditText talkDuration = (EditText) talkAddDialog
+				.findViewById(R.id.talkDuration);
+		CheckBox coPresenterCheck = (CheckBox) talkAddDialog
+				.findViewById(R.id.coPresenterCheck);
+		CheckBox projectorCheck = (CheckBox) talkAddDialog
+				.findViewById(R.id.projectorCheck);
+		CheckBox toolsCheck = (CheckBox) talkAddDialog
+				.findViewById(R.id.toolsCheck);
+		EditText talkNotes = (EditText) talkAddDialog
+				.findViewById(R.id.talkNotes);
+
+		talkDuration.setText("");
+		coPresenterCheck.setChecked(false);
+		projectorCheck.setChecked(false);
+		toolsCheck.setChecked(false);
+		talkNotes.setText("");
+		talkTitle.setText("");
+
 		talkAddDialog.show();
 	}
 
@@ -183,6 +203,7 @@ public class TalksActivity extends ActionBarActivity implements
 
 					talkAddDialog.dismiss();
 				}
+
 			} else {
 				DebugHelper.ShowMessage.t(context,
 						"Your presentation title cannot be empty");
