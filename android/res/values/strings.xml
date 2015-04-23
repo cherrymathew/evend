@@ -120,7 +120,7 @@
     <string name="server_url">http://fooobar.mooo.com:3000/</string>
 
     <!-- The location Map URL -->
-    <string name="map_url">http://www.openstreetmap.org/?mlat=32.24159&amp;mlon=76.32994#map=17/32.24161/76.32873</string>
+    <string name="map_url">http://www.openstreetmap.org/?mlat=32.24159&amp;mlon=76.32994#map=17/32.24161/76.33029</string>
 
     <!-- Various Pickup Locations -->
     <string-array name="location_names">
