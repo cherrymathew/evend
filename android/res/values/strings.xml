@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">evend</string>
+    <string name="app_name">Evend</string>
     <string name="action_about">About</string>
     <string name="hello_world">Hello world!</string>
+    <string name="app_version">(0.1-rc1)</string>
 
     <!-- Strings used in the Startup Activity -->
     <string name="title_activity_startup">Startup</string>
