@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import foo.fruitfox.adapters.EventCalendarAdapter;
 import foo.fruitfox.data.TalkData;
@@ -86,11 +87,15 @@ public class SummaryActivity extends ActionBarActivity implements
 	}
 
 	private void initalizeLayout() {
+		ScrollView scrollContainer = (ScrollView) findViewById(R.id.scrollContainter);
 		String finalizeDialogMessage = getResources().getString(
 				R.string.summary_finalize_dialog_message);
+
 		finalizeAlertDialogBuilder.setMessage(finalizeDialogMessage);
+		scrollContainer.fullScroll(View.FOCUS_DOWN);
 
 		TextView username = (TextView) findViewById(R.id.name);
+		TextView instructionText = (TextView) findViewById(R.id.instructionText);
 
 		username.setText(userData.getFirstName());
 
@@ -98,6 +103,7 @@ public class SummaryActivity extends ActionBarActivity implements
 			Button openMap = (Button) findViewById(R.id.openMap);
 			Button finalize = (Button) findViewById(R.id.finalize);
 
+			instructionText.setVisibility(View.GONE);
 			openMap.setVisibility(View.VISIBLE);
 			finalize.setVisibility(View.GONE);
 		}
