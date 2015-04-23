@@ -27,22 +27,22 @@
     <string name="welcome_attendance_name_hint">Enter your name here</string>
     <string name="welcome_attendance_start_date_label">When do you plan to attend?</string>
     <string name="welcome_attendance_end_date_label">When do you plan to leave?</string>
-    <string name="welcome_accommodation_check_label">Would you like to Camp on-site?</string>
+    <string name="welcome_accommodation_check_label">Would you like Accommodation?</string>
     <string name="welcome_pickup_check_label">Would you like a Taxi Pick up?</string>
     <string name="welcome_talk_check_label">Would you like to present a Talk?</string>
     <string name="welcome_pickup_warning_text">You are responsible for your own Taxi fare. Fares shown are approximate and indicative only.\n\nPlease pay the driver directly at pick up time.\n\nDo you Agree to this?</string>
 
     <!-- Strings used in the Accommodation Activity -->
-    <string name="title_activity_accomodation">Camping</string>
-    <string name="accommodation_header_label">Camping Details</string>
-    <string name="accommodation_camping_gear_label">Please tell us what gear you will bring.\n\nNOTE: Local gear is available for rent</string>
+    <string name="title_activity_accomodation">Accommodation</string>
+    <string name="accommodation_header_label">Accommodation (Camping) Details</string>
+    <string name="accommodation_camping_gear_label">Please tell us what gear you can bring.\n\nNOTE: Please help us by bringing as much camping gear as you can.\nHowever don\'t worry if you don\'t have any gear to bring.</string>
     <string name="accommodation_tent_check_label">Yes, I am bringing a Tent</string>
     <string name="accommodation_sleeping_bag_check_label">Yes, I am bringing a Sleeping Bag</string>
     <string name="accommodation_matress_check_label">Yes, I am bringing a Matress</string>
     <string name="accommodation_pillow_check_label">Yes, I am bringing a Pillow</string>
     <string name="accommodation_family_label">Are you coming with your family?</string>
     <string name="accommodation_family_check_label">Yes, I am coming with my family</string>
-    <string name="accommodation_family_details_hint">Please provide us with the details of your family members</string>
+    <string name="accommodation_family_details_hint">e.g. Seetha, my wife and our two children, Kavita (10) and Konarak (3) will be with us</string>
 
     <!-- Strings used in the Pickup Activity -->
     <string name="title_activity_pickup">Taxi Pickup</string>
@@ -90,6 +90,8 @@
     <string name="summary_name_label">Name :</string>
     <string name="summary_family_details">Family Details</string>
     <string name="summary_finalize_dialog_message">Once you Confirm the changes you will no longer be able to edit any of the registration details.\n\nAre you sure you wish to continue?</string>
+    <string name="summary_thank_you_note">Thank you\nfor submitting your details.</string>
+    <string name="summary_instruction_text">Please confirm your signup as soon as your travel plans are fixed by clicking on "CONFIRM"\nIf you have any questions or want to get in touch with other hillhackers click "IRC CHAT"</string>
 
     <!-- Strings used in the Chat Activity -->
     <string name="title_activity_chat">Chat to hillhacks</string>
@@ -120,7 +122,7 @@
     <string name="server_url">http://fooobar.mooo.com:3000/</string>
 
     <!-- The location Map URL -->
-    <string name="map_url">http://www.openstreetmap.org/?mlat=32.24159&amp;mlon=76.32994#map=17/32.24161/76.32873</string>
+    <string name="map_url">http://www.openstreetmap.org/?mlat=32.24159&amp;mlon=76.32994#map=17/32.24161/76.33029</string>
 
     <!-- Various Pickup Locations -->
     <string-array name="location_names">
@@ -139,10 +141,10 @@
 
     <!-- Various Talk Events -->
     <string-array name="talk_events">
+        <item>Main Conference</item>
         <item>CodeCamp</item>
         <item>School Program</item>
         <item>Unconference</item>
-        <item>Main Conference</item>
         <item>Other</item>
     </string-array>
 
