@@ -109,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/attendanceEndDateContainer"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/welcome_accommodation_check_label" />
 
             <CheckBox
@@ -118,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/accommodationCheck"
                 android:layout_below="@+id/accommodationCheck"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/welcome_pickup_check_label" />
 
             <CheckBox
@@ -127,7 +127,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/accommodationCheck"
                 android:layout_below="@+id/pickupCheck"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/welcome_talk_check_label" />
         </RelativeLayout>
     </ScrollView>
