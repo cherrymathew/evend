@@ -298,7 +298,7 @@ public class PickupActivity extends ActionBarActivity implements
 				if (pickupDate.getText().toString().length() == 0) {
 					pickupDate.setText("23-05-2015");
 				}
-				// dialog.dismiss();
+				dialog.dismiss();
 			}
 		});
 
