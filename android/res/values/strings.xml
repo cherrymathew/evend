@@ -4,7 +4,7 @@
     <string name="app_name">Evend</string>
     <string name="action_about">About</string>
     <string name="hello_world">Hello world!</string>
-    <string name="app_version">(0.1-rc1)</string>
+    <string name="app_version">(0.1-rc2)</string>
 
     <!-- Strings used in the Startup Activity -->
     <string name="title_activity_startup">Startup</string>
@@ -65,7 +65,7 @@
     <string name="talks_duration_label">Duration</string>
     <string name="talks_duration_hint">e.g. 1 hr , 2 days</string>
     <string name="talks_co_presenter_check_label">Do you have Co-Presenters for your event?</string>
-    <string name="talks_projector_check_label">Do you need a projecter for your event?</string>
+    <string name="talks_projector_check_label">Do you need a projector for your event?</string>
     <string name="talks_tools_check_label">Do you need tools for your event?</string>
     <string name="talks_notes_label">Notes</string>
     <string name="talks_notes_hint">Any additional information you would like to provide</string>

@@ -48,7 +48,8 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="5dp"
                 android:textSize="@dimen/view_text_size_10sp"
-                android:text="@string/app_version" />
+                android:text="@string/app_version"
+                android:visibility="invisible" />
             
             <TextView
                 android:id="@+id/evend_link"

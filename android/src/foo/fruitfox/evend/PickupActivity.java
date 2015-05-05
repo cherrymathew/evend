@@ -283,7 +283,7 @@ public class PickupActivity extends ActionBarActivity implements
 				EditText pickupDate = (EditText) pickupDateLayout
 						.findViewById(R.id.pickupDate);
 				pickupDate.setText(dayOfMonth + "-" + (month + 1) + "-" + year);
-				dialog.dismiss();
+				// dialog.dismiss();
 			}
 		});
 
@@ -298,7 +298,7 @@ public class PickupActivity extends ActionBarActivity implements
 				if (pickupDate.getText().toString().length() == 0) {
 					pickupDate.setText("23-05-2015");
 				}
-				dialog.dismiss();
+				// dialog.dismiss();
 			}
 		});
 
