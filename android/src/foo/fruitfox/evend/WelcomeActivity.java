@@ -51,12 +51,22 @@ public class WelcomeActivity extends ActionBarActivity implements
 	private CheckBox accommodationCheck;
 	private CheckBox pickupCheck;
 	private CheckBox talkCheck;
+	private CheckBox attendMainConferenceCheck;
+	private CheckBox attendPreConferenceCheck;
+	private CheckBox attendLearnToCodeCheck;
+	private CheckBox teachSchoolOureachCheck;
+	private CheckBox teachLearnToCodeCheck;
 
 	private Context context;
 
 	private Boolean needsAccommodation = false;
 	private Boolean needsPickup = false;
 	private Boolean hasTalk = false;
+	private Boolean isAttendingMainConference = false;
+	private Boolean isAttendingPreConference = false;
+	private Boolean isAttendingLearnToCode = false;
+	private Boolean isTeachingSchoolOutreach = false;
+	private Boolean isTeachingLearnToCode = false;
 	private String userName;
 
 	private AlertDialog.Builder pickupAlertDialogBuilder;
@@ -83,6 +93,11 @@ public class WelcomeActivity extends ActionBarActivity implements
 		accommodationCheck = (CheckBox) findViewById(R.id.accommodationCheck);
 		pickupCheck = (CheckBox) findViewById(R.id.pickupCheck);
 		talkCheck = (CheckBox) findViewById(R.id.talkCheck);
+		attendMainConferenceCheck = (CheckBox) findViewById(R.id.attendMainConferenceCheck);
+		attendPreConferenceCheck = (CheckBox) findViewById(R.id.attendPreConferenceCheck);
+		attendLearnToCodeCheck = (CheckBox) findViewById(R.id.attendLearnToCodeCheck);
+		teachSchoolOureachCheck = (CheckBox) findViewById(R.id.teachSchoolOutreachCheck);
+		teachLearnToCodeCheck = (CheckBox) findViewById(R.id.teachLearnToCodeCheck);
 
 		attendanceName = (EditText) findViewById(R.id.attendanceName);
 		attendanceStartDate = (EditText) findViewById(R.id.attendanceStartDate);
@@ -156,6 +171,26 @@ public class WelcomeActivity extends ActionBarActivity implements
 			hasTalk = isChecked;
 			break;
 
+		case R.id.attendMainConferenceCheck:
+			isAttendingMainConference = isChecked;
+			break;
+
+		case R.id.attendPreConferenceCheck:
+			isAttendingPreConference = isChecked;
+			break;
+
+		case R.id.attendLearnToCodeCheck:
+			isAttendingLearnToCode = isChecked;
+			break;
+
+		case R.id.teachSchoolOutreachCheck:
+			isTeachingSchoolOutreach = isChecked;
+			break;
+
+		case R.id.teachLearnToCodeCheck:
+			isTeachingLearnToCode = isChecked;
+			break;
+
 		default:
 			break;
 
@@ -191,6 +226,12 @@ public class WelcomeActivity extends ActionBarActivity implements
 				userData.setTalkDataList(new ArrayList<TalkData>());
 			}
 
+			userData.setIsAttendingLearnToCode(isAttendingLearnToCode);
+			userData.setIsAttendingMainConference(isAttendingMainConference);
+			userData.setIsAttendingPreConference(isAttendingPreConference);
+			userData.setIsTeachingSchoolOutreach(isTeachingSchoolOutreach);
+			userData.setIsTeachingLearnToCode(isTeachingLearnToCode);
+
 			userData.setAttendanceStartDate("dd-MM-yyyy", attendanceStartDate
 					.getText().toString());
 
@@ -215,6 +256,16 @@ public class WelcomeActivity extends ActionBarActivity implements
 				requestJSON.put("accommodation",
 						userData.getNeedsAccommodation() ? 1 : 0);
 				requestJSON.put("talk", userData.getHasTalk() ? 1 : 0);
+				requestJSON.put("main_conference",
+						userData.getIsAttendingMainConference() ? 1 : 0);
+				requestJSON.put("pre_conference",
+						userData.getIsAttendingPreConference() ? 1 : 0);
+				requestJSON.put("learn_to_code",
+						userData.getIsAttendingLearnToCode() ? 1 : 0);
+				requestJSON.put("teach_school_outreach",
+						userData.getIsTeachingSchoolOutreach() ? 1 : 0);
+				requestJSON.put("teach_learn_to_code",
+						userData.getIsTeachingLearnToCode() ? 1 : 0);
 			} catch (JSONException e) {
 				DebugHelper.ShowMessage.t(this,
 						"An error occured while creating the JSON request.");
@@ -280,6 +331,11 @@ public class WelcomeActivity extends ActionBarActivity implements
 		needsAccommodation = userData.getNeedsAccommodation();
 		needsPickup = userData.getNeedsPickUp();
 		hasTalk = userData.getHasTalk();
+		isAttendingMainConference = userData.getIsAttendingMainConference();
+		isAttendingPreConference = userData.getIsAttendingPreConference();
+		isAttendingLearnToCode = userData.getIsAttendingLearnToCode();
+		isTeachingSchoolOutreach = userData.getIsTeachingSchoolOutreach();
+		isTeachingLearnToCode = userData.getIsTeachingLearnToCode();
 
 		if (userData.getAttendanceStartDate("dd-MM-yyyy").length() > 0) {
 			currentStartDateString = userData
@@ -302,6 +358,26 @@ public class WelcomeActivity extends ActionBarActivity implements
 
 		if (hasTalk == true) {
 			talkCheck.setChecked(true);
+		}
+
+		if (isAttendingMainConference == true) {
+			attendMainConferenceCheck.setChecked(true);
+		}
+
+		if (isAttendingPreConference == true) {
+			attendPreConferenceCheck.setChecked(true);
+		}
+
+		if (isAttendingLearnToCode == true) {
+			attendLearnToCodeCheck.setChecked(true);
+		}
+
+		if (isTeachingSchoolOutreach == true) {
+			teachSchoolOureachCheck.setChecked(true);
+		}
+
+		if (isTeachingLearnToCode == true) {
+			teachLearnToCodeCheck.setChecked(true);
 		}
 
 		if (currentStartDateString.length() > 0) {
@@ -393,6 +469,11 @@ public class WelcomeActivity extends ActionBarActivity implements
 		accommodationCheck.setOnCheckedChangeListener(this);
 		pickupCheck.setOnCheckedChangeListener(this);
 		talkCheck.setOnCheckedChangeListener(this);
+		attendLearnToCodeCheck.setOnCheckedChangeListener(this);
+		attendMainConferenceCheck.setOnCheckedChangeListener(this);
+		attendPreConferenceCheck.setOnCheckedChangeListener(this);
+		teachSchoolOureachCheck.setOnCheckedChangeListener(this);
+		teachLearnToCodeCheck.setOnCheckedChangeListener(this);
 
 		attendanceStartDate.setOnClickListener(this);
 		attendanceStartDate.setOnFocusChangeListener(this);

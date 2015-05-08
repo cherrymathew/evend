@@ -56,14 +56,13 @@
 
                     <requestFocus />
                 </EditText>
-                
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/attendanceStartDateContainer"
-                android:layout_below="@+id/attendanceNameContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/attendanceNameContainer"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical" >
 
@@ -104,11 +103,56 @@
             </LinearLayout>
 
             <CheckBox
-                android:id="@+id/accommodationCheck"
+                android:id="@+id/attendMainConferenceCheck"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/attendanceEndDateContainer"
+                android:layout_marginTop="10dp"
+                android:text="@string/welcome_attendMainConference_check_label" />
+
+            <CheckBox
+                android:id="@+id/attendPreConferenceCheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/attendMainConferenceCheck"
+                android:layout_marginTop="10dp"
+                android:text="@string/welcome_attendPreConference_check_label" />
+
+            <CheckBox
+                android:id="@+id/teachSchoolOutreachCheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/attendPreConferenceCheck"
+                android:layout_marginTop="10dp"
+                android:text="@string/welcome_teachSchoolOutreach_check_label" />
+
+            <CheckBox
+                android:id="@+id/attendLearnToCodeCheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/teachSchoolOutreachCheck"
+                android:layout_marginTop="10dp"
+                android:text="@string/welcome_attendLearnToCode_check_label" />
+
+            <CheckBox
+                android:id="@+id/teachLearnToCodeCheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/attendLearnToCodeCheck"
+                android:layout_marginTop="10dp"
+                android:text="@string/welcome_teachLearnToCode_check_label" />
+                        
+            <CheckBox
+                android:id="@+id/accommodationCheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/teachLearnToCodeCheck"
                 android:layout_marginTop="10dp"
                 android:text="@string/welcome_accommodation_check_label" />
 

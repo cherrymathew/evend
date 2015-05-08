@@ -387,6 +387,18 @@ public class LoginActivity extends ActionBarActivity implements
 								: false);
 						userData.setHasTalk(attendanceJSON.getInt("talk") == 1 ? true
 								: false);
+						userData.setIsAttendingMainConference(attendanceJSON
+								.getInt("main_conference") == 1 ? true : false);
+						userData.setIsAttendingPreConference(attendanceJSON
+								.getInt("pre_conference") == 1 ? true : false);
+						userData.setIsAttendingLearnToCode(attendanceJSON
+								.getInt("learn_to_code") == 1 ? true : false);
+						userData.setIsTeachingSchoolOutreach(attendanceJSON
+								.getInt("teach_school_outreach") == 1 ? true
+								: false);
+						userData.setIsTeachingLearnToCode(attendanceJSON
+								.getInt("teach_learn_to_code") == 1 ? true
+								: false);
 
 						userData.setEventDaysAttending(new DateTime(
 								"2015-05-07"), new DateTime("2015-06-07"));

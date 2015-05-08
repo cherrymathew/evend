@@ -28,6 +28,11 @@
     <string name="welcome_attendance_name_hint">Enter your name here</string>
     <string name="welcome_attendance_start_date_label">When do you plan to attend?</string>
     <string name="welcome_attendance_end_date_label">When do you plan to leave?</string>
+    <string name="welcome_attendMainConference_check_label">Attending Main Conference Events?</string>
+    <string name="welcome_attendPreConference_check_label">Attending Pre Conference Events?</string>
+    <string name="welcome_teachSchoolOutreach_check_label">Teaching in the school outreach sessions?</string>
+    <string name="welcome_attendLearnToCode_check_label">Attending Learn To Code?</string>
+    <string name="welcome_teachLearnToCode_check_label">Mentoring at Learn To Code?</string>
     <string name="welcome_accommodation_check_label">Would you like Accommodation?</string>
     <string name="welcome_pickup_check_label">Would you like a Taxi Pick up?</string>
     <string name="welcome_talk_check_label">Would you like to present a Talk?</string>
