@@ -156,7 +156,7 @@
         <LinearLayout
             android:id="@+id/attendanceSummary"
             android:layout_width="match_parent"
-            android:layout_height="205dp"
+            android:layout_height="215dp"
             android:layout_below="@+id/attendanceSummaryHeading"
             android:orientation="vertical" >
 
@@ -174,11 +174,20 @@
             </GridView>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_marginTop="@dimen/view_horizontal_margin_10dp"
+            android:id="@+id/attendanceSummaryDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/attendanceSummary"
+            android:orientation="vertical" >
+        </LinearLayout>
+
         <View
             android:id="@+id/separator2"
             android:layout_width="fill_parent"
             android:layout_height="1dp"
-            android:layout_below="@+id/attendanceSummary"
+            android:layout_below="@+id/attendanceSummaryDetails"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
             android:background="@android:color/darker_gray" />

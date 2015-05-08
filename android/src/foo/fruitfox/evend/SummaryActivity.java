@@ -39,6 +39,7 @@ public class SummaryActivity extends ActionBarActivity implements
 	private LinearLayout accommodationSummary;
 	private LinearLayout pickupSummary;
 	private LinearLayout talksSummary;
+	private LinearLayout attendanceSummary;
 
 	private GridView eventCalendarGrid;
 
@@ -74,6 +75,7 @@ public class SummaryActivity extends ActionBarActivity implements
 
 		eventCalendarGrid = (GridView) findViewById(R.id.attendanceSummaryGrid);
 
+		attendanceSummary = (LinearLayout) findViewById(R.id.attendanceSummaryDetails);
 		accommodationSummary = (LinearLayout) findViewById(R.id.accommodationSummary);
 		pickupSummary = (LinearLayout) findViewById(R.id.pickupSummary);
 		talksSummary = (LinearLayout) findViewById(R.id.talksSummary);
@@ -81,6 +83,7 @@ public class SummaryActivity extends ActionBarActivity implements
 		initalizeLayout();
 		initalizeAdapters();
 		initalizeListeners();
+		initalizeAttendanceSummary();
 		initializeAccommodationSummary();
 		initializePickupSummary();
 		initializeTalksSummary();
@@ -134,6 +137,52 @@ public class SummaryActivity extends ActionBarActivity implements
 		return super.onOptionsItemSelected(item);
 	}
 
+	private void initalizeAttendanceSummary() {
+		View summarySingleRow;
+		TextView itemTitle;
+		TextView itemDetail;
+
+		summaryMap = new LinkedHashMap<String, String>();
+
+		summaryMap.put(
+				getResources().getString(
+						R.string.welcome_attendMainConference_check_label),
+				userData.getIsAttendingMainConference() ? "Yes" : "No");
+		summaryMap.put(
+				getResources().getString(
+						R.string.welcome_attendPreConference_check_label),
+				userData.getIsAttendingPreConference() ? "Yes" : "No");
+		summaryMap.put(
+				getResources().getString(
+						R.string.welcome_teachSchoolOutreach_check_label),
+				userData.getIsTeachingSchoolOutreach() ? "Yes" : "No");
+		summaryMap.put(
+				getResources().getString(
+						R.string.welcome_attendLearnToCode_check_label),
+				userData.getIsAttendingLearnToCode() ? "Yes" : "No");
+		summaryMap.put(
+				getResources().getString(
+						R.string.welcome_teachLearnToCode_check_label),
+				userData.getIsTeachingLearnToCode() ? "Yes" : "No");
+
+		for (Map.Entry<String, String> item : summaryMap.entrySet()) {
+			LayoutInflater inflater = (LayoutInflater) context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			summarySingleRow = inflater.inflate(R.layout.summary_single_row,
+					attendanceSummary, false);
+
+			itemTitle = (TextView) summarySingleRow
+					.findViewById(R.id.itemTitle);
+			itemDetail = (TextView) summarySingleRow
+					.findViewById(R.id.itemDetail);
+
+			itemTitle.setText(item.getKey());
+			itemDetail.setText(item.getValue());
+
+			attendanceSummary.addView(summarySingleRow);
+		}
+	}
+
 	private void initializeAccommodationSummary() {
 		View summarySingleRow;
 		TextView itemTitle;
@@ -142,30 +191,31 @@ public class SummaryActivity extends ActionBarActivity implements
 		summaryMap = new LinkedHashMap<String, String>();
 
 		if (userData.getAccommodationData() != null) {
-			summaryMap
-					.put(getResources().getString(
-							R.string.accommodation_tent_check_label), userData
-							.getAccommodationData().getHasTent() ? "Yes" : "No");
-			summaryMap
-					.put(getResources().getString(
-							R.string.accommodation_sleeping_bag_check_label),
-							userData.getAccommodationData()
-									.getHasSleeplingBag() ? "Yes" : "No");
 			summaryMap.put(
 					getResources().getString(
-							R.string.accommodation_matress_check_label),
-					userData.getAccommodationData().getHasMatress() ? "Yes"
-							: "No");
+							R.string.accommodation_tent_check_label).split(
+							"Yes, ")[1], userData.getAccommodationData()
+							.getHasTent() ? "Yes" : "No");
 			summaryMap.put(
 					getResources().getString(
-							R.string.accommodation_pillow_check_label),
-					userData.getAccommodationData().getHasPillow() ? "Yes"
-							: "No");
+							R.string.accommodation_sleeping_bag_check_label)
+							.split("Yes, ")[1], userData.getAccommodationData()
+							.getHasSleeplingBag() ? "Yes" : "No");
 			summaryMap.put(
 					getResources().getString(
-							R.string.accommodation_family_check_label),
-					userData.getAccommodationData().getHasFamily() ? "Yes"
-							: "No");
+							R.string.accommodation_matress_check_label).split(
+							"Yes, ")[1], userData.getAccommodationData()
+							.getHasMatress() ? "Yes" : "No");
+			summaryMap.put(
+					getResources().getString(
+							R.string.accommodation_pillow_check_label).split(
+							"Yes, ")[1], userData.getAccommodationData()
+							.getHasPillow() ? "Yes" : "No");
+			summaryMap.put(
+					getResources().getString(
+							R.string.accommodation_family_check_label).split(
+							"Yes, ")[1], userData.getAccommodationData()
+							.getHasFamily() ? "Yes" : "No");
 
 			if (userData.getAccommodationData().getHasFamily()) {
 				String familyDetails = userData.getAccommodationData()
