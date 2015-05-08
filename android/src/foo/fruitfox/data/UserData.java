@@ -27,6 +27,11 @@ public class UserData {
 	private Boolean hasOauth;
 	private Boolean isVerified;
 	private Boolean isFinalized;
+	private Boolean isAttendingMainConference;
+	private Boolean isAttendingPreConference;
+	private Boolean isAttendingLearnToCode;
+	private Boolean isTeachingSchoolOutreach;
+	private Boolean isTeachingLearnToCode;
 	private UserOauthData oauthData;
 	private AccommodationData accommodationData;
 	private PickupData pickupData;
@@ -339,5 +344,45 @@ public class UserData {
 				eventDaysAttending[i] = true;
 			}
 		}
+	}
+
+	public Boolean getIsAttendingMainConference() {
+		return isAttendingMainConference;
+	}
+
+	public void setIsAttendingMainConference(Boolean isAttendingMainConference) {
+		this.isAttendingMainConference = isAttendingMainConference;
+	}
+
+	public Boolean getIsAttendingPreConference() {
+		return isAttendingPreConference;
+	}
+
+	public void setIsAttendingPreConference(Boolean isAttendingPreConference) {
+		this.isAttendingPreConference = isAttendingPreConference;
+	}
+
+	public Boolean getIsAttendingLearnToCode() {
+		return isAttendingLearnToCode;
+	}
+
+	public void setIsAttendingLearnToCode(Boolean isAttendingLearnToCode) {
+		this.isAttendingLearnToCode = isAttendingLearnToCode;
+	}
+
+	public Boolean getIsTeachingSchoolOutreach() {
+		return isTeachingSchoolOutreach;
+	}
+
+	public void setIsTeachingSchoolOutreach(Boolean isTeachingSchoolOutreach) {
+		this.isTeachingSchoolOutreach = isTeachingSchoolOutreach;
+	}
+
+	public Boolean getIsTeachingLearnToCode() {
+		return isTeachingLearnToCode;
+	}
+
+	public void setIsTeachingLearnToCode(Boolean isTeachingLearnToCode) {
+		this.isTeachingLearnToCode = isTeachingLearnToCode;
 	}
 }
