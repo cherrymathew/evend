@@ -68,8 +68,11 @@ public class EventCalendarAdapter extends BaseAdapter {
 
 			ViewHolder viewHolder = new ViewHolder();
 			viewHolder.dayText = (TextView) dayView.findViewById(R.id.dayText);
-			viewHolder.dayText.setText(Integer.toString(startDate.plusDays(
-					position).getDayOfMonth()));
+			viewHolder.dayText.setText(startDate.plusDays(position)
+					.getDayOfMonth() < 10 ? "0"
+					+ Integer.toString(startDate.plusDays(position)
+							.getDayOfMonth()) : Integer.toString(startDate
+					.plusDays(position).getDayOfMonth()));
 
 			if (eventDays[position] == true) {
 				viewHolder.dayText.setBackgroundColor(Color.GREEN);
@@ -81,8 +84,11 @@ public class EventCalendarAdapter extends BaseAdapter {
 
 		} else {
 			ViewHolder viewHolder = (ViewHolder) dayView.getTag();
-			viewHolder.dayText.setText(Integer.toString(startDate.plusDays(
-					position).getDayOfMonth()));
+			viewHolder.dayText.setText(startDate.plusDays(position)
+					.getDayOfMonth() < 10 ? "0"
+					+ Integer.toString(startDate.plusDays(position)
+							.getDayOfMonth()) : Integer.toString(startDate
+					.plusDays(position).getDayOfMonth()));
 
 			if (eventDays[position] == true) {
 				viewHolder.dayText.setBackgroundColor(Color.GREEN);
