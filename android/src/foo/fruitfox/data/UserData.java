@@ -54,6 +54,11 @@ public class UserData {
 		this.hasOauth = false;
 		this.isVerified = false;
 		this.isFinalized = false;
+		this.isAttendingLearnToCode = false;
+		this.isAttendingMainConference = false;
+		this.isAttendingPreConference = false;
+		this.isTeachingLearnToCode = false;
+		this.isTeachingSchoolOutreach = false;
 		this.talkDataList = new ArrayList<TalkData>();
 	}
 
@@ -71,6 +76,11 @@ public class UserData {
 		this.hasOauth = true;
 		this.isVerified = false;
 		this.isFinalized = false;
+		this.isAttendingLearnToCode = false;
+		this.isAttendingMainConference = false;
+		this.isAttendingPreConference = false;
+		this.isTeachingLearnToCode = false;
+		this.isTeachingSchoolOutreach = false;
 		this.talkDataList = new ArrayList<TalkData>();
 	}
 
